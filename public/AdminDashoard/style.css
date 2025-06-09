@@ -2870,3 +2870,21 @@ body.dark .box-info.analytics li .text p {
 .table-data .order table td:last-child {
     text-align: center;
 }
+
+.conversation.unread {
+    background-color: #f2fdff; /* لون خفيف */
+    font-weight: bold;
+    position: relative;
+}
+
+.conversation.unread::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background: red;
+    border-radius: 50%;
+}

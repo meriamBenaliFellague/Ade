@@ -321,6 +321,22 @@ async function display_reclamationClient(req,res){
   }
 }
 
+//display information to reclamation 
+async function display_information(req,res){
+  try {
+    const recId = req.params.IdReclamation;
+    console.log(recId);
+    const reclamations = await SchemaReclamation.findOne({ _id:recId });
+    
+    const photo = reclamations.Photos[0]; // نستعمل أول صورة مثلا
+    const base64Image = photo.data.toString('base64');
+    const mimeType = photo.contentType; // مثلا: 'image/jpeg'
+    res.status(200).json({reclamations,image: `data:${mimeType};base64,${base64Image}`});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 //display reclamation to responsable
 async function display_reclamationResponsable(req,res){
   try {
@@ -332,8 +348,8 @@ async function display_reclamationResponsable(req,res){
   }
 }
 
-//display New reclamation to Admin
-async function display_New_reclamation(req,res){
+//display reclamation to Admin
+async function display_reclamationAdmin(req,res){
   try {
     const reclamations = await SchemaReclamation.find();
     
@@ -344,6 +360,27 @@ async function display_New_reclamation(req,res){
   } catch (err) {
     res.status(500).json({ error: err.message});
   }
+}
+
+//New reclamation
+async function Analytics(req,res) {
+   try {
+    let Status = 'Pending';
+    const reclamations = await SchemaReclamation.find({Status});
+    const clients = await SchemaClient.find();
+    Status = 'completed';
+    const completedRec = await SchemaReclamation.find({Status});
+    const newRec = reclamations.length;
+    const client = clients.length;
+    const completed = completedRec.length;
+    console.log(newRec,client,completed);
+    res.status(200).json({newRec: newRec,
+  client: client,
+  completed: completed});
+  } catch (err) {
+    res.status(500).json({ error: err.message});
+  }
+  
 }
 
 //Update reclamation status
@@ -373,6 +410,7 @@ async function display_New_reclamation(req,res){
 
 module.exports = {create_account, login_account,create_user,login_accountUser,login_accountAdmin,
   create_reclamation,update_user,delet_user,Admin, Responsable,display_reclamationClient,
-  display_New_reclamation,display_user,forget_password,verifyResetCode,reset_password,
-  display_leader,display_message_admin,display_message_leader,display_reclamationResponsable
+  Analytics,display_user,forget_password,verifyResetCode,reset_password,
+  display_leader,display_message_admin,display_message_leader,display_reclamationResponsable,
+  display_information,display_reclamationAdmin
 };

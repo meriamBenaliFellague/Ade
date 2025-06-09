@@ -1161,17 +1161,49 @@ socket.on('connect', () => {
 })	
 
 socket.on("receive_message", (data) => {
-    console.log("📩 وصلك ميساج:", data);
-
-    const message = data.message;
-	const createdAt = data.createdAt;
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'message received';
-    msgDiv.innerHTML = `
-        <div class="message-content">${message}</div>
-        <div class="message-time">${new Date(createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-    `;
-    document.querySelector('.chat-messages').appendChild(msgDiv);
+const leaders = sessionStorage.getItem("leaders");
+const lastMessage = data.message;
+const dateOnly =  new Date(data.createdAt).toLocaleTimeString([], {
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: true // حطها true إذا حبيت صيغة 12 ساعة
+		  });
+let leadersRaw ;
+leadersRaw = JSON.parse(leaders);
+        const conversationElement = document.querySelector(`.conversation[data-userid="${data.leaderId}"]`);
+            if (conversationElement) {
+                const previewElement = conversationElement.querySelector('.conversation-preview');
+				const timeElement = conversationElement.querySelector('.conversation-time');
+                if (previewElement) {
+                    previewElement.textContent = lastMessage; // ← هنا يتم التحديث الفعلي
+                    timeElement.textContent = dateOnly;
+				}
+            }
+		console.log('data.leaderId =',data.leaderId,'leadersRaw._id =',leadersRaw._id)
+        if (leadersRaw._id == null || data.leaderId !== leadersRaw._id){
+			if (conversationElement){
+                conversationElement.classList.add("unread");
+			 // نضيف كلاس للتمييز
+			 }
+		   return ;
+		}else{
+			console.log("📩 وصلك ميساج:", data);
+	        const chatMessages = document.querySelector('.chat-messages');
+            const message = data.message;
+	        const createdAt = data.createdAt;
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message received';
+            msgDiv.innerHTML = `
+               <div class="message-content">${message}</div>
+               <div class="message-time">${new Date(createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+            `;
+           //document.querySelector('.chat-messages').appendChild(msgDiv);
+	        chatMessages.appendChild(msgDiv);
+	        chatMessages.scrollTop = chatMessages.scrollHeight;
+		}
+		
+	
+    
 });
 
 //Display messages
@@ -1186,6 +1218,12 @@ async function DisplayMessages(lead){
         }
     
         const messages = await response.json();
+
+    // نحي الإشعار
+    const conversationElement = document.querySelector(`.conversation[data-userid="${lead._id}"]`);
+    if (conversationElement) {
+        conversationElement.classList.remove("unread");
+    }
         renderMessages(messages);
         // هنا تقدر تعرضهم فـ DOM حسب الشكل لي تحب
       } catch (error) {
@@ -1211,6 +1249,7 @@ async function renderMessages(message){
 				<div class="message-time">${dateOnly}</div>
 			`;
 			chatMessages.appendChild(messageElement);
+			chatMessages.scrollTop = chatMessages.scrollHeight;
 		}else{
 			messageElement.className = 'message received';
 			messageElement.innerHTML = `
@@ -1218,7 +1257,9 @@ async function renderMessages(message){
 				<div class="message-time">${dateOnly}</div>
 			`;
 			chatMessages.appendChild(messageElement);
+			chatMessages.scrollTop = chatMessages.scrollHeight;
 		}	
+		
 	})
 }
 
@@ -1280,34 +1321,60 @@ async function DisplayLeaders(){
         const leaders = await response.json();
 		console.log(leaders)
         renderLeader(leaders);
+		renderLeaderAssign(leaders)
         // هنا تقدر تعرضهم فـ DOM حسب الشكل لي تحب
       } catch (error) {
         console.error("❌ خطأ في جلب الشكاوى:", error);
       }
 }
-
+//display leaders to select leader section
+async function renderLeaderAssign(lead){
+	const tech = document.getElementById('TechSupport');
+	const customer = document.getElementById('CustomerService');
+	const quality = document.getElementById('QualityTeam');
+	lead.forEach(leader => {
+		const item = document.createElement("div");
+		item.className = "member-item";
+		item.textContent = leader.Fullname;
+		item.addEventListener("click", function() {
+            selectMember(this);
+        });
+		console.log(leader.Team)
+		if (leader.Team == 'tech-support') {
+		    tech.appendChild(item);
+	    } else if (leader.Team == 'customer-service') {
+		    customer.appendChild(item);
+	    }else{
+		    quality.appendChild(item);
+	    }
+	})
+	
+}
+//display leaders to message section
 async function renderLeader(lead){
 	const chatContainer = document.getElementById('conversations');
 	chatContainer.innerHTML = "";
-
+	sessionStorage.setItem("leaders",  JSON.stringify(lead));
 	lead.forEach(leader => {
 		const item = document.createElement("div");
 		item.className = "conversation";
+		item.setAttribute("data-userid", leader._id);
 		item.innerHTML = `
 		    <div class="conversation-avatar">
 				<i class='bx bx-user'></i>
 			</div>
 			<div class="conversation-info">
 				<div class="conversation-name">${leader.Fullname}</div>
-				<div class="conversation-preview">Welcome to the dashboard!</div>
+				<div class="conversation-preview"></div>
 			</div>
-			<div class="conversation-time">10:30 AM</div>
+			<div class="conversation-time"></div>
 		 `;
 		 item.onclick = () => {
 			
-		       
+		        sessionStorage.setItem("leaders",  JSON.stringify(lead));
 		        socket.emit("get receiverId", leader._id);
-	        
+				const chatMessages = document.querySelector('.chat-messages');
+				chatMessages.scrollTop = chatMessages.scrollHeight;
 			
 			DisplayMessages(leader)
 			console.log(leader._id);
@@ -1470,7 +1537,7 @@ function renderReclamations(reclamations) {
 			e.preventDefault();
 			selectedAssignCell = this.closest('.assignee-cell');
 			modal.style.display = 'flex';
-			
+			DisplayLeaders();
 			// Reset selection
 			document.querySelectorAll('.member-item').forEach(item => {
 				item.classList.remove('selected');
@@ -1602,6 +1669,7 @@ function renderUsers(user){
 		div.onclick = () => {
 			UpdateUser(u);console.log(u._id);
 			id = u._id;
+
 	   }
 	   
 	   // Add edit functionality
@@ -1770,3 +1838,31 @@ window.addRow = function(data) {
     addDeleteIcon(row);
     document.getElementById('tbody').appendChild(row);
 };
+
+async function Analytics() { 
+	try {
+        const response = await fetch(`http://localhost:3000/api/Analytics`, {
+            method: 'GET',
+        });   
+
+        if (!response.ok) throw new Error("فشل في جلب البيانات");
+
+        const result = await response.json();
+        // تحديث القائمة بعد الحذف
+		 console.log(result);
+       renderAnalytics(result); 
+    } catch (error) { 
+        console.error(error.message);
+    }
+} 
+window.addEventListener('load', Analytics);
+
+function renderAnalytics(data){
+	const newRec = document.getElementById('newRec');
+	const client = document.getElementById('client');
+	const completed = document.getElementById('completed');
+
+	newRec.textContent =  data.newRec;
+	client.textContent =  data.client;
+	completed.textContent =  data.completed;
+}

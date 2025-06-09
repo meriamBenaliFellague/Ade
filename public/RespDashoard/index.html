@@ -988,11 +988,12 @@ document.getElementById('close-message-modal').onclick = function() {
   </div>
 </div>
 
-<script>
+<script>/*
 function showComplaintInfo(btn) {
   var row = btn.closest('tr');
   var user = row.querySelector('td p').innerText;
   var details = {
+	'فطيم': 'Complaint details for aya inas: ...',
     'aya inas': 'Complaint details for aya inas: ...',
     'ben krouda gogo': 'Complaint details for ben krouda gogo: ...',
     'Benali fellague mimi': 'Complaint details for Benali fellague mimi: ...',
@@ -1003,7 +1004,7 @@ function showComplaintInfo(btn) {
   document.getElementById('complaint-modal-body').innerText = info;
   document.getElementById('complaint-modal-overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
-}
+}*/
 function closeComplaintInfoModal() {
   document.getElementById('complaint-modal-overlay').style.display = 'none';
   document.body.style.overflow = '';

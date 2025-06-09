@@ -350,6 +350,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	sendBtn.addEventListener('click', (e) => { 
 		e.preventDefault(); 
 		sendMessage();
+		
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
 	});
 
 
@@ -1330,6 +1333,7 @@ function renderReclamations(reclamations) {
       tbody.appendChild(item);
 	  item.onclick = () => {
 		UpdateReclamations(r);
+		sessionStorage.setItem("recId", r._id);
 	  }
     });
   }
@@ -1391,7 +1395,7 @@ socket.on('connect', async () => {
 
 socket.on("receive_message", (data) => {
     console.log("📩 وصلك ميساج:", data);
-
+	const chatMessages = document.querySelector('.chat-messages');
     const message = data.message;
 	const createdAt = data.createdAt;
     const msgDiv = document.createElement('div');
@@ -1400,7 +1404,8 @@ socket.on("receive_message", (data) => {
         <div class="message-content">${message}</div>
         <div class="message-time">${new Date(createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
     `;
-    document.querySelector('.chat-messages').appendChild(msgDiv);
+    chatMessages.appendChild(msgDiv);
+	chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
 //Sent Message
@@ -1445,7 +1450,6 @@ async function DisplayMessages(){
 }
 
 
-//Display message
 async function renderMessages(message){
 	const chatMessages = document.querySelector('.chat-messages');
 	chatMessages.innerHTML = "";
@@ -1464,6 +1468,7 @@ async function renderMessages(message){
 				<div class="message-time">${dateOnly}</div>
 			`;
 			chatMessages.appendChild(messageElement);
+			chatMessages.scrollTop = chatMessages.scrollHeight;
 
 			}else{
 			messageElement.className = 'message sent';
@@ -1472,7 +1477,68 @@ async function renderMessages(message){
 				<div class="message-time">${dateOnly}</div>
 			`;
 			chatMessages.appendChild(messageElement);
+			chatMessages.scrollTop = chatMessages.scrollHeight;
 		
 		}	
 	})
+}
+
+//Display information complaint
+async function DisplayInformation(){
+	try {
+        const response = await fetch('http://localhost:3000/api/DisplayInformation', {
+          method: "GET",
+        });
+    
+        if (!response.ok) {
+          throw new Error("فشل في جلب البيانات");
+        }
+    
+        const reclamation = await response.json();
+        
+        // هنا تقدر تعرضهم فـ DOM حسب الشكل لي تحب
+      } catch (error) {
+        console.error("❌ خطأ في جلب المعلومات :", error);
+      }
+}
+
+
+async function showComplaintInfo(btn) {
+const recId = sessionStorage.getItem("recId");
+console.log(recId)
+	try {
+        const response = await fetch(`http://localhost:3000/api/DisplayInformation/${recId}`, {
+          method: "GET",
+        });
+    
+        if (!response.ok) {
+          throw new Error("فشل في جلب البيانات");
+        }
+    
+        const data = await response.json();
+        
+        // هنا تقدر تعرضهم فـ DOM حسب الشكل لي تحب
+      
+    var row = btn.closest('tr');
+
+	const r = data.reclamations;
+	document.getElementById('complaint-modal-overlay').style.display = 'flex';
+    document.getElementById('complaint-modal-body').innerText = `
+        Type : ${r.Type},
+        Fullname : ${r.Name} ${r.Surname},
+        Phone : ${r.Phone},
+        Municipality : ${r.Municipality},
+        Subscriber ID : ${r.Subscriber_ID},
+		Address : ${r.Address},
+		Complaint : ${r.Complaint},
+		`
+	const img = document.createElement('img');
+	img.src = data.image;
+	img.id = 'myImage';
+	img.style.maxWidth = '30%';
+	document.getElementById('complaint-modal-body').appendChild(img);
+  document.body.style.overflow = 'hidden';
+  } catch (error) {
+        console.error("❌ خطأ في جلب المعلومات :", error);
+      }
 }

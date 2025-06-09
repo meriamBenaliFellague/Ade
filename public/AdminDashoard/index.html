@@ -133,8 +133,8 @@
 									<i class='bx bx-user'></i>
 								</div>
 								<div class="chat-info">
-									<div class="chat-name">Admin</div>
-									<div class="chat-status">Online</div>
+									<div class="chat-name"></div>
+									<div class="chat-status"></div>
 								</div>
 							</div>
 						</div>
@@ -321,21 +321,21 @@
         <li>
             <i class='bx bxs-calendar-check' ></i>
             <span class="text">
-                <h3>1020</h3>
+                <h3 id="newRec"></h3>
                 <p>New Reclamation</p>
             </span>
         </li>
         <li>
             <i class='bx bxs-group' ></i>
             <span class="text">
-                <h3>2834</h3>
+                <h3 id="client"></h3>
                 <p>Visitors</p>
             </span>
         </li>
         <li>
             <i class='bx bxs-check-circle' ></i>
             <span class="text">
-                <h3>156</h3>
+                <h3 id="completed"></h3>
                 <p>Completed Tasks</p>
             </span>
         </li>
@@ -647,10 +647,8 @@ document.querySelectorAll('.assignee-cell').forEach(cell => {
                         <i class='bx bx-wrench'></i>
                         <span>Tech Support</span>
                     </div>
-                    <div class="team-members">
-                        <div class="member-item" onclick="selectMember(this)">John Doe</div>
-                        <div class="member-item" onclick="selectMember(this)">Jane Smith</div>
-                        <div class="member-item" onclick="selectMember(this)">Mike Johnson</div>
+                    <div class="team-members" id="TechSupport">
+                        
                     </div>
                 </div>
                 
@@ -660,10 +658,8 @@ document.querySelectorAll('.assignee-cell').forEach(cell => {
                         <i class='bx bx-message-rounded-dots'></i>
                         <span>Customer Service</span>
                     </div>
-                    <div class="team-members">
-                        <div class="member-item" onclick="selectMember(this)">Alex Brown</div>
-                        <div class="member-item" onclick="selectMember(this)">Emily Davis</div>
-                        <div class="member-item" onclick="selectMember(this)">Chris Lee</div>
+                    <div class="team-members" id="CustomerService">
+                       
                     </div>
                 </div>
                 
@@ -673,10 +669,8 @@ document.querySelectorAll('.assignee-cell').forEach(cell => {
                         <i class='bx bx-check-circle'></i>
                         <span>Quality Team</span>
                     </div>
-                    <div class="team-members">
-                        <div class="member-item" onclick="selectMember(this)">Robert White</div>
-                        <div class="member-item" onclick="selectMember(this)">Jennifer Black</div>
-                        <div class="member-item" onclick="selectMember(this)">Thomas Green</div>
+                    <div class="team-members" id="QualityTeam">
+                        
                     </div>
                 </div>
             </div>

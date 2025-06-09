@@ -83,6 +83,8 @@ app.use("/api/UpdateUser", update_user);
 const display_leaders = require("./server/DisplayLeader");
 app.use("/api/Displayleader", display_leaders);
 
+const display_information = require("./server/Displayinformation");
+app.use("/api/DisplayInformation", display_information);
 
 const display_reclamation_client = require("./server/DisplayReclamationClient");
 app.use("/api/DisplayReclamationClient", display_reclamation_client);
@@ -98,6 +100,9 @@ app.use("/api/UpdateReclamationAdmin", update_reclamation_status_admin);
 
 const update_reclamation_status_leader = require("./server/UpdateReclamationStatusLeader");
 app.use("/api/UpdateReclamationLeader", update_reclamation_status_leader);
+
+const Analytics = require("./server/Analytics");
+app.use("/api/Analytics", Analytics);
 
 //.....
 
