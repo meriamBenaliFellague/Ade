@@ -9,22 +9,39 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
+    <!-- Background Elements -->
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+    
     <div class="container">
         <div class="form-box login">
             <form action="/api/Admin" method="POST" class="one">
-                <h1>Login</h1>
+                <!-- Logo -->
+                <div class="logo-container">
+                    <div class="logo">
+                        <span class="logo-text">ADE</span>
+                        <span class="logo-subtext">AIN-DEFLA</span>
+                    </div>
+                </div>
+                
                 <div class="input-box">
-                    <input type="text" id="nameUser" placeholder="Username" required>
+                    <input type="text" id="nameUser" placeholder=" " required>
+                    <label for="nameUser">Username</label>
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" id="pass" placeholder="Password">
+                    <input type="password" id="pass" placeholder=" ">
+                    <label for="pass">Password</label>
                     <i class='bx bxs-lock-alt'></i>
+                    <i class='bx bx-hide password-toggle' id="togglePassword"></i>
                 </div>
                 <div class="forgot-link">
-                    <a href="#">Forgot password ?</a>
+                    <a href="#" onclick="openForgotPasswordModal(event)">Forgot password ?</a>
                 </div>
-                <button type="submit" class="btn" id="btn-login">Login</button>
+                <button type="submit" class="btn pulse" id="btn-login">
+                    <span class="btn-text">Login</span>
+                    <i class='bx bx-log-in-circle'></i>
+                </button>
                 <p>or login with social platforms</p>
                 <div class="social-icons">
                     <a href="#"><i class='bx bxl-google'></i></a>
@@ -34,7 +51,22 @@
                 </div>
             </form>
         </div>
-        </div>
+    </div>
+    
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="forgot-password-modal">
+        <div class="forgot-password-content">
+            <span class="close-forgot-password">&times;</span>
+            <h2>Reset Password</h2>
+            <p>Enter your email address and we'll send you a link to reset your password.</p>
+            <form id="forgotPasswordForm">
+                <div class="input-box">
+                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <div id="resetMessage" class="reset-message"></div>
+                <button type="submit" class="btn">Send Reset Link</button>
+            </form>
         </div>
     </div>
     <script src="script.js">

@@ -41,13 +41,10 @@ if (navbarSearchInput && teamSection && teamMembersGrid) {
 // DASHBOARD REFRESH FUNCTIONALITY
 const refreshBtn = document.getElementById('refresh-reclamation');
 if (refreshBtn) {
-    refreshBtn.addEventListener('click', function() {
-        // ابحث عن الجدول الخاص بالشكاوى الحديثة
-        const table = document.querySelector('.order table tbody');
-        if (table && table.children.length > 1) {
-            // نقل آخر صف إلى الأعلى (محاكاة تحديث)
-            table.insertBefore(table.lastElementChild, table.firstElementChild);
-        }
+    refreshBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        // إعادة تحميل الصفحة لتحديث البيانات
+        window.location.reload();
     });
 }
 

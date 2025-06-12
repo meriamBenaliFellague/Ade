@@ -13,17 +13,23 @@
             <form action="/api/login" method="POST" class="one">
                 <h1>Login</h1>
                 <div class="input-box">
-                    <input type="text" id="nameUser" placeholder="Username" required>
+                    <input type="text" id="nameUser" placeholder="" required>
+                    <label for="nameUser">Username</label>
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" id="pass" placeholder="Password">
+                    <input type="password" id="pass" placeholder=" ">
+                    <label for="pass">Password</label>
                     <i class='bx bxs-lock-alt'></i>
+                    <i class='bx bx-hide password-toggle' id="togglePassword"></i>
                 </div>
                 <div class="forgot-link">
-                    <a href="#">Forgot password ?</a>
+                    <a href="#" onclick="openForgotPasswordModal()">Forgot password ?</a>
                 </div>
-                <button type="submit" class="btn" id="btn-login">Login</button>
+                <button type="submit" class="btn" id="btn-login">
+                    <span class="btn-text">Login</span>
+                    <i class='bx bx-log-in-circle'></i>
+                </button>
                 <p>or login with social platforms</p>
                 <div class="social-icons">
                     <a href="#"><i class='bx bxl-google'></i></a>
@@ -35,20 +41,27 @@
         </div>
         <div class="form-box Registr">
             <form action="/api/register" method="POST" class="one" id="form">
-                <h1>Registration</h1>
+                <h1 class="register">Registration</h1>
                 <div class="input-box">
-                    <input type="text" id="Username" placeholder="username"  required >
+                    <input type="text" id="Username" placeholder=" " required>
+                    <label for="Username">Username</label>
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="email"  id="Email" placeholder="email" required >
-                    <i class='bx bxs-envelope' ></i>
+                    <input type="email" id="Email" placeholder=" " required>
+                    <label for="Email">Email</label>
+                    <i class='bx bxs-envelope'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" name="Password" id="Password" placeholder="password" >
+                    <input type="password" name="Password" id="Password" placeholder=" ">
+                    <label for="Password">Password</label>
                     <i class='bx bxs-lock-alt'></i>
+                    <i class='bx bx-hide password-toggle' id="toggleRegisterPassword"></i>
                 </div>
-                <button type="submit" class="btn" id="btn-register">Registr</button>
+                <button type="submit" class="btn" id="btn-register">
+                    <span class="btn-text">Register</span>
+                    <i class='bx bx-user-plus'></i>
+                </button>
                 <p>or registr with social platforms</p>
                 <div class="social-icons">
                     <a href="#"><i class='bx bxl-google'></i></a>
@@ -60,19 +73,57 @@
         </div>
         <div class="side-switch">
             <div class="switch switch-left">
+                <!-- Logo in blue section -->
+                <div class="logo-container">
+                    <div class="logo">
+                        <span class="logo-text">ADE</span>
+                        <span class="logo-subtext">AIN-DEFLA</span>
+                    </div>
+                </div>
                 <h1>Hello, Welcome!</h1>
-                <p>Don't have account?</p>
+                <p class="switch-text">Don't have account?</p>
                 <button class="btn registr-btn">Register</button>
             </div>
             <div class="switch switch-right">
+                <!-- Logo in blue section -->
+                <div class="logo-container">
+                    <div class="logo">
+                        <span class="logo-text">ADE</span>
+                        <span class="logo-subtext">AIN-DEFLA</span>
+                    </div>
+                </div>
                 <h1>Welcome Back!</h1>
-                <p>Already have an account?</p>
+                <p class="switch-text">Already have an account?</p>
                 <button class="btn login-btn">Login</button>
             </div>
         </div>
     </div>
-    <script src="script.js">
-        
-    </script>
+    
+    <!-- Background Elements -->
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+    
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="forgot-password-modal">
+        <div class="forgot-password-content">
+            <span class="close-forgot-password">&times;</span>
+            <h2>Reset Password</h2>
+            <p>Please enter your email address. We'll send you a link to reset your password.</p>
+            <form id="forgotPasswordForm">
+                <div class="input-box">
+                    <input type="email" id="resetEmail" placeholder=" " required>
+                    <label for="resetEmail">Email</label>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <button type="submit" class="btn">
+                    <span class="btn-text">Send Reset Link</span>
+                    <i class='bx bx-send'></i>
+                </button>
+            </form>
+            <div id="resetMessage" class="reset-message"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

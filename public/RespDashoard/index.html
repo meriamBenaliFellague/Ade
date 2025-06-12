@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <!-- Boxicons -->
-	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- ====== Icons ====== -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="style.css">
 
     <!-- jsPDF Library -->
@@ -19,7 +22,7 @@
 	<section id="sidebar">
 		<a href="#" class="brand">
 			<i class='bx bx-laptop'></i>
-			<span class="text">AdminHub</span>
+			<span class="text">LeaderHub</span>
 		</a>
 		<ul class="side-menu top">
 			<li class="active">
@@ -199,81 +202,140 @@
 			</div>
 
 			<!-- Team Management Section -->
+			<!-- Team Section -->
 			<div id="team-section" style="display:none;">
 				<div class="head-title">
 					<div class="left">
-						<h1>Meet our team</h1>
+						<h1>Team Members</h1>
 						<ul class="breadcrumb">
 							<li><a href="#">Dashboard</a></li>
 							<li><i class='bx bx-chevron-right'></i></li>
 							<li><a class="active" href="#">Team</a></li>
 						</ul>
 					</div>
+					<a href="#" class="btn-download">
+						<i class='bx bxs-cloud-download'></i>
+						<span class="text">Export</span>
+					</a>
 				</div>
 
-				<!-- Team Members Grid -->
-				<div class="team-members-grid" id="team-members-grid">
-					<div class="member-card">
-						<div class="member-photo-wrap">
-							<img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Abdul Kean" class="member-photo">
-							
-						</div>
-						<div class="member-info">
-							<h4>Abdul Kean</h4>
-							
-							<div class="member-actions">
-								<a href="#" title="Call"><i class='bx bx-phone-call'></i></a>
-								<a href="#" title="Video"><i class='bx bx-video'></i></a>
-								<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+				<div class="table-data">
+					<div class="order">
+						<div class="head">
+							<h3>All Team Members</h3>
+							<div class="search-container">
+								<i class='bx bx-search search-icon'></i>
+								<input type="text" id="team-search" placeholder="Search team member..." class="search-input">
 							</div>
+							<i class='bx bx-filter filter-icon' title="Filter"></i>
 						</div>
-					</div>
-					<div class="member-card">
-						<div class="member-photo-wrap">
-							<img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Angela Moss" class="member-photo">
-							
-						</div>
-						<div class="member-info">
-							<h4>Angela Moss</h4>
-							
-							<div class="member-actions">
-								<a href="#" title="Call"><i class='bx bx-phone-call'></i></a>
-								<a href="#" title="Video"><i class='bx bx-video'></i></a>
-								<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+
+						<div class="team-members-grid">
+							<!-- Team Member 1 -->
+							<div class="member-card">
+								<div class="member-photo-wrap">
+									<img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Smith" class="member-photo">
+									<span class="member-status available"></span>
+								</div>
+								<div class="member-info">
+									<h4>John Smith</h4>
+									<div class="member-role">Electronics Technician</div>
+									<div class="member-actions">
+										<a href="tel:+123456789" title="Call"><i class='bx bx-phone'></i></a>
+										<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+										<a href="#" title="Tasks"><i class='bx bx-task'></i></a>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-					<div class="member-card">
-						<div class="member-photo-wrap">
-							<img src="https://randomuser.me/api/portraits/men/13.jpg" alt="Afiif Skunder" class="member-photo">
-							
-						</div>
-						<div class="member-info">
-							<h4>Afiif Skunder</h4>
-							
-							<div class="member-actions">
-								<a href="#" title="Call"><i class='bx bx-phone-call'></i></a>
-								<a href="#" title="Video"><i class='bx bx-video'></i></a>
-								<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+
+							<!-- Team Member 2 -->
+							<div class="member-card">
+								<div class="member-photo-wrap">
+									<img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson" class="member-photo">
+									<span class="member-status busy"></span>
+								</div>
+								<div class="member-info">
+									<h4>Sarah Johnson</h4>
+									<div class="member-role">Appliance Specialist</div>
+									<div class="member-actions">
+										<a href="tel:+123456789" title="Call"><i class='bx bx-phone'></i></a>
+										<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+										<a href="#" title="Tasks"><i class='bx bx-task'></i></a>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-					<div class="member-card">
-						<div class="member-photo-wrap">
-							<img src="https://randomuser.me/api/portraits/women/14.jpg" alt="Anita Queen" class="member-photo">
-							
-						</div>
-						<div class="member-info">
-							<h4>Anita Queen</h4>
-							
-							<div class="member-actions">
-								<a href="#" title="Call"><i class='bx bx-phone-call'></i></a>
-								<a href="#" title="Video"><i class='bx bx-video'></i></a>
-								<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+
+							<!-- Team Member 3 -->
+							<div class="member-card">
+								<div class="member-photo-wrap">
+									<img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Michael Brown" class="member-photo">
+									<span class="member-status available"></span>
+								</div>
+								<div class="member-info">
+									<h4>Michael Brown</h4>
+									<div class="member-role">HVAC Technician</div>
+									<div class="member-actions">
+										<a href="tel:+123456789" title="Call"><i class='bx bx-phone'></i></a>
+										<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+										<a href="#" title="Tasks"><i class='bx bx-task'></i></a>
+									</div>
+								</div>
+							</div>
+
+							<!-- Team Member 4 -->
+							<div class="member-card">
+								<div class="member-photo-wrap">
+									<img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Davis" class="member-photo">
+									<span class="member-status offline"></span>
+								</div>
+								<div class="member-info">
+									<h4>Emily Davis</h4>
+									<div class="member-role">Electrician</div>
+									<div class="member-actions">
+										<a href="tel:+123456789" title="Call"><i class='bx bx-phone'></i></a>
+										<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+										<a href="#" title="Tasks"><i class='bx bx-task'></i></a>
+									</div>
+								</div>
+							</div>
+
+							<!-- Team Member 5 -->
+							<div class="member-card">
+								<div class="member-photo-wrap">
+									<img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Robert Wilson" class="member-photo">
+									<span class="member-status available"></span>
+								</div>
+								<div class="member-info">
+									<h4>Robert Wilson</h4>
+									<div class="member-role">Plumbing Expert</div>
+									<div class="member-actions">
+										<a href="tel:+123456789" title="Call"><i class='bx bx-phone'></i></a>
+										<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+										<a href="#" title="Tasks"><i class='bx bx-task'></i></a>
+									</div>
+								</div>
+							</div>
+
+							<!-- Team Member 6 -->
+							<div class="member-card">
+								<div class="member-photo-wrap">
+									<img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Jennifer Lee" class="member-photo">
+									<span class="member-status available"></span>
+								</div>
+								<div class="member-info">
+									<h4>Jennifer Lee</h4>
+									<div class="member-role">Painting Specialist</div>
+									<div class="member-actions">
+										<a href="tel:+123456789" title="Call"><i class='bx bx-phone'></i></a>
+										<a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+										<a href="#" title="Tasks"><i class='bx bx-task'></i></a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
 			</div>
 
 			<!-- Add Member Modal -->
@@ -351,7 +413,7 @@
 			<div class="table-data">
 				<div class="order">
 					<div class="head">
-						<h3>Recent Reclamation</h3>
+						<h3>Recent Complaints</h3>
 						<i class='bx bx-refresh' title="Refresh" style="cursor:pointer" id="refresh-reclamation"></i>
 						<i class='bx bx-filter' ></i>
 					</div>
@@ -394,13 +456,15 @@
 
 			<!-- Settings Section -->
 			<div id="settings-section" style="display:none;">
-				<div class="settings-head">
-					<h1>Settings</h1>
-					<ul class="breadcrumb">
-						<li><a href="#">Dashboard</a></li>
-						<li><i class='bx bx-chevron-right'></i></li>
-						<li><a class="active" href="#">Settings</a></li>
-					</ul>
+				<div class="head-title">
+					<div class="left">
+						<h1>Settings</h1>
+						<ul class="breadcrumb">
+							<li><a href="#">Dashboard</a></li>
+							<li><i class='bx bx-chevron-right'></i></li>
+							<li><a class="active" href="#">Settings</a></li>
+						</ul>
+					</div>
 				</div>
 				<div class="settings-stack">
 					<!-- Profile Settings Card -->
@@ -496,17 +560,381 @@
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
-	
 
-    <script src="script.js"></script> 
-<script>
-// Dropdown toggle logic for assignee
-function closeAllDropdowns() {
-  document.querySelectorAll('.group-dropdown').forEach(dd => dd.style.display = 'none');
-}
-document.addEventListener('click', function(event) {
-  // Hide all dropdowns if clicking outside
-  if (!event.target.closest('.assignee-cell')) {
+
+    <script src="script.js"></script>
+
+    <script>
+    // Function to export team data to Excel
+    function exportTeamToExcel() {
+        // Create an array with team data
+        const teamData = [
+            ['Name', 'Position', 'Status', 'Phone Number'],
+            ['John Smith', 'Electronics Technician', 'Available', '+123456789'],
+            ['Sarah Johnson', 'Appliance Specialist', 'Busy', '+123456789'],
+            ['Michael Brown', 'HVAC Technician', 'Available', '+123456789'],
+            ['Emily Davis', 'Electrician', 'Offline', '+123456789'],
+            ['Robert Wilson', 'Plumbing Expert', 'Available', '+123456789'],
+            ['Jennifer Lee', 'Painting Specialist', 'Available', '+123456789']
+        ];
+
+        // Create an Excel workbook
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(teamData);
+        
+        // Format columns
+        const wscols = [
+            {wch: 20}, // Name column width
+            {wch: 25}, // Position column width
+            {wch: 15}, // Status column width
+            {wch: 15}  // Phone Number column width
+        ];
+        ws['!cols'] = wscols;
+        
+        // Add the sheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Team Members');
+        
+        // Save the file
+        const fileName = `Team_Members_${new Date().toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(wb, fileName);
+        
+        // Show success notification
+        showNotification('Team data exported successfully', 'success');
+    }
+    
+    // Add search functionality
+    function setupTeamSearch() {
+        const searchInput = document.getElementById('team-search');
+        const memberCards = document.querySelectorAll('.member-card');
+        
+        if (!searchInput) return;
+        
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.trim().toLowerCase();
+            
+            memberCards.forEach(card => {
+                const name = card.querySelector('h4').textContent.toLowerCase();
+                const role = card.querySelector('.member-role').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || role.includes(searchTerm)) {
+                    card.style.display = '';
+                    // إضافة تأثير ظهور عند ظهور النتيجة
+                    card.style.animation = 'fadeIn 0.3s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // إظهار رسالة إذا لم توجد نتائج
+            const visibleCards = document.querySelectorAll('.member-card[style*="display: block"], .member-card:not([style*="display:"])');
+            const noResults = document.getElementById('no-results');
+            
+            if (visibleCards.length === 0) {
+                if (!noResults) {
+                    const noResultsMsg = document.createElement('div');
+                    noResultsMsg.id = 'no-results';
+                    noResultsMsg.className = 'no-results';
+                    noResultsMsg.innerHTML = `
+                        <i class='bx bx-search-alt'></i>
+                        <p>No results for "${searchTerm}"</p>
+                        <small>Try searching by name or role</small>
+                    `;
+                    document.querySelector('.team-members-grid').appendChild(noResultsMsg);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        });
+    }
+    
+    // Handle chat icon clicks on team member cards
+    function setupChatLinks() {
+        document.querySelectorAll('.member-actions .bx-chat').forEach(chatIcon => {
+            chatIcon.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Get the team member's name and role
+                const memberCard = this.closest('.member-card');
+                const memberName = memberCard.querySelector('h4').textContent;
+                const memberRole = memberCard.querySelector('.member-role').textContent;
+                const memberStatus = memberCard.querySelector('.member-status').classList[1]; // available, busy, or offline
+                
+                // Store the selected team member in session storage
+                sessionStorage.setItem('selectedMember', JSON.stringify({
+                    name: memberName,
+                    role: memberRole,
+                    status: memberStatus
+                }));
+                
+                // Switch to messages section
+                document.querySelectorAll('main > div').forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.getElementById('messages-section').style.display = 'block';
+                
+                // Update active menu item
+                document.querySelectorAll('#sidebar li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.getElementById('messages-link').parentElement.classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            });
+        });
+    }
+    
+    // Function to open chat with a specific team member
+    function openChatWithMember(memberData) {
+        // Check if conversation already exists
+        let conversation = document.querySelector(`.conversation[data-conversation="${memberData.name.toLowerCase().replace(/\s+/g, '-')}"]`);
+        
+        if (!conversation) {
+            // Create new conversation if it doesn't exist
+            const conversationsList = document.querySelector('.conversations');
+            if (conversationsList) {
+                const newConversation = document.createElement('div');
+                newConversation.className = 'conversation';
+                newConversation.dataset.conversation = memberData.name.toLowerCase().replace(/\s+/g, '-');
+                newConversation.innerHTML = `
+                    <div class="conversation-avatar">
+                        ${memberData.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-name">${memberData.name}</div>
+                        <div class="conversation-preview">Start a new conversation</div>
+                    </div>
+                    <div class="conversation-time">Just now</div>
+                `;
+                conversationsList.prepend(newConversation);
+                conversation = newConversation;
+                
+                // Add click handler for the new conversation
+                conversation.addEventListener('click', function() {
+                    // Remove active class from all conversations
+                    document.querySelectorAll('.conversation').forEach(conv => {
+                        conv.classList.remove('active');
+                    });
+                    // Add active class to clicked conversation
+                    this.classList.add('active');
+                    // Update chat header
+                    updateChatHeader(memberData);
+                });
+            }
+        } else {
+            // If conversation exists, make it active
+            document.querySelectorAll('.conversation').forEach(conv => {
+                conv.classList.remove('active');
+            });
+            conversation.classList.add('active');
+        }
+        
+        // Update chat header
+        updateChatHeader(memberData);
+        
+        // Show messages section and hide others
+        document.querySelectorAll('main > div').forEach(section => {
+            section.style.display = 'none';
+        });
+        document.getElementById('messages-section').style.display = 'block';
+        
+        // Update active menu item
+        document.querySelectorAll('#sidebar li').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.getElementById('messages-link').parentElement.classList.add('active');
+        
+        // Focus message input
+        const messageInput = document.querySelector('.chat-input input');
+        if (messageInput) {
+            messageInput.focus();
+        }
+    }
+    
+    // Function to update chat header with member info
+    function updateChatHeader(memberData) {
+        const chatHeader = document.querySelector('.chat-header');
+        if (chatHeader) {
+            chatHeader.innerHTML = `
+                <div class="chat-user">
+                    <div class="chat-avatar">
+                        ${memberData.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="chat-user-info">
+                        <h3>${memberData.name}</h3>
+                        <p class="chat-status">
+                            <span class="status-dot ${memberData.status}"></span>
+                            ${memberData.status.charAt(0).toUpperCase() + memberData.status.slice(1)}
+                        </p>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn"><i class='bx bx-phone-call'></i></button>
+                    <button class="chat-action-btn"><i class='bx bx-dots-vertical-rounded'></i></button>
+                </div>
+            `;
+        }
+        
+        // Update chat messages
+        const chatMessages = document.querySelector('.chat-messages');
+        if (chatMessages) {
+            chatMessages.innerHTML = `
+                <div class="chat-start-message">
+                    <p>Start a new conversation with ${memberData.name}</p>
+                    <small>${memberData.role}</small>
+                </div>
+            `;
+        }
+    }
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize search
+        setupTeamSearch();
+        
+        // Setup chat links
+        setupChatLinks();
+        
+        // Handle export button
+        const exportBtn = document.querySelector('.btn-download');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                exportTeamToExcel();
+            });
+        }
+        
+        // Initialize settings page
+        initSettingsPage();
+        
+        // Check if we're coming from team member click
+        const selectedMember = sessionStorage.getItem('selectedMember');
+        if (selectedMember && window.location.hash === '#messages') {
+            const memberData = JSON.parse(selectedMember);
+            openChatWithMember(memberData);
+            sessionStorage.removeItem('selectedMember');
+        }
+    });
+    
+    // Initialize settings page functionality
+    function initSettingsPage() {
+        // Tab switching
+        const menuItems = document.querySelectorAll('.settings-menu-item');
+        const tabs = document.querySelectorAll('.settings-tab');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all menu items and tabs
+                menuItems.forEach(i => i.classList.remove('active'));
+                tabs.forEach(tab => tab.classList.remove('active'));
+                
+                // Add active class to clicked menu item
+                this.classList.add('active');
+                
+                // Show corresponding tab
+                const tabId = this.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Theme selection
+        const themeOptions = document.querySelectorAll('.theme-option');
+        themeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                themeOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                const theme = this.getAttribute('data-theme');
+                if (theme === 'dark') {
+                    document.body.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else if (theme === 'light') {
+                    document.body.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    // System theme
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        document.body.classList.add('dark');
+                    } else {
+                        document.body.classList.remove('dark');
+                    }
+                    localStorage.setItem('theme', 'system');
+                }
+            });
+        });
+        
+        // Font size slider
+        const fontSizeSlider = document.getElementById('font-size');
+        const fontSizeValue = document.querySelector('.range-value');
+        
+        if (fontSizeSlider && fontSizeValue) {
+            // Update display value
+            fontSizeValue.textContent = `${fontSizeSlider.value}px`;
+            
+            // Update on input
+            fontSizeSlider.addEventListener('input', function() {
+                const size = this.value;
+                fontSizeValue.textContent = `${size}px`;
+                document.documentElement.style.setProperty('--base-font-size', `${size}px`);
+                localStorage.setItem('fontSize', size);
+            });
+        }
+        
+        // Density options
+        const densityOptions = document.querySelectorAll('.density-option');
+        densityOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                densityOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                const density = this.getAttribute('data-density');
+                document.body.setAttribute('data-density', density);
+                localStorage.setItem('density', density);
+            });
+        });
+        
+        // Load saved settings
+        loadSettings();
+    }
+    
+    // Load saved settings from localStorage
+    function loadSettings() {
+        // Load theme
+        const savedTheme = localStorage.getItem('theme') || 'system';
+        if (savedTheme === 'dark' || (savedTheme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark');
+        } else {
+            document.body.classList.remove('dark');
+        }
+        
+        // Highlight selected theme option
+        const themeOption = document.querySelector(`.theme-option[data-theme="${savedTheme}"]`);
+        if (themeOption) {
+            themeOption.classList.add('active');
+        } else {
+            document.querySelector('.theme-option[data-theme="system"]').classList.add('active');
+        }
+        
+        // Load font size
+        const savedFontSize = localStorage.getItem('fontSize') || '16';
+        const fontSizeSlider = document.getElementById('font-size');
+        if (fontSizeSlider) {
+            fontSizeSlider.value = savedFontSize;
+            document.documentElement.style.setProperty('--base-font-size', `${savedFontSize}px`);
+            document.querySelector('.range-value').textContent = `${savedFontSize}px`;
+        }
+        
+        // Load density
+        const savedDensity = localStorage.getItem('density') || 'comfortable';
+        document.body.setAttribute('data-density', savedDensity);
+        const densityOption = document.querySelector(`.density-option[data-density="${savedDensity}"]`);
+        if (densityOption) {
+            densityOption.classList.add('active');
+        }
+    }
+
+    // Hide all dropdowns if clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.assignee-cell')) {
     closeAllDropdowns();
   }
 });
@@ -1010,22 +1438,5 @@ function closeComplaintInfoModal() {
   document.body.style.overflow = '';
 }
 </script>
-More actions
-<!-- Custom Confirmation Dialog -->
-<div id="confirmation-dialog" class="confirmation-dialog">
-    <div class="confirmation-content">
-        <div class="confirmation-header">Add commentMore actions
-            <h3>Confirm Action</h3>
-            <button class="close-confirmation">&times;</button>
-        </div>
-        <div class="confirmation-body">
-            <i class='bx bx-check-circle'></i>
-            <p>Are you sure you want to mark this complaint as completed?</p>
-        </div>
-        <div class="confirmation-footer">
-            <button class="btn-cancel">Cancel</button>
-            <button class="btn-confirm">Confirm</button>
-        </div>
-    </div>
-</div>
+
 </html>
