@@ -1,3 +1,13 @@
+// Set default theme to light mode if no preference is saved
+if (!localStorage.getItem('theme')) {
+    document.body.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+} else if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark');
+} else {
+    document.body.classList.remove('dark');
+}
+
 const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 
 allSideMenu.forEach(item=> {
@@ -256,10 +266,89 @@ function changeStatus(btn, status) {
     }
 }
 
+// Function to handle image upload
+function handleImageUpload(file) {
+    if (!file) return;
+    
+    // Check if the file is an image
+    if (!file.type.match('image.*')) {
+        alert('Please select an image file (JPEG, PNG, GIF, etc.)');
+        return;
+    }
+    
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
+        return;
+    }
+    
+    // Create a FileReader to read the image file
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        // Create a new message element for the image
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message sent';
+        
+        // Create image element
+        const imgElement = document.createElement('img');
+        imgElement.src = e.target.result;
+        imgElement.alt = 'Uploaded image';
+        imgElement.style.maxWidth = '200px';
+        imgElement.style.borderRadius = '8px';
+        imgElement.style.marginTop = '5px';
+        
+        // Add timestamp
+        const timeElement = document.createElement('span');
+        timeElement.className = 'message-time';
+        timeElement.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Append elements
+        messageElement.appendChild(imgElement);
+        messageElement.appendChild(timeElement);
+        
+        // Add to chat messages
+        const chatMessages = document.querySelector('.chat-messages');
+        if (chatMessages) {
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Here you would typically send the image to your server
+        // For now, we'll just log it
+        console.log('Image uploaded:', file.name);
+        
+        // You can send the image to your server here
+        // Example: socket.emit('sendMessage', { type: 'image', data: e.target.result });
+    };
+    
+    // Read the image file as a data URL
+    reader.readAsDataURL(file);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
 	const conversations = document.querySelectorAll('.conversation');
 	const chatArea = document.querySelector('.chat-area');
 	const chatMessages = document.querySelector('.chat-messages');
+	const attachmentBtn = document.getElementById('attachment-btn');
+    const imageUpload = document.getElementById('image-upload');
+    
+    // Handle attachment button click
+    if (attachmentBtn && imageUpload) {
+        attachmentBtn.addEventListener('click', function() {
+            imageUpload.click();
+        });
+        
+        // Handle file selection
+        imageUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleImageUpload(file);
+                // Reset the input to allow selecting the same file again
+                this.value = '';
+            }
+        });
+    }
 	const chatInput = document.getElementById('msg_input');
 	const sendBtn = document.querySelector('.send-btn');
 	const messagesLink = document.getElementById('messages-link');
@@ -271,33 +360,43 @@ document.addEventListener('DOMContentLoaded', function() {
 	const messageSearchInput = document.getElementById('message-search-input');
 	if (messageSearchInput) {
 		messageSearchInput.addEventListener('input', function() {
-		const searchTerm = this.value.toLowerCase();
-		let found = false;
-		conversations.forEach(conv => {
-			const name = conv.querySelector('.conversation-info .conversation-name');
-			if (name) {
-				const match = name.textContent.toLowerCase().includes(searchTerm);
-				conv.style.display = match || searchTerm === '' ? '' : 'none';
-				if (match && searchTerm !== '') {
-					conv.classList.add('active');
-					if (chatArea) {
-						chatArea.style.display = '';
+			const searchTerm = this.value.toLowerCase().trim();
+			let found = false;
+			
+			conversations.forEach(conv => {
+				const name = conv.querySelector('.conversation-info .conversation-name');
+				if (name) {
+					const match = name.textContent.toLowerCase().includes(searchTerm);
+					// Only update display, don't modify active state here
+					conv.style.display = match || searchTerm === '' ? '' : 'none';
+					if (match) {
+						found = true;
 					}
-					found = true;
+				}
+			});
+
+			// Show/hide chat area based on search results
+			if (chatArea) {
+				if (searchTerm === '') {
+					// If search is empty, show chat area if there's an active conversation
+					const activeConv = document.querySelector('.conversation.active');
+					chatArea.style.display = activeConv ? '' : 'none';
 				} else {
-					conv.classList.remove('active');
+					// If searching, only show chat area if a conversation is selected
+					chatArea.style.display = found ? '' : 'none';
 				}
 			}
 		});
-		// إذا كان البحث فارغ أظهر جميع المحادثات فقط (لا تخفي أو تظهر chatArea هنا)
-		if (searchTerm === '' && chatArea) {
-			// لا تغير حالة chatArea هنا حتى لا تتعارض مع النقر اليدوي
+
+		// Add click handler to the search icon to clear search
+		const searchIcon = messageSearchInput.nextElementSibling;
+		if (searchIcon && searchIcon.classList.contains('bx-search')) {
+			searchIcon.addEventListener('click', function() {
+				messageSearchInput.value = '';
+				const event = new Event('input', { bubbles: true });
+				messageSearchInput.dispatchEvent(event);
+			});
 		}
-		// إذا لم يوجد أي تطابق أخفِ الرسائل
-		if (!found && chatArea && searchTerm !== '') {
-			chatArea.style.display = 'none';
-		}
-	});
 	}
 
 	// Show messages section when clicking on Messages link
@@ -1447,37 +1546,66 @@ async function DisplayMessages(){
 }
 
 
-async function renderMessages(message){
-	const chatMessages = document.querySelector('.chat-messages');
-	chatMessages.innerHTML = "";
+async function renderMessages(messages) {
+    const chatMessages = document.querySelector('.chat-messages');
+    chatMessages.innerHTML = "";
 
-	message.forEach(msg => {
-		const dateOnly =  new Date(msg.createdAt).toLocaleTimeString([], {
-			hour: '2-digit',
-			minute: '2-digit',
-			hour12: true // حطها true إذا حبيت صيغة 12 ساعة
-		  });
-		const messageElement = document.createElement('div');
-		if(!msg.sender){
-			messageElement.className = 'message received';
-			messageElement.innerHTML = `
-				<div class="message-content">${msg.message}</div>
-				<div class="message-time">${dateOnly}</div>
-			`;
-			chatMessages.appendChild(messageElement);
-			chatMessages.scrollTop = chatMessages.scrollHeight;
+    messages.forEach(msg => {
+        const dateOnly = new Date(msg.createdAt).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
 
-			}else{
-			messageElement.className = 'message sent';
-			messageElement.innerHTML = `
-				<div class="message-content">${msg.message}</div>
-				<div class="message-time">${dateOnly}</div>
-			`;
-			chatMessages.appendChild(messageElement);
-			chatMessages.scrollTop = chatMessages.scrollHeight;
-		
-		}	
-	})
+        const messageElement = document.createElement('div');
+        const isSentMessage = !!msg.sender;
+        
+        // Set base message class
+        messageElement.className = `message ${isSentMessage ? 'sent' : 'received'}`;
+        
+        // Determine message size based on content length
+        const messageLength = msg.message ? msg.message.length : 0;
+        let sizeClass = 'medium'; // Default size
+        
+        if (messageLength > 0) {
+            if (messageLength < 30) {
+                sizeClass = 'small';
+            } else if (messageLength > 150) {
+                sizeClass = 'large';
+            }
+        }
+        
+        // Check if message contains an image (you might need to adjust this based on your data structure)
+        const isImage = msg.imageUrl || (msg.message && msg.message.match(/\.(jpeg|jpg|gif|png)$/));
+        
+        if (isImage) {
+            // Handle image message
+            const imageUrl = msg.imageUrl || msg.message;
+            messageElement.innerHTML = `
+                <div class="message-image">
+                    <img src="${imageUrl}" alt="Sent image" onerror="this.parentElement.innerHTML='<div class=\'message-content error\'>Image failed to load</div>'" />
+                </div>
+                <div class="message-time">${dateOnly}</div>
+            `;
+        } else {
+            // Handle text message
+            messageElement.innerHTML = `
+                <div class="message-content ${sizeClass}">${msg.message || ''}</div>
+                <div class="message-time">${dateOnly}</div>
+            `;
+        }
+        
+        // Add to DOM
+        chatMessages.appendChild(messageElement);
+        
+        // Trigger animation
+        setTimeout(() => {
+            messageElement.classList.add('show');
+        }, 10);
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
 }
 
 //Display information complaint
