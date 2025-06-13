@@ -16,10 +16,11 @@ document.querySelector('#search-btn').onclick = () =>{
 };
 
 document.querySelector('#login-btn').onclick = () =>{
-   loginForm.classList.toggle('active');
    navbar.classList.remove('active');
    searchForm.classList.remove('active'); 
+   window.location.href = "/Home/LoginAdmin";
 };
+
 
 document.querySelector('#info-btn').onclick = () =>{
    contactInfo.classList.add('active');

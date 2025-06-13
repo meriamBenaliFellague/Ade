@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/Home/register',express.static(path.join(__dirname, "public/loginClient")));
 app.use('/Home/LoginAdmin/Admin',express.static(path.join(__dirname, "public/AdminDashoard")));
-app.use('/Home',express.static(path.join(__dirname, "public/HomePage")));
+app.use('/Home',express.static(path.join(__dirname, "public/home-page")));
 app.use('/Home/LoginAdmin',express.static(path.join(__dirname, "public/loginAdmin")));
 app.use('/Home/LoginAdmin/Dashboard',express.static(path.join(__dirname, "public/AdminDashoard")));
 app.use('/Home/LoginLeader/Dashboard',express.static(path.join(__dirname, "public/RespDashoard")));
