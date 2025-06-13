@@ -11,8 +11,6 @@ const multer = require('multer');
 const storage = multer.memoryStorage(); // باش نخلي الصورة في الذاكرة
 const upload = multer({ storage: storage });
 
-const crypto = require("crypto");
-const bcrypt = require('bcrypt');
 
 const SendEmailFunction = require("../utils/SendEmail");
 const { Console } = require("console");
