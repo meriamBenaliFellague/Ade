@@ -1897,10 +1897,10 @@ function showNotification(type, title, message) {
     }
 }
 
-/**
+/*
  * Shows detailed information about a complaint in a modal
  * @param {string} complaintId - The unique identifier of the complaint to display
- */
+ 
 function showComplaintInfo(complaintId) {
     try {
         // In a real application, you would fetch the complaint details from your API
@@ -1979,7 +1979,7 @@ function showComplaintInfo(complaintId) {
         console.error('Error showing complaint info:', error);
         showNotification('error', 'خطأ', 'حدث خطأ أثناء تحميل تفاصيل الشكوى');
     }
-}
+} */
 
 /**
  * Closes the complaint details modal
