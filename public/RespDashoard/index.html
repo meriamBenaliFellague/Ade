@@ -160,8 +160,14 @@
 							
 						</div>
 						<form class="chat-input" id="chat-form">
-							<input id="msg_input" type="text" placeholder="Type a message..." autocomplete="off" required />
-							<button class="send-btn" type="submit">
+							<div class="input-wrapper">
+								<button type="button" class="attachment-btn" id="attachment-btn" aria-label="Attach photo">
+									<i class="bx bx-image"></i>
+								</button>
+								<input type="file" id="image-upload" accept="image/*" style="display: none;" />
+								<input id="msg_input" type="text" placeholder="Type a message..." autocomplete="off" required />
+							</div>
+							<button class="send-btn" type="submit" aria-label="Send message">
 								<i class="bx bx-send"></i>
 							</button>
 						</form>

@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<title>Admin-Dashboard</title>
 	
 </head>
@@ -133,19 +135,89 @@
 									<i class='bx bx-user'></i>
 								</div>
 								<div class="chat-info">
-									<div class="chat-name"></div>
-									<div class="chat-status"></div>
+									<div class="chat-name">Admin</div>
+									<div class="chat-status">online</div>
 								</div>
 							</div>
+				
 						</div>
 						<div id="msg-container" class="chat-messages">
 						</div>
 						<form action="" id="msg-form" class="chat-input">
-							<input type="text" id="msg-input" placeholder="Type a message...">
-							<button type="submit" class="send-btn">
-								<i class='bx bx-send'></i>
-						    </button>
-						</form>
+                            <div class="chat-input-wrapper">
+                                <div class="image-upload-btn">
+                                    <button type="button" class="chat-action-btn" title="Add photo" id="image-upload-btn">
+                                        <i class='bx bx-image-add'></i>
+                                    </button>
+                                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                                </div>
+                                <input type="text" id="msg-input" placeholder="Type a message...">
+                            </div>
+                            <button type="submit" class="send-btn" title="Send">
+                                <i class='bx bx-send'></i>
+                            </button>
+                        </form>
+                        
+                        <script>
+                            // Handle image upload button click
+                            document.getElementById('image-upload-btn').addEventListener('click', function() {
+                                document.getElementById('image-upload').click();
+                            });
+
+                            // Handle file selection
+                            document.getElementById('image-upload').addEventListener('change', function(e) {
+                                if (e.target.files && e.target.files[0]) {
+                                    const file = e.target.files[0];
+                                    // Here you can handle the file upload
+                                    console.log('Selected file:', file.name);
+                                    
+                                    // Example: Show a preview or upload the file
+                                    // uploadImage(file);
+                                    
+                                    // Reset the input to allow selecting the same file again
+                                    e.target.value = '';
+                                }
+                            });
+
+                            // Function to handle image upload (you can implement this as needed)
+                            function uploadImage(file) {
+                                const formData = new FormData();
+                                formData.append('image', file);
+                                
+                                // Example: Send the image to your server
+                                /*
+                                fetch('/api/upload', {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Upload successful:', data);
+                                    // Handle successful upload (e.g., add image to chat)
+                                })
+                                .catch(error => {
+                                    console.error('Upload error:', error);
+                                    // Handle upload error
+                                });
+                                */
+                            }
+                        </script>
+                        
+                        <script>
+                            // Add scroll effect to chat header
+                            const chatMessages = document.querySelector('.chat-messages');
+                            const chatHeader = document.querySelector('.chat-header');
+                            
+                            if (chatMessages && chatHeader) {
+                                chatMessages.addEventListener('scroll', () => {
+                                    if (chatMessages.scrollTop > 0) {
+                                        chatHeader.classList.add('scrolled');
+                                    } else {
+                                        chatHeader.classList.remove('scrolled');
+                                    }
+                                });
+                            }
+                        </script>
 					</div>
 				</div>
 			</div>
@@ -317,6 +389,154 @@
             <span class="text">Download PDF</span>
         </a>
     </div>
+    
+    <!-- Analytics Content -->
+    <div class="analytics-content">
+        <!-- Reclamation Status Section -->
+        <div class="analytics-card">
+            <div class="card-header">
+                <h3>Reclamation Status</h3>
+                <div class="time-filters">
+                    <button class="time-filter active" data-period="week">Week</button>
+                    <button class="time-filter" data-period="month">Month</button>
+                    <button class="time-filter" data-period="year">Year</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="reclamationChart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #4CAF50;"></span>
+                        <span class="legend-label">Completed</span>
+                        <span class="legend-value">45%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #2196F3;"></span>
+                        <span class="legend-label">In Progress</span>
+                        <span class="legend-value">30%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #FFC107;"></span>
+                        <span class="legend-label">Pending</span>
+                        <span class="legend-value">15%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #F44336;"></span>
+                        <span class="legend-label">Reopened</span>
+                        <span class="legend-value">10%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Section -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #E3F2FD;">
+                    <i class='bx bx-time' style="color: #1976D2;"></i>
+                </div>
+                <div class="stat-details">
+                    <h4>Avg. Response Time</h4>
+                    <h2>2h 30m</h2>
+                    <span class="stat-change positive">
+                        <i class='bx bx-up-arrow-alt'></i> 12% from last week
+                    </span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #E8F5E9;">
+                    <i class='bx bx-check-circle' style="color: #4CAF50;"></i>
+                </div>
+                <div class="stat-details">
+                    <h4>Resolution Rate</h4>
+                    <h2>85%</h2>
+                    <span class="stat-change positive">
+                        <i class='bx bx-up-arrow-alt'></i> 5% from last week
+                    </span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #F3E5F5;">
+                    <i class='bx bx-user' style="color: #9C27B0;"></i>
+                </div>
+                <div class="stat-details">
+                    <h4>Active Users</h4>
+                    <h2>1,234</h2>
+                    <span class="stat-change negative">
+                        <i class='bx bx-down-arrow-alt'></i> 3% from last week
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Monthly Reclamation Trend -->
+    <div class="analytics-card full-width">
+        <div class="card-header">
+            <h3>Monthly Reclamation Trend</h3>
+            <div class="view-options">
+                <button class="view-option active" data-view="trend">Trend</button>
+                <button class="view-option" data-view="comparison">Comparison</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="monthlyTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Category Distribution & Priority Levels -->
+    <div class="analytics-grid">
+        <!-- Category Distribution -->
+        <div class="analytics-card">
+            <div class="card-header">
+                <h3>Category Distribution</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Priority Levels -->
+        <div class="analytics-card">
+            <div class="card-header">
+                <h3>Priority Levels</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="priorityChart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #00B4D8;"></span>
+                        <span class="legend-label">Low</span>
+                        <span class="legend-value">25%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #4361EE;"></span>
+                        <span class="legend-label">Medium</span>
+                        <span class="legend-value">35%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #FFD60A;"></span>
+                        <span class="legend-label">High</span>
+                        <span class="legend-value">25%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #FF6D6A;"></span>
+                        <span class="legend-label">Critical</span>
+                        <span class="legend-value">15%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <ul class="box-info">
         <li>
             <i class='bx bxs-calendar-check' ></i>
@@ -921,6 +1141,607 @@ document.getElementById('close-message-modal').onclick = function() {
 };
 </script>
 </body>
+
+<script>
+// Initialize donut chart
+document.addEventListener('DOMContentLoaded', function() {
+    // Chart data
+    const chartData = {
+        labels: ['Completed', 'In Progress', 'Pending', 'Reopened'],
+        datasets: [{
+            data: [45, 30, 15, 10],
+            backgroundColor: [
+                '#4CAF50', // Green
+                '#2196F3', // Blue
+                '#FFC107', // Yellow
+                '#F44336'  // Red
+            ],
+            borderWidth: 0,
+            cutout: '70%',
+            spacing: 5
+        }]
+    };
+
+    // Chart configuration
+    const config = {
+        type: 'doughnut',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            return `${label}: ${value}%`;
+                        }
+                    }
+                }
+            },
+            cutout: '70%',
+            radius: '90%'
+        }
+    };
+
+    // Initialize chart
+    const ctx = document.getElementById('reclamationChart').getContext('2d');
+    const reclamationChart = new Chart(ctx, config);
+
+    // Time filter functionality
+    const timeFilters = document.querySelectorAll('.time-filter');
+    timeFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            // Remove active class from all filters
+            timeFilters.forEach(f => f.classList.remove('active'));
+            // Add active class to clicked filter
+            this.classList.add('active');
+            
+            // Here you would typically fetch new data based on the selected time period
+            // For now, we'll just log the selected period
+            const period = this.getAttribute('data-period');
+            console.log('Selected period:', period);
+            
+            // Example of how you might update the chart with new data
+            // updateChartData(period);
+        });
+    });
+
+    // Function to update chart data (example)
+    function updateChartData(period) {
+        // This is where you would fetch new data based on the selected period
+        // For demonstration, we'll just rotate the data
+        const newData = [...chartData.datasets[0].data];
+        const firstItem = newData.shift();
+        newData.push(firstItem);
+        
+        reclamationChart.data.datasets[0].data = newData;
+        reclamationChart.update();
+        
+        // Update legend values
+        document.querySelectorAll('.legend-item').forEach((item, index) => {
+            item.querySelector('.legend-value').textContent = `${newData[index]}%`;
+        });
+    }
+});
+</script>
+
+<script>
+// Initialize monthly trend chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('monthlyTrendChart').getContext('2d');
+    
+    // Sample data for the trend chart (Jan-Dec)
+    const monthlyData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            label: 'Reclamations',
+            data: [45, 60, 55, 75, 80, 65, 70, 85, 90, 80, 75, 95],
+            borderColor: '#3C91E6',
+            backgroundColor: 'rgba(60, 145, 230, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#3C91E6',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+        }]
+    };
+
+    // Chart configuration
+    const config = {
+        type: 'line',
+        data: monthlyData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 14,
+                        weight: '500'
+                    },
+                    bodyFont: {
+                        size: 14
+                    },
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return `Reclamations: ${context.raw}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 12
+                        },
+                        callback: function(value) {
+                            return value;
+                        }
+                    },
+                    max: 100,
+                    min: 0,
+                    stepSize: 20
+                }
+            },
+            elements: {
+                line: {
+                    borderWidth: 2
+                }
+            }
+        }
+    };
+
+    // Initialize the chart
+    const monthlyTrendChart = new Chart(ctx, config);
+
+    // Toggle between trend and comparison views
+    const viewOptions = document.querySelectorAll('.view-option');
+    viewOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove active class from all options
+            viewOptions.forEach(opt => opt.classList.remove('active'));
+            // Add active class to clicked option
+            this.classList.add('active');
+            
+            const viewType = this.getAttribute('data-view');
+            
+            // Here you would typically fetch new data based on the selected view
+            // For now, we'll just log the selected view
+            console.log('Selected view:', viewType);
+            
+            // Example of how you might update the chart with new data
+            // updateChartView(viewType);
+        });
+    });
+    
+    // Function to update chart view (example)
+    function updateChartView(viewType) {
+        // This is where you would fetch new data based on the selected view
+        // For demonstration, we'll just modify the existing data
+        if (viewType === 'comparison') {
+            // Add a second dataset for comparison
+            monthlyTrendChart.data.datasets = [
+                {
+                    ...monthlyTrendChart.data.datasets[0],
+                    label: 'Current Year',
+                    borderColor: '#3C91E6',
+                    backgroundColor: 'rgba(60, 145, 230, 0.1)'
+                },
+                {
+                    label: 'Previous Year',
+                    data: [35, 50, 45, 65, 70, 55, 60, 75, 80, 70, 65, 85],
+                    borderColor: '#9C27B0',
+                    backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#9C27B0',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }
+            ];
+        } else {
+            // Reset to single dataset for trend view
+            monthlyTrendChart.data.datasets = [monthlyData.datasets[0]];
+        }
+        
+        monthlyTrendChart.update();
+    }
+});
+</script>
+
+<script>
+// Initialize Category Distribution and Priority Levels charts
+document.addEventListener('DOMContentLoaded', function() {
+    // Category Distribution - Bar Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    const categoryChart = new Chart(categoryCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Technical', 'Billing', 'Account', 'General', 'Other'],
+            datasets: [{
+                label: 'Tickets',
+                data: [35, 28, 20, 15, 10],
+                backgroundColor: [
+                    'rgba(66, 135, 245, 0.8)',
+                    'rgba(102, 187, 106, 0.8)',
+                    'rgba(255, 167, 38, 0.8)',
+                    'rgba(156, 39, 176, 0.8)',
+                    'rgba(84, 110, 122, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(66, 135, 245, 1)',
+                    'rgba(102, 187, 106, 1)',
+                    'rgba(255, 167, 38, 1)',
+                    'rgba(156, 39, 176, 1)',
+                    'rgba(84, 110, 122, 1)'
+                ],
+                borderWidth: 1,
+                borderRadius: 4,
+                barThickness: 20,
+                maxBarThickness: 30
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 13,
+                        weight: '500'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    padding: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.raw} tickets`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 11
+                        },
+                        stepSize: 10,
+                        maxTicksLimit: 6
+                    }
+                }
+            }
+        }
+    });
+
+
+    // Priority Levels - Polar Area Chart
+    const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+    const priorityChart = new Chart(priorityCtx, {
+        type: 'polarArea',
+        data: {
+            labels: ['Low', 'Medium', 'High', 'Critical'],
+            datasets: [{
+                data: [25, 35, 25, 15],
+                backgroundColor: [
+                    'rgba(0, 180, 216, 0.8)',
+                    'rgba(67, 97, 238, 0.8)',
+                    'rgba(255, 214, 10, 0.8)',
+                    'rgba(255, 109, 106, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(0, 180, 216, 1)',
+                    'rgba(67, 97, 238, 1)',
+                    'rgba(255, 214, 10, 1)',
+                    'rgba(255, 109, 106, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 13,
+                        weight: '500'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    padding: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw}%`;
+                        }
+                    }
+                }
+            },
+            scale: {
+                display: false
+            },
+            elements: {
+                arc: {
+                    borderWidth: 1
+                }
+            }
+        }
+    });
+
+    // Update legend values when chart data changes
+    function updatePriorityLegend(chart) {
+        const data = chart.data.datasets[0].data;
+        const total = data.reduce((a, b) => a + b, 0);
+        
+        document.querySelectorAll('#priorityChart ~ .chart-legend .legend-value').forEach((elem, index) => {
+            const value = data[index] || 0;
+            const percentage = Math.round((value / total) * 100);
+            elem.textContent = `${percentage}%`;
+        });
+    }
+    
+    // Initial legend update
+    updatePriorityLegend(priorityChart);
+});
+</script>
+
+<script>
+// Enhanced number animation with better debugging
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing number animations...');
+    
+    // Simple animation function with easing
+    function animateValue(element, start, end, duration) {
+        // Skip if already animated
+        if (element.classList.contains('animated')) {
+            console.log('Element already animated, skipping:', element);
+            return;
+        }
+        
+        element.classList.add('animating');
+        console.log('Starting animation for element:', element, 'from', start, 'to', end);
+        
+        const range = end - start;
+        const startTime = performance.now();
+        const isPercentage = element.getAttribute('data-original-text')?.includes('%') || false;
+        
+        function updateNumber(timestamp) {
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Ease out function for smoother end
+            const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+            const current = Math.floor(start + (range * easeOutCubic));
+            
+            // Update the element's text
+            element.textContent = isPercentage ? 
+                current + '%' : 
+                current.toLocaleString();
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateNumber);
+            } else {
+                // Animation complete
+                element.textContent = isPercentage ? 
+                    end + '%' : 
+                    end.toLocaleString();
+                element.classList.remove('animating');
+                element.classList.add('animated');
+                console.log('Animation complete for:', element);
+            }
+        }
+        
+        requestAnimationFrame(updateNumber);
+    }
+    
+    // Setup Intersection Observer with better options
+    const observer = new IntersectionObserver((entries, observer) => {
+        console.log('Intersection observer triggered, entries:', entries.length);
+        
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                console.log('Element in view:', element);
+                
+                // Get the target number from data-count or parse from text
+                let targetNumber = parseFloat(element.getAttribute('data-count'));
+                if (isNaN(targetNumber)) {
+                    const text = element.getAttribute('data-original-text') || element.textContent;
+                    targetNumber = parseFloat(text.replace(/[^0-9.]/g, ''));
+                    element.setAttribute('data-count', targetNumber);
+                }
+                
+                if (!isNaN(targetNumber)) {
+                    console.log('Animating element to:', targetNumber);
+                    animateValue(element, 0, targetNumber, 2000);
+                    observer.unobserve(element);
+                } else {
+                    console.warn('Invalid number for element:', element);
+                }
+            }
+        });
+    }, {
+        root: null,
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    // Find and initialize all number elements
+    function initializeNumberElements() {
+        console.log('Initializing number elements...');
+        
+        // Select all potential number elements
+        const numberElements = document.querySelectorAll([
+            '.stat-number',
+            '.legend-percentage',
+            '.stat-details h2',
+            '.legend-value',
+            '.stat-details p span',
+            '.analytics-card h3 span',
+            '.analytics-card .number'
+        ].join(','));
+        
+        console.log('Found number elements:', numberElements.length);
+        
+        numberElements.forEach(el => {
+            // Skip if already processed
+            if (el.hasAttribute('data-initialized')) return;
+            
+            // Get the original text and clean it
+            const originalText = el.textContent.trim();
+            const numberMatch = originalText.match(/[0-9.,]+/);
+            
+            if (numberMatch) {
+                const number = parseFloat(numberMatch[0].replace(/,/g, ''));
+                if (!isNaN(number)) {
+                    console.log('Found number element:', el, 'with value:', number);
+                    
+                    // Store original text and number
+                    el.setAttribute('data-original-text', originalText);
+                    el.setAttribute('data-count', number);
+                    
+                    // Set initial value to 0
+                    if (originalText.includes('%')) {
+                        el.textContent = '0%';
+                    } else {
+                        el.textContent = '0';
+                    }
+                    
+                    // Start observing
+                    observer.observe(el);
+                    el.setAttribute('data-initialized', 'true');
+                }
+            }
+        });
+    }
+    
+    // Initialize on load
+    initializeNumberElements();
+    
+    // Re-initialize when content might change (e.g., after AJAX)
+    window.addEventListener('resize', () => {
+        // Recheck all observed elements on resize
+        document.querySelectorAll('[data-initialized]').forEach(el => {
+            observer.unobserve(el);
+            observer.observe(el);
+        });    
+    });
+    
+    // Debug button - only in development
+    const analyticsSection = document.querySelector('.analytics');
+    if (analyticsSection) {
+        const debugButton = document.createElement('button');
+        debugButton.textContent = 'Debug Animation';
+        debugButton.className = 'debug-button';
+        
+        // Position the button in the top-right of the analytics section
+        debugButton.style.position = 'absolute';
+        debugButton.style.top = '20px';
+        debugButton.style.right = '20px';
+        debugButton.style.zIndex = '10';
+        
+        debugButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('--- DEBUG INFO ---');
+            console.log('Analytics section position:', analyticsSection.getBoundingClientRect());
+            console.log('Number elements found:', document.querySelectorAll('[data-initialized]').length);
+            
+            // Force re-animate all numbers in analytics section
+            analyticsSection.querySelectorAll('[data-initialized]').forEach(el => {
+                const originalText = el.getAttribute('data-original-text');
+                const numberMatch = originalText ? originalText.match(/[0-9.,]+/) : null;
+                
+                if (numberMatch) {
+                    el.textContent = originalText.includes('%') ? '0%' : '0';
+                    el.classList.remove('animated', 'animating');
+                    observer.unobserve(el);
+                    observer.observe(el);
+                }
+            });
+            
+            console.log('Forced re-animation of all numbers in analytics section');
+        };
+        
+        // Add debug button to the analytics section header
+        const analyticsHeader = analyticsSection.querySelector('.card-header');
+        if (analyticsHeader) {
+            analyticsHeader.style.position = 'relative';
+            analyticsHeader.appendChild(debugButton);
+        } else {
+            analyticsSection.insertBefore(debugButton, analyticsSection.firstChild);
+        }
+    }
+});
+</script>
+
 <style>
   .assignee-group-dropdown {
     padding: 5px 10px;
