@@ -971,30 +971,968 @@ body {
 	cursor: pointer;
 }
 
+#content main .table-data {
+    width: 100%;
+    overflow: hidden;
+}
+
 #content main .table-data .order {
-	flex-grow: 1;
-	flex-basis: 500px;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    background: var(--light);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
+
+#content main .table-data .order .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+#content main .table-data .order .head::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    transform: scaleX(0.3);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+#content main .table-data .order .head:hover::after {
+    transform: scaleX(1);
+}
+
+#content main .table-data .order .head h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    position: relative;
+    padding-left: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+#content main .table-data .order .head h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 25px;
+    background: linear-gradient(to bottom, #4facfe, #00f2fe);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+#content main .table-data .order .head h3 {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#content main .table-data .order .head h3:hover {
+    color: #1a237e;
+    transform: translateX(5px);
+}
+
+/* Dark mode header hover effect */
+body.dark #content main .table-data .order .head h3 {
+    color: #e0e0e0;
+}
+
+body.dark #content main .table-data .order .head h3:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
+    transform: translateX(5px);
+}
+
+body.dark #content main .table-data .order .head h3::before {
+    background: linear-gradient(to bottom, #4facfe, #3a8cff);
+}
+
+body.dark #content main .table-data .order .head h3:hover::before {
+    height: 30px;
+    background: linear-gradient(to bottom, #3a8cff, #4facfe);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+}
+
+#content main .table-data .order .head h3:hover::before {
+    height: 30px;
+    background: linear-gradient(to bottom, #00f2fe, #4facfe);
+}
+
+/* Modern Table Actions */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Dark Mode Styles */
+body.dark #content main .table-data .order {
+    background: #1e1e2d;
+    border: 1px solid #2d2d3d;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+body.dark #content main .table-data .order .head {
+    background: #2a2a3c;
+    border-bottom: 1px solid #3a3a4d;
+}
+
+body.dark #content main .table-data .order h3 {
+    color: #e0e0e0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+body.dark #content main .table-data .order table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+body.dark #content main .table-data .order th {
+    background: #2a2a3c;
+    color: #a0a0c0;
+    font-weight: 500;
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid #3a3a4d;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+body.dark #content main .table-data .order td {
+    padding: 16px 20px;
+    color: #d0d0e0;
+    border-bottom: 1px solid rgba(69, 69, 92, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(145deg, #252538, #1e1e2d);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle gradient overlay on hover */
+body.dark #content main .table-data .order td::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+/* Hover effect with subtle glow */
+body.dark #content main .table-data .order tr:hover td {
+    background: linear-gradient(145deg, #2a2a42, #232332);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+}
+
+/* Subtle border highlight on hover */
+body.dark #content main .table-data .order tr:hover td:first-child {
+    border-left: 2px solid #4a90e2;
+}
+
+body.dark #content main .table-data .order tr:hover td:last-child {
+    border-right: 2px solid #4a90e2;
+}
+
+body.dark #content main .table-data .order tr:last-child td {
+    border-bottom: none;
+}
+
+body.dark #content main .table-data .order tr:hover td {
+    background: #2d2d3d;
+}
+
+body.dark #content main .table-data .order .status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+body.dark #content main .table-data .order .status.pending {
+    background: rgba(255, 183, 0, 0.1);
+    color: #ffb700;
+}
+
+body.dark #content main .table-data .order .status.completed {
+    background: rgba(40, 199, 111, 0.1);
+    color: #28c76f;
+}
+
+body.dark #content main .table-data .order .status.in-progress {
+    background: rgba(0, 145, 255, 0.1);
+    color: #3a8cff;
+}
+
+/* Fix for User and Date Order columns in dark mode */
+body.dark #content main .table-data .order td:nth-child(1),
+body.dark #content main .table-data .order td:nth-child(2) {
+    color: #e0e0e0 !important;
+    font-weight: 450;
+}
+
+/* Hover effect for better interaction */
+body.dark #content main .table-data .order tr:hover td:nth-child(1),
+body.dark #content main .table-data .order tr:hover td:nth-child(2) {
+    color: #ffffff !important;
+}
+
+/* Style for the date text specifically */
+body.dark #content main .table-data .order .date-cell {
+    color: #a0c4ff !important;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9em;
+}
+
+/* Style for the user name specifically */
+body.dark #content main .table-data .order .user-cell {
+    color: #c8b6ff !important;
+    font-weight: 450;
+}
+
+/* Ensure proper contrast for icons in these cells */
+body.dark #content main .table-data .order td i {
+    color: inherit !important;
+    opacity: 0.9;
+}
+
+/* Dark mode for assigned member */
+body.dark .assigned-member {
+    background: rgba(25, 118, 210, 0.15);
+    color: #64b5f6;
+    border-color: rgba(100, 181, 246, 0.2);
+}
+
+body.dark .assigned-member i {
+    background: rgba(25, 118, 210, 0.3);
+    color: #90caf9;
+}
+
+/* Dark mode for table actions */
+body.dark .table-actions i {
+    color: #a0a0c0;
+    background: #2a2a3c;
+    border: 1px solid #3a3a4d;
+}
+
+body.dark .table-actions i:hover {
+    background: #3a3a4d;
+    color: #ffffff;
+}
+
+body.dark .table-actions i.bx-refresh:hover {
+    color: #64b5f6;
+}
+
+body.dark .table-actions i.bx-search:hover {
+    color: #81c784;
+}
+
+body.dark .table-actions i.bx-filter:hover {
+    color: #ff8a65;
+}
+
+/* Modern Paragraph Styles in Table */
+#content main .table-data .order p,
+#content main .table-data .order td p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #4a4a68;
+    transition: all 0.2s ease;
+    position: relative;
+    padding-left: 8px;
+}
+
+#content main .table-data .order p:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: linear-gradient(to bottom, #00f2fe, #4facfe);
+    border-radius: 3px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+#content main .table-data .order p:hover {
+    color: #2d2d6e;
+    transform: translateX(2px);
+}
+
+#content main .table-data .order p:hover:before {
+    opacity: 1;
+    height: 80%;
+    background: linear-gradient(to bottom, #4facfe, #00f2fe);
+}
+
+/* Dark Mode Paragraph Styles */
+body.dark #content main .table-data .order p,
+body.dark #content main .table-data .order td p {
+    color: #c0c0e0;
+}
+
+body.dark #content main .table-data .order p:hover {
+    color: #ffffff;
+}
+
+body.dark #content main .table-data .order p:before {
+    background: linear-gradient(to bottom, #4facfe, #3a8cff);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #content main .table-data .order p,
+    #content main .table-data .order td p {
+        font-size: 0.85rem;
+        padding-left: 6px;
+    }
+    
+    #content main .table-data .order p:before {
+        width: 2px;
+    }
+}
+
+.table-actions i {
+    font-size: 1.3rem;
+    color: #6c757d;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover Effects */
+.table-actions i:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual Icon Colors */
+.table-actions i.bx-refresh {
+    color: #4a90e2;
+}
+
+.table-actions i.bx-search {
+    color: #6c5ce7;
+}
+
+.table-actions i.bx-filter {
+    color: #e84393;
+}
+
+/* Hover Colors */
+.table-actions i.bx-refresh:hover {
+    background: rgba(74, 144, 226, 0.1);
+}
+
+.table-actions i.bx-search:hover {
+    background: rgba(108, 92, 231, 0.1);
+}
+
+.table-actions i.bx-filter:hover {
+    background: rgba(232, 67, 147, 0.1);
+}
+
+/* Active State */
+.table-actions i:active {
+    transform: translateY(0);
+}
+
+/* Tooltip */
+.table-actions i::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d3436;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.table-actions i:hover::after {
+    opacity: 1;
+    bottom: -25px;
+}
+
+/* Spin Animation for Refresh */
+@keyframes spin {
+    0% { transform: rotate(0deg) translateY(0); }
+    100% { transform: rotate(360deg) translateY(0); }
+}
+
+.refreshing {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(79, 172, 254, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0); }
+}
+
+.table-actions i.refreshing {
+    animation: pulse 1.5s infinite, spin 1s linear infinite !important;
+}
+
+/* Modern Table Container */
+#content main .table-data .order {
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(145deg, #ffffff, #f8f9ff);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 
+        0 10px 30px -5px rgba(0, 0, 0, 0.05),
+        0 8px 16px -8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+/* Hover effect on table container */
+#content main .table-data .order:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 15px 35px -5px rgba(0, 0, 0, 0.08),
+        0 12px 20px -10px rgba(0, 0, 0, 0.15);
+}
+
+/* Subtle gradient overlay */
+#content main .table-data .order::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 16px 16px 0 0;
+}
+
+/* Table styles */
 #content main .table-data .order table {
-	width: 100%;
-	border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    min-width: 100%;
 }
-#content main .table-data .order table th {
-	padding-bottom: 12px;
-	font-size: 13px;
-	text-align: left;
-	border-bottom: 1px solid var(--grey);
+
+/* Table header */
+#content main .table-data .order thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
-#content main .table-data .order table td {
-	padding: 12px 16px;
-	vertical-align: middle;
-	white-space: nowrap;
+
+/* Table body */
+#content main .table-data .order tbody {
+    display: block;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 70vh;
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
 }
-#content main .table-data .order table tr td:first-child {
-	display: flex;
-	align-items: center;
-	grid-gap: 12px;
-	padding-left: 6px;
+
+/* ===== Global Scrollbar Hiding ===== */
+/* Hide scrollbar for all elements for all browsers */
+* {
+    /* For Webkit (Chrome, Safari, newer Edge) */
+    &::-webkit-scrollbar {
+        display: none;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    
+    /* For Firefox */
+    scrollbar-width: none !important;
+    
+    /* For IE and Edge */
+    -ms-overflow-style: none !important;
+}
+
+/* Ensure html and body don't show scrollbars */
+html, body {
+    overflow: -moz-scrollbars-none !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+/* Hide scrollbar for specific elements */
+#content,
+#content main,
+#content main .table-data,
+#content main .table-data .order,
+#content main .table-data .order tbody,
+#content main .table-data .order table,
+.sidebar,
+.main-content,
+.insights,
+.recent-orders,
+.todo,
+.charts {
+    &::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+/* Fix for Firefox */
+@-moz-document url-prefix() {
+    * {
+        scrollbar-width: none !important;
+    }
+    
+    html, body {
+        overflow: hidden !important;
+        overflow-y: auto !important;
+    }
+}
+
+/* Ensure scrolling still works */
+html, body, #content, .main-content {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+    overflow: auto !important;
+}
+
+/* Table rows */
+#content main .table-data .order tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Table cells and headers */
+#content main .table-data .order th,
+#content main .table-data .order td {
+    padding: 12px 10px;
+    text-align: right;
+    word-wrap: break-word;
+    box-sizing: border-box;
+}
+
+/* Modern Table Headers */
+#content main .table-data .order th {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4a4a8a;
+    background: linear-gradient(135deg, #f8f9ff 0%, #edf0ff 100%);
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 16px 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Header hover effect */
+#content main .table-data .order th:hover {
+    background: linear-gradient(135deg, #f0f2ff 0%, #e1e5ff 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+/* Modern Table Rows & Cells */
+#content main .table-data .order tbody tr {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+#content main .table-data .order tbody tr:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    z-index: 2;
+}
+
+/* Modern Table Cells */
+#content main .table-data .order td {
+    border: none;
+    color: #4a4a8a;
+    line-height: 1.6;
+    vertical-align: middle;
+    padding: 16px 20px;
+    position: relative;
+    background: transparent;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+/* Add subtle border between rows */
+#content main .table-data .order tbody tr:not(:last-child) td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* Add subtle highlight on hover */
+#content main .table-data .order tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Add subtle animation to cells on load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#content main .table-data .order tbody tr {
+    animation: fadeInUp 0.4s ease-out forwards;
+    opacity: 0;
+}
+
+/* Staggered animation for rows */
+#content main .table-data .order tbody tr:nth-child(1) { animation-delay: 0.05s; }
+#content main .table-data .order tbody tr:nth-child(2) { animation-delay: 0.1s; }
+#content main .table-data .order tbody tr:nth-child(3) { animation-delay: 0.15s; }
+#content main .table-data .order tbody tr:nth-child(4) { animation-delay: 0.2s; }
+#content main .table-data .order tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+/* Column Widths */
+#content main .table-data .order th:nth-child(1),
+#content main .table-data .order td:nth-child(1) {
+    width: 20%;
+    min-width: 150px;
+    padding-right: 15px;
+    text-align: left;
+}
+
+#content main .table-data .order th:nth-child(2),
+#content main .table-data .order td:nth-child(2) {
+    width: 20%;
+    min-width: 150px;
+    text-align: left;
+}
+
+/* Assignee column (3rd column) */
+#content main .table-data .order th:nth-child(3),
+#content main .table-data .order td:nth-child(3) {
+    width: 20%;
+    min-width: 150px;
+    text-align: left;
+    padding-right: 15px;
+}
+
+/* Status column (4th column) */
+#content main .table-data .order th:nth-child(4),
+#content main .table-data .order td:nth-child(4) {
+    width: 20%;
+    min-width: 120px;
+    text-align: left;
+    padding: 12px 5px;
+}
+
+/* Actions column (last column) */
+#content main .table-data .order th:last-child,
+#content main .table-data .order td:last-child {
+    width: 20%;
+    min-width: 150px; /* Increased to accommodate buttons */
+    text-align: center;
+    padding: 8px 15px; /* Adjusted padding */
+    box-sizing: border-box;
+}
+
+/* Actions header specific styles */
+#content main .table-data .order th:last-child {
+    padding-bottom: 12px;
+    position: relative;
+    left: -15px; /* Shift header left to align with buttons */
+}
+
+/* Ensure action buttons are properly centered */
+#content main .table-data .order .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px; /* Slightly increased gap */
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/* Modern Action Buttons */
+#content main .table-data .order .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 10px;
+}
+
+#content main .table-data .order .action-buttons .btn-info,
+#content main .table-data .order .action-buttons .btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Info Button Styling */
+#content main .table-data .order .action-buttons .btn-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+/* Delete Button Styling */
+#content main .table-data .order .action-buttons .btn-delete {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    color: white;
+}
+
+/* Button Hover Effects */
+#content main .table-data .order .action-buttons .btn-info:hover,
+#content main .table-data .order .action-buttons .btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#content main .table-data .order .action-buttons .btn-info:hover {
+    background: linear-gradient(135deg, #3a9cfd 0%, #00d9e8 100%);
+}
+
+#content main .table-data .order .action-buttons .btn-delete:hover {
+    background: linear-gradient(135deg, #ff5252 0%, #ff7b7b 100%);
+}
+
+/* Button Active/Press Effect */
+#content main .table-data .order .action-buttons .btn-info:active,
+#content main .table-data .order .action-buttons .btn-delete:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Icons */
+#content main .table-data .order .action-buttons i {
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+/* Ripple Effect */
+@keyframes ripple {
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.ripple {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+/* Ensure status text is properly aligned */
+#content main .table-data .order .status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+    min-width: 90px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Status Specific Styles */
+#content main .table-data .order .status.pending {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe8a1 100%);
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+#content main .table-data .order .status.in-progress {
+    background: linear-gradient(135deg, #cce5ff 0%, #99c2ff 100%);
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+#content main .table-data .order .status.completed {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+#content main .table-data .order .status.cancelled {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Status Dot */
+#content main .table-data .order .status::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background: currentColor;
+    opacity: 0.7;
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.loading-row {
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 1000px 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle pulse animation for rows */
+@keyframes pulse {
+    0% { opacity: 0.9; }
+    50% { opacity: 1; }
+    100% { opacity: 0.9; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    #content main .table-data .order {
+        padding: 15px;
+    }
+    
+    #content main .table-data .order th,
+    #content main .table-data .order td {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+}
+
+/* Ensure table maintains layout when sidebar is toggled */
+#content main .table-data .order {
+    transition: all 0.3s ease;
+}
+
+/* Fix for Webkit browsers */
+#content main .table-data .order table {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+#content main .table-data .order table tr:last-child td {
+    border-bottom: none;
+}
+
+#content main .table-data .order table tr:hover td {
+    background-color: #f8f9fa;
+}
+
+/* Make the table responsive */
+@media (max-width: 1200px) {
+    #content main .table-data .order {
+        padding: 15px;
+    }
+    
+    #content main .table-data .order table th,
+    #content main .table-data .order table td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+}
+
+/* For very small screens, make the table scroll horizontally */
+@media (max-width: 992px) {
+    #content main .table-data {
+        overflow-x: auto;
+    }
+    
+    #content main .table-data .order {
+        min-width: 900px; /* Ensure table has a minimum width */
+    }
 }
 #content main .table-data .order table td img {
 	width: 36px;
@@ -2150,24 +3088,96 @@ body.dark .chat-status {
     text-align: center;
 }
 
+/* Modern Assigned Member Badge */
 .assigned-member {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 6px 10px;
-    background: #f0f7ff;
-    border-radius: 4px;
-    color: #1976d2;
+    padding: 6px 12px 6px 8px;
+    background: rgba(25, 118, 210, 0.1);
+    border-radius: 20px;
+    color: #1565c0;
     font-weight: 500;
+    font-size: 0.85rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(25, 118, 210, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    max-width: 180px;
 }
 
+/* Hover Effect */
+.assigned-member:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: rgba(25, 118, 210, 0.15);
+}
+
+/* Active State */
+.assigned-member:active {
+    transform: translateY(0);
+}
+
+/* Icon Styling */
 .assigned-member i {
-    margin-right: 5px;
+    margin-right: 8px;
     font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    padding: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Status Indicator */
+.assigned-member::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: #4caf50;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+/* Different Status Colors */
+.assigned-member.pending {
+    background: rgba(255, 171, 0, 0.1);
+    border-color: rgba(255, 171, 0, 0.2);
+    color: #ff6d00;
+}
+
+.assigned-member.pending::after {
+    background: #ff9800;
+}
+
+.assigned-member.available {
+    background: rgba(76, 175, 80, 0.1);
+    border-color: rgba(76, 175, 80, 0.2);
+    color: #2e7d32;
+}
+
+.assigned-member.available::after {
+    background: #4caf50;
+}
+
+.assigned-member.busy {
+    background: rgba(244, 67, 54, 0.1);
+    border-color: rgba(244, 67, 54, 0.2);
+    color: #c62828;
+}
+
+.assigned-member.busy::after {
+    background: #f44336;
 }
 
 .assignee-icon {
@@ -3691,6 +4701,322 @@ body.dark .box-info.analytics li .text p {
     max-width: 100%;
     min-width: 0;
   }
+}
+
+.actions-cell {
+    text-align: right;
+    padding: 0 15px !important;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+}
+
+.action-buttons button {
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Info Button */
+.action-buttons button.btn-info {
+    color: #3C91E6;
+    background-color: rgba(60, 145, 230, 0.1);
+}
+
+.action-buttons button.btn-info:hover {
+    background-color: rgba(60, 145, 230, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(60, 145, 230, 0.2);
+}
+
+/* Delete Button */
+.action-buttons button.btn-delete {
+    color: #DB504A;
+    background-color: rgba(219, 80, 74, 0.1);
+}
+
+.action-buttons button.btn-delete:hover {
+    background-color: rgba(219, 80, 74, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(219, 80, 74, 0.2);
+}
+
+/* Icons */
+.action-buttons i {
+    font-size: 18px;
+    transition: transform 0.25s ease;
+}
+
+.action-buttons button:hover i {
+    transform: scale(1.1);
+}
+
+/* Tooltip */
+.action-buttons button::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.action-buttons button:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Dark Mode */
+body.dark .action-buttons button {
+    color: var(--light);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+body.dark .action-buttons button.btn-info {
+    background-color: rgba(60, 145, 230, 0.2);
+}
+
+body.dark .action-buttons button.btn-info:hover {
+    background-color: rgba(60, 145, 230, 0.3);
+}
+
+body.dark .action-buttons button.btn-delete {
+    background-color: rgba(219, 80, 74, 0.2);
+}
+
+body.dark .action-buttons button.btn-delete:hover {
+    background-color: rgba(219, 80, 74, 0.3);
+}
+
+body.dark .action-buttons button::after {
+    background: var(--light);
+    color: var(--dark);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .action-buttons {
+        gap: 6px;
+    }
+    
+    .action-buttons button {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .action-buttons i {
+        font-size: 16px;
+    }
+}
+
+/* Complaint Details Modal */
+#complaint-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.3s;
+}
+
+#complaint-modal .modal-content {
+    background: var(--light);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    border: none;
+}
+
+#complaint-modal .modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--grey);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#complaint-modal .modal-header h3 {
+    margin: 0;
+    color: var(--dark);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+#complaint-modal .close-modal {
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--dark-grey);
+    transition: color 0.2s;
+}
+
+#complaint-modal .close-modal:hover {
+    color: var(--dark);
+}
+
+#complaint-modal .modal-body {
+    padding: 20px;
+}
+
+.complaint-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--grey);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--dark);
+    width: 150px;
+    margin-bottom: 8px;
+}
+
+.detail-value {
+    flex: 1;
+    color: var(--dark);
+}
+
+.complaint-description {
+    background: rgba(0, 0, 0, 0.03);
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    line-height: 1.6;
+}
+
+.complaint-attachments {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(60, 145, 230, 0.1);
+    border-radius: 6px;
+    color: var(--blue);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.attachment-item i {
+    margin-left: 8px;
+    font-size: 18px;
+}
+
+.attachment-item:hover {
+    background: rgba(60, 145, 230, 0.2);
+    transform: translateX(2px);
+}
+
+.modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--grey);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-close {
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-close:hover {
+    background: #2d7bc8;
+    transform: translateY(-1px);
+}
+
+/* Dark mode styles */
+body.dark #complaint-modal .modal-content {
+    background: var(--dark);
+    color: var(--light);
+}
+
+body.dark #complaint-modal .modal-header h3,
+body.dark .detail-label,
+body.dark .detail-value {
+    color: var(--light);
+}
+
+body.dark .complaint-description {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+}
+
+body.dark .detail-row {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .status-actions {
