@@ -1489,66 +1489,93 @@ function renderReclamations(reclamations) {
     tbody.innerHTML = ""; 
 
     reclamations.forEach(r => {
-		const dateOnly = r.createdAt.substring(0, 10);
+        const dateOnly = r.createdAt.substring(0, 10);
         const item = document.createElement("tr");
-		let statusClass;
-		if(r.Status == 'Pending'){
-			statusClass = 'pending';
-		}else if(r.Status == 'In Progress'){
-			statusClass = 'process';
-		}else{
-			statusClass = 'completed';
-		}
-		if(r.Group != null){
-			item.innerHTML = `
-		        <td>
-	                <p>${r.Name} ${r.Surname}</p>
-	            </td>
-		        <td>${dateOnly}</td>
-				<span class="assigned-member" style="color: #1976d2; font-weight: 500;">
-					<i class='bx bx-user' style="margin-right: 5px;"></i>
-					${r.Group}
-				</span>
-				<td><span class="status ${statusClass}">${r.Status}</span></td>
-			`;
-		}else{
-        item.innerHTML = `
-        <td>
-	        <p>${r.Name} ${r.Surname}</p>
-	    </td>
-		<td>${dateOnly}</td>
-		<td  class="assignee-cell">
-			<a href="#" class="assignee-icon"  data-toggle="modal" data-target="#assign-modal">
-		        <i class='bx bx-user-plus'></i>
-			</a>  
-		</td>
-		<td><span class="status ${statusClass}">${r.Status}</span></td>
-      ` ;}
-	    item.onclick = () => {
-			UpdateReclamations(r);
-			const modal = document.getElementById('assign-modal');
-	const assignButton = document.getElementById('assign-button');
-	const closeButton = document.querySelector('.close-modal');
-	const searchInput = document.getElementById('member-search');
+        item.setAttribute('data-complaint-id', r.id); // Add data attribute for complaint ID
+        let statusClass;
+        if(r.Status == 'Pending'){
+            statusClass = 'pending';
+        }else if(r.Status == 'In Progress'){
+            statusClass = 'process';
+        }else{
+            statusClass = 'completed';
+        }
+        
+        // Create action buttons HTML
+        const actionButtons = `
+            <td class="actions-cell">
+                <div class="action-buttons">
+                    <button class="btn-info" title="View Details" onclick="showComplaintInfo('${r.id}')">
+                        <i class='bx bx-info-circle'></i>
+                    </button>
+                    <button class="btn-delete" title="Delete Complaint" onclick="handleDelete('${r.id}')">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </div>
+            </td>
+        `;
 
-	// Handle assign icon clicks
-	document.querySelectorAll('.assignee-icon').forEach(icon => {
-		icon.addEventListener('click', function(e) {
-			e.preventDefault();
-			selectedAssignCell = this.closest('.assignee-cell');
-			modal.style.display = 'flex';
-			DisplayLeaders();
-			// Reset selection
-			document.querySelectorAll('.member-item').forEach(item => {
-				item.classList.remove('selected');
-			});
-			assignButton.disabled = true;
-			selectedMember = null;
-		});
-	});
-		};
-		
-      tbody.appendChild(item);
+        if(r.Group != null){
+            item.innerHTML = `
+                <td>
+                    <p>${r.Name} ${r.Surname}</p>
+                </td>
+                <td>${dateOnly}</td>
+                <td>
+                    <span class="assigned-member" style="color: #1976d2; font-weight: 500;">
+                        <i class='bx bx-user' style="margin-right: 5px;"></i>
+                        ${r.Group}
+                    </span>
+                </td>
+                <td><span class="status ${statusClass}">${r.Status}</span></td>
+                ${actionButtons}
+            `;
+        } else {
+            item.innerHTML = `
+                <td>
+                    <p>${r.Name} ${r.Surname}</p>
+                </td>
+                <td>${dateOnly}</td>
+                <td class="assignee-cell">
+                    <a href="#" class="assignee-icon" data-toggle="modal" data-target="#assign-modal">
+                        <i class='bx bx-user-plus'></i>
+                    </a>
+                </td>
+                <td><span class="status ${statusClass}">${r.Status}</span></td>
+                ${actionButtons}
+            `;
+        }
+        
+        item.onclick = (e) => {
+            // Prevent triggering row click when clicking on action buttons
+            if (e.target.closest('.action-buttons, .assignee-icon')) {
+                e.stopPropagation();
+                return;
+            }
+            UpdateReclamations(r);
+            const modal = document.getElementById('assign-modal');
+            const assignButton = document.getElementById('assign-button');
+            const closeButton = document.querySelector('.close-modal');
+            const searchInput = document.getElementById('member-search');
+
+            // Handle assign icon clicks
+            document.querySelectorAll('.assignee-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    selectedAssignCell = this.closest('.assignee-cell');
+                    modal.style.display = 'flex';
+                    DisplayLeaders();
+                    // Reset selection
+                    document.querySelectorAll('.member-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    assignButton.disabled = true;
+                    selectedMember = null;
+                });
+            });
+        };
+        
+        tbody.appendChild(item);
     });
   }
   window.onload = DisplayReclamations;
@@ -1799,19 +1826,230 @@ function changeStatus(btn, status) {
     }
 }
 
-// Function to handle delete action
-function handleDelete(rowId) {
-    if (confirm('Are you sure you want to delete this complaint?')) {
-        // Here you would typically make an API call to delete the complaint
-        // For now, we'll just remove the row from the table
-        const row = document.querySelector(`tr[data-id="${rowId}"]`);
-        if (row) {
-            row.remove();
+/**
+ * Handles the deletion of a complaint after user confirmation
+ * @param {string} complaintId - The unique identifier of the complaint to delete
+ */
+function handleDelete(complaintId) {
+    // Show confirmation dialog
+    const isConfirmed = confirm('هل أنت متأكد من حذف هذه الشكوى؟');
+    
+    if (isConfirmed) {
+        try {
+            // Find the row to remove
+            const row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
+            
+            if (row) {
+                // Add a fade-out effect before removing
+                row.style.transition = 'opacity 0.3s ease';
+                row.style.opacity = '0';
+                
+                // Remove the row after the animation completes
+                setTimeout(() => {
+                    row.remove();
+                    // Show a success notification
+                    showNotification('success', 'تم الحذف بنجاح', 'تم حذف الشكوى بنجاح');
+                }, 300);
+                
+                // Here you would typically make an API call to delete the complaint from the server
+                // Example:
+                // fetch(`/api/complaints/${complaintId}`, {
+                //     method: 'DELETE',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                // })
+                // .then(response => response.json())
+                // .then(data => {
+                //     if (data.success) {
+                //         row.remove();
+                //         showNotification('success', 'تم الحذف بنجاح', 'تم حذف الشكوى بنجاح');
+                //     } else {
+                //         throw new Error('فشل حذف الشكوى');
+                //     }
+                // })
+                // .catch(error => {
+                //     console.error('Error deleting complaint:', error);
+                //     showNotification('error', 'خطأ', 'حدث خطأ أثناء محاولة حذف الشكوى');
+                //     row.style.opacity = '1'; // Reset opacity if there's an error
+                // });
+            }
+        } catch (error) {
+            console.error('Error in handleDelete:', error);
+            alert('حدث خطأ أثناء محاولة حذف الشكوى');
         }
     }
 }
 
-// Function to add delete icon to a row
+/**
+ * Shows a notification to the user
+ * @param {string} type - The type of notification (success, error, info, warning)
+ * @param {string} title - The title of the notification
+ * @param {string} message - The message to display
+ */
+function showNotification(type, title, message) {
+    // Check if notification system is available
+    if (typeof notificationSystem !== 'undefined') {
+        notificationSystem.addNotification(type, message);
+    } else {
+        // Fallback to alert if notification system is not available
+        alert(`${title}: ${message}`);
+    }
+}
+
+/**
+ * Shows detailed information about a complaint in a modal
+ * @param {string} complaintId - The unique identifier of the complaint to display
+ */
+function showComplaintInfo(complaintId) {
+    try {
+        // In a real application, you would fetch the complaint details from your API
+        // For now, we'll use the data from the table row
+        const row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
+        
+        if (!row) {
+            showNotification('error', 'خطأ', 'تعذر العثور على بيانات الشكوى');
+            return;
+        }
+        
+        // Extract data from the row
+        const name = row.querySelector('td:first-child p')?.textContent || 'غير محدد';
+        const date = row.querySelector('td:nth-child(2)')?.textContent || 'غير محدد';
+        const statusElement = row.querySelector('.status');
+        const status = statusElement ? statusElement.textContent : 'غير محدد';
+        const statusClass = statusElement ? statusElement.className.replace('status ', '') : '';
+        
+        // Create modal HTML
+        const modalHTML = `
+            <div id="complaint-modal" class="modal" style="display: flex;">
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3>تفاصيل الشكوى #${complaintId}</h3>
+                        <span class="close-modal" onclick="closeComplaintModal()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="complaint-details">
+                            <div class="detail-row">
+                                <span class="detail-label">الاسم الكامل:</span>
+                                <span class="detail-value">${name}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">تاريخ الطلب:</span>
+                                <span class="detail-value">${date}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">الحالة:</span>
+                                <span class="status ${statusClass}" style="display: inline-flex;">${status}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">وصف المشكلة:</span>
+                                <div class="complaint-description">
+                                    <p>هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى.</p>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">المرفقات:</span>
+                                <div class="complaint-attachments">
+                                    <div class="attachment-item">
+                                        <i class='bx bx-file'></i>
+                                        <span>صورة المشكلة.jpg</span>
+                                    </div>
+                                    <div class="attachment-item">
+                                        <i class='bx bx-file'></i>
+                                        <span>ملف إضافي.pdf</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-close" onclick="closeComplaintModal()">إغلاق</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add modal to the body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Add event listener for ESC key
+        document.addEventListener('keydown', handleEscapeKey);
+        
+    } catch (error) {
+        console.error('Error showing complaint info:', error);
+        showNotification('error', 'خطأ', 'حدث خطأ أثناء تحميل تفاصيل الشكوى');
+    }
+}
+
+/**
+ * Closes the complaint details modal
+ */
+function closeComplaintModal() {
+    const modal = document.getElementById('complaint-modal');
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.3s';
+        setTimeout(() => {
+            modal.remove();
+            document.removeEventListener('keydown', handleEscapeKey);
+        }, 300);
+    }
+}
+
+/**
+ * Handles the ESC key press to close the modal
+ * @param {KeyboardEvent} event - The keyboard event
+ */
+function handleEscapeKey(event) {
+    if (event.key === 'Escape') {
+        closeComplaintModal();
+    }
+}
+
+// Close modal when clicking outside the content
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('complaint-modal');
+    if (event.target === modal) {
+        closeComplaintModal();
+    }
+});
+
+/**
+ * Refreshes the complaints table
+ */
+function refreshTable() {
+    try {
+        // Get the refresh button and add loading class
+        const refreshBtn = document.querySelector('.refresh-btn');
+        refreshBtn.style.animation = 'spin 1s linear infinite';
+        
+        // Show a loading notification
+        showNotification('info', 'جاري التحديث', 'جاري تحديث قائمة الشكاوى...');
+        
+        // Simulate API call delay (replace with actual API call)
+        setTimeout(() => {
+            // In a real application, you would fetch the latest data here
+            // For now, we'll just reload the page to show the refresh working
+            window.location.reload();
+            
+            // Reset the refresh button animation
+            refreshBtn.style.animation = '';
+            
+            // Show success notification
+            showNotification('success', 'تم التحديث', 'تم تحديث قائمة الشكاوى بنجاح');
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Error refreshing table:', error);
+        showNotification('error', 'خطأ', 'حدث خطأ أثناء تحديث الجدول');
+        
+        // Reset the refresh button animation in case of error
+        const refreshBtn = document.querySelector('.refresh-btn');
+        if (refreshBtn) {
+            refreshBtn.style.animation = '';
+        }
+    }
+}
+
 function addDeleteIcon(row) {
     const actionsCell = document.createElement('td');
     const deleteIcon = document.createElement('i');

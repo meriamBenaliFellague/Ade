@@ -395,7 +395,7 @@
         <!-- Reclamation Status Section -->
         <div class="analytics-card">
             <div class="card-header">
-                <h3>Reclamation Status</h3>
+                <h3>Complaint Status</h3>
                 <div class="time-filters">
                     <button class="time-filter active" data-period="week">Week</button>
                     <button class="time-filter" data-period="month">Month</button>
@@ -587,9 +587,12 @@
 			<div class="table-data">
 				<div class="order">
 					<div class="head">
-						<h3>Recent Reclamation</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
+						<h3>Recent Complaints</h3>
+						<div class="table-actions">
+							<i class='bx bx-refresh refresh-btn' title="Refresh" onclick="refreshTable()"></i>
+							<i class='bx bx-search search-btn' title="Search"></i>
+							<i class='bx bx-filter filter-btn' title="Filter"></i>
+						</div>
 					</div>
 					<table>
 						<thead>
