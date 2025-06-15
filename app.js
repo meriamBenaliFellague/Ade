@@ -209,7 +209,7 @@ io.on("connection", (socket) => {
   });
 
   //get receiverId
-  let receiverId;
+  let receiverId = await SchemaTeam.findOne();
   socket.on("get receiverId", async (userID) => {
     receiverId = userID;
     console.log("receiverId Admin",receiverId)
