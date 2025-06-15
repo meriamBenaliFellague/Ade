@@ -2159,4 +2159,9 @@ delet;
         pending.dataset.initialized = true;
         pending.textContent = `${percentages["pending"]}%`;
 
+		reopened.dataset.originalText = `${percentages["reopened"]}%`;
+        reopened.dataset.count = percentages["reopened"];
+        reopened.dataset.initialized = true;
+        reopened.textContent = `${percentages["reopened"]}%`;
+
 }

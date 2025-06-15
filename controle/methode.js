@@ -392,7 +392,7 @@ async function Analytics(req,res) {
     const completedRec = await SchemaReclamation.find({Status});
      Status = 'In Progress';
     const progressRec = await SchemaReclamation.find({Status});
-     Status = 'deleted';
+     Status = 'Dismissed';
     const deletedRec = await SchemaReclamation.find({Status});
     const newRec = reclamations.length;
     const client = clients.length;
@@ -423,7 +423,7 @@ async function Analytics(req,res) {
       completed: all.filter(r => r.Status === 'completed').length,
       inProgress: all.filter(r => r.Status === 'In Progress').length,
       pending: all.filter(r => r.Status === 'Pending').length,
-      reopened: all.filter(r => r.Status === 'reopened').length,
+      reopened: all.filter(r => r.Status === 'Dismissed').length,
     };
 
     // نحسب النسبة المئوية

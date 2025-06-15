@@ -197,7 +197,7 @@ io.on("connection", (socket) => {
           onlineUsers.set(userId, socket.id);
           socket.emit("registration_success",userId);
           // Load old messages
-          socket.emit('load-messages'); // ⬅️ ترسلهم للـ Leader
+          socket.emit('load-messages');
         
       } else {
           socket.emit("registration_error", "Invalid user");
@@ -209,7 +209,8 @@ io.on("connection", (socket) => {
   });
 
   //get receiverId
-  let receiverId = await SchemaTeam.findOne();
+  let receiverId /* = await SchemaTeam.findOne();
+  */
   socket.on("get receiverId", async (userID) => {
     receiverId = userID;
     console.log("receiverId Admin",receiverId)
