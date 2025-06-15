@@ -328,10 +328,13 @@ function renderReclamations(reclamations) {
 		}else if(r.Status == 'In Progress'){
 			statusClass = 'in-progress';
             icon = 'fa-clock';
-		}else{  
+		}else if(r.Status == 'completed'){  
 			statusClass = 'resolved'; 
             icon = 'fa-check-circle';  
-		} 
+		}else{
+            statusClass = 'dismissed'; 
+            icon = 'fa-window-close'; 
+        }
       item.innerHTML = `
       <div class="complaint-header">
             <span class="complaint-date">${dateOnly}</span>

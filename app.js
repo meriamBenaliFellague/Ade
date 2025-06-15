@@ -77,6 +77,9 @@ app.use("/api/DisplayMessagesLeader", DisplayMessageLeader);
 const deletUser = require("./server/DeletUser");
 app.use("/api/DeleteUser", deletUser);   
 
+const deletRec = require("./server/DeletRec");
+app.use("/api/DeleteRec", deletRec);  
+
 const update_user = require("./server/UpdateUser");
 app.use("/api/UpdateUser", update_user);
 

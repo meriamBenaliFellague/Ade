@@ -1508,7 +1508,7 @@ function renderReclamations(reclamations) {
                     <button class="btn-info" title="View Details" onclick="showComplaintInfo('${r.id}')">
                         <i class='bx bx-info-circle'></i>
                     </button>
-                    <button class="btn-delete" title="Delete Complaint" onclick="handleDelete('${r.id}')">
+                    <button class="btn-delete" title="Delete Complaint" onclick="handleDelete('${r.id}', '${r._id}')">
                         <i class='bx bx-trash'></i>
                     </button>
                 </div>
@@ -1578,6 +1578,26 @@ function renderReclamations(reclamations) {
         tbody.appendChild(item);
     });
   }
+
+//delet reclamtion
+async function DeleteRec(rec) { 
+	
+	try {
+        const response = await fetch(`http://localhost:3000/api/DeleteRec/${rec}`, {
+            method: 'DELETE',
+        });   
+
+        if (!response.ok) throw new Error("خلل في حذف الشكوى");
+
+        const result = await response.json();
+        alert("✅ تم الحذف بنجاح");
+        console.log(result)
+        // تحديث القائمة بعد الحذف
+        DisplayReclamations(); 
+    } catch (error) { 
+        console.error("❌ خطأ أثناء الحذف:", error.message);
+    }
+}
   window.onload = DisplayReclamations;
 
 //manage team
@@ -1830,12 +1850,26 @@ function changeStatus(btn, status) {
  * Handles the deletion of a complaint after user confirmation
  * @param {string} complaintId - The unique identifier of the complaint to delete
  */
-function handleDelete(complaintId) {
+let delet = 0;
+async function handleDelete(complaintId,complaint_Id) {
     // Show confirmation dialog
     const isConfirmed = confirm('هل أنت متأكد من حذف هذه الشكوى؟');
     
     if (isConfirmed) {
         try {
+			const response = await fetch(`http://localhost:3000/api/UpdateReclamationAdmin/${complaint_Id}`, {
+			  method: "PUT",
+			  headers: {
+                "Content-Type": "application/json"
+            },
+             
+            body: JSON.stringify({ 
+            Group : null})  
+			});
+			
+			if (!response.ok) {
+			  throw new Error("فشل في جلب البيانات");
+			}
             // Find the row to remove
             const row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
             
@@ -2099,27 +2133,30 @@ function renderAnalytics(data){
 	const newRec = document.getElementById('newRec');
 	const client = document.getElementById('client');
 	const completed = document.getElementById('completed');
-
+delet;
 	newRec.textContent =  data.newRec;
 	client.textContent =  data.client;
 	completed.textContent =  data.completed;
 
 	//Reclamation Status
 	const percentages = data.percentages;
-	const count  = data.counts;
       const completedVal = document.getElementById('completed-val');
 	  const progress = document.getElementById('progress-val');
 	  const pending = document.getElementById('pending-val');
 	  const reopened = document.getElementById('reopened-val');
-        completedVal.dataset.originalText = `${count["completed"]}%`;
-        completedVal.dataset.count = count["completed"];
+        completedVal.dataset.originalText = `${percentages["completed"]}%`;
+        completedVal.dataset.count = percentages["completed"];
         completedVal.dataset.initialized = true;
-        completedVal.textContent = `${count["completed"]}%`;
+        completedVal.textContent = `${percentages["completed"]}%`;
 
-		progress.dataset.originalText = `${count["inProgress"]}%`;
-        progress.dataset.count = count["inProgress"];
+		progress.dataset.originalText = `${percentages["inProgress"]}%`;
+        progress.dataset.count = percentages["inProgress"];
         progress.dataset.initialized = true;
-        progress.textContent = `${count["inProgress"]}%`;
-
+        progress.textContent = `${percentages["inProgress"]}%`;
+ 
+		pending.dataset.originalText = `${percentages["pending"]}%`;
+        pending.dataset.count = percentages["pending"];
+        pending.dataset.initialized = true;
+        pending.textContent = `${percentages["pending"]}%`;
 
 }

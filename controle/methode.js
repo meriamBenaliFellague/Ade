@@ -160,6 +160,16 @@ async function delet_user(req, res){
     .catch((err) => res.status(500).json({ message: err.message }));
 };
 
+//delet reclamation
+async function delet_reclamation(req, res){
+  const idrec = req.params.idrec;
+  SchemaReclamation.findByIdAndDelete(idrec)
+    .then((results) =>
+      res.status(200).json(results)
+    )
+    .catch((err) => res.status(500).json({ message: err.message }));
+};
+
 //update user (Admin)
 async function update_user(req,res){
   const { Fullname, Email, Password, Team, Role } = req.body;
@@ -349,7 +359,7 @@ async function display_reclamationResponsable(req,res){
 //display reclamation to Admin
 async function display_reclamationAdmin(req,res){
   try {
-    const reclamations = await SchemaReclamation.find();
+    const reclamations = await SchemaReclamation.find({ Status: { $ne: 'Dismissed' } });
     
     if (reclamations.length === 0) {
       return res.status(400).json({ message: "Aucune réclamation en attente." });
@@ -440,12 +450,13 @@ async function Analytics(req,res) {
   async function Admin(req,res){console.log(req.body)
     const { Group} = req.body;
     const IdReclamation = req.params.IdReclamation;
-    let Status; 
+    let Status = "Dismissed"; 
     try{
       if (Group != null) {
         Status = "In Progress";
       }console.log(Status)
-      const update = await SchemaReclamation.findByIdAndUpdate(IdReclamation, {Status , Group}, { new: true })
+      const update = await SchemaReclamation.findByIdAndUpdate(IdReclamation, {Status , Group}, { new: true });
+
       res.status(200).json(update);
     }catch(err){
       res.status(500).json({ error: err.message });
@@ -464,5 +475,5 @@ module.exports = {create_account, login_account,create_user,login_accountUser,lo
   create_reclamation,update_user,delet_user,Admin, Responsable,display_reclamationClient,
   Analytics,display_user,forget_password,verifyResetCode,reset_password,
   display_leader,display_message_admin,display_message_leader,display_reclamationResponsable,
-  display_information,display_reclamationAdmin
+  display_information,display_reclamationAdmin,delet_reclamation
 };

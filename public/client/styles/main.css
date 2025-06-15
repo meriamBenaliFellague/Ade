@@ -297,6 +297,11 @@ textarea.form-control {
     color: #155724;
 }
 
+.complaint-status.dismissed {
+    background-color: #e74c3c;
+    color: #e7e7e7;
+}
+
 .complaint-status.in-progress {
     background-color: #fff3cd;
     color: #856404;
