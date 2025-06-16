@@ -1415,6 +1415,9 @@ async function renderLeaderAssign(lead){
 	const tech = document.getElementById('TechSupport');
 	const customer = document.getElementById('CustomerService');
 	const quality = document.getElementById('QualityTeam');
+	 tech.innerHTML = '';
+	  customer.innerHTML = '';
+	   quality.innerHTML = '';
 	lead.forEach(leader => {
 		const item = document.createElement("div");
 		item.className = "member-item";
@@ -1594,7 +1597,7 @@ function renderReclamations(reclamations) {
         const actionButtons = `
             <td class="actions-cell">
                 <div class="action-buttons">
-                    <button class="btn-info" title="View Details" onclick="showComplaintInfo('${r.id}')">
+                    <button class="btn-info" title="View Details" onclick="showComplaintInfo('${r._id}')">
                         <i class='bx bx-info-circle'></i>
                     </button>
                     <button class="btn-delete" title="Delete Complaint" onclick="handleDelete('${r.id}', '${r._id}')">
@@ -1636,21 +1639,19 @@ function renderReclamations(reclamations) {
         }
         
         item.onclick = (e) => {
-            // Prevent triggering row click when clicking on action buttons
-            if (e.target.closest('.action-buttons, .assignee-icon')) {
-                e.stopPropagation();
-                return;
-            }
-            UpdateReclamations(r);
+            
+            UpdateReclamations(r);                 
             const modal = document.getElementById('assign-modal');
             const assignButton = document.getElementById('assign-button');
             const closeButton = document.querySelector('.close-modal');
             const searchInput = document.getElementById('member-search');
 
             // Handle assign icon clicks
+	
             document.querySelectorAll('.assignee-icon').forEach(icon => {
                 icon.addEventListener('click', function(e) {
                     e.preventDefault();
+					console.log("open");
                     selectedAssignCell = this.closest('.assignee-cell');
                     modal.style.display = 'flex';
                     DisplayLeaders();
@@ -1912,42 +1913,39 @@ async function DeleteUser(user) {
  * Shows the complaint details in a modal
  * @param {string} complaintId - The ID of the complaint to show details for
  */
-function showComplaintInfo(complaintId) {
-    // Find the complaint row in the table
-    const row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
-    if (!row) {
-        console.error('Complaint row not found');
-        return;
-    }
-
-    // Get complaint data from the row
-    const userName = row.querySelector('td p')?.textContent || 'Unknown User';
-    const date = row.querySelector('td:nth-child(2)')?.textContent || 'N/A';
-    const assignee = row.querySelector('.assigned-member')?.textContent.trim() || 'Unassigned';
-    const status = row.querySelector('td:nth-child(4) .status')?.textContent || 'Unknown';
+async function showComplaintInfo(complaintId) {
+console.log(complaintId);
+	try {
+        const response = await fetch(`http://localhost:3000/api/DisplayInformation/${complaintId}`, {
+          method: "GET",
+        });
+        const data = await response.json();
+		console.log(data.reclamations);
+        if (!response.ok) {
+          throw new Error("فشل في جلب البيانات");
+        }
     
-    // Get the complaint details (this would typically come from your data)
-    // For now, we'll use placeholders for the additional fields
-    const complaintDetails = {
-        id: complaintId,
-        title: `Complaint from ${userName}`,
-        description: `Description of the issue reported by the user.`,
-        address: '123 Main Street, City', // This would come from your data
-        complaintType: 'Water Leak', // This would come from your data
-        hasPhoto: true, // This would come from your data
-        status: status,
-        priority: 'Medium', // This would come from your data
-        category: 'General', // This would come from your data
-        createdAt: date,
-        updatedAt: new Date().toISOString().split('T')[0],
-        assignedTo: assignee,
-        contactEmail: 'user@example.com', // This would come from your data
-        contactPhone: '+1234567890', // This would come from your data
-        municipality: 'Ain Defla', // This would come from your data
-        subscribeId: 'SUB' + Math.floor(10000 + Math.random() * 90000) // This would come from your data
-    };
+        
+		const r = data.reclamations;
 
-    // Create the HTML for the modal content
+		const complaintDetails = {
+        id: complaintId,
+        title: `Complaint from  ${r.Name} ${r.Surname}`,
+        description: r.Complaint,
+        address: r.Address, 
+        complaintType: r.Type, 
+        hasPhoto: true, 
+        status: r.Status,
+        createdAt: r.createdAt.substring(0, 10),
+        updatedAt: r.updatedAt.substring(0, 10),
+        assignedTo: r.Group,
+        contactEmail: r.Email, 
+        contactPhone: r.Phone,
+        municipality: r.Municipality,
+        subscribeId: r.Subscriber_ID,
+    };
+    
+	    // Create the HTML for the modal content
     const modalContent = `
         <div class="complaint-details">
             <div class="complaint-modal-header">
@@ -1968,15 +1966,7 @@ function showComplaintInfo(complaintId) {
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Status:</span>
-                    <span class="status ${status.toLowerCase().replace(' ', '-')}">${status}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Priority:</span>
-                    <span class="priority">${complaintDetails.priority}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Category:</span>
-                    <span class="category">${complaintDetails.category}</span>
+                    <span class="status ${complaintDetails.status}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Submitted On:</span>
@@ -2095,6 +2085,11 @@ function showComplaintInfo(complaintId) {
             closeComplaintInfoModal();
         }
     };
+        // هنا تقدر تعرضهم فـ DOM حسب الشكل لي تحب
+      } catch (error) {
+        console.error("❌ خطأ في جلب المعلومات :", error);
+      }
+
 }
 
 function closeComplaintInfoModal() {

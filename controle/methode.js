@@ -335,7 +335,7 @@ async function display_information(req,res){
     const recId = req.params.IdReclamation;
     console.log(recId);
     const reclamations = await SchemaReclamation.findOne({ _id:recId });
-    
+    console.log(reclamations);
     const photo = reclamations.Photos[0]; // نستعمل أول صورة مثلا
     const base64Image = photo.data.toString('base64');
     const mimeType = photo.contentType; // مثلا: 'image/jpeg'

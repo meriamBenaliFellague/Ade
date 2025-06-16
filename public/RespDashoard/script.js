@@ -1491,13 +1491,22 @@ socket.on('connect', async () => {
 
 socket.on("receive_message", (data) => {
     console.log("📩 وصلك ميساج:", data);
+	let sizeClass = 'medium'; // Default size
+        const messageLength = data.message ? data.message.length : 0;
+        if (messageLength > 0) {
+            if (messageLength < 30) {
+                sizeClass = 'small';
+            } else if (messageLength > 150) {
+                sizeClass = 'large';
+            }
+        }
 	const chatMessages = document.querySelector('.chat-messages');
     const message = data.message;
 	const createdAt = data.createdAt;
     const msgDiv = document.createElement('div');
-    msgDiv.className = 'message received';
+    msgDiv.className = 'message received show';
     msgDiv.innerHTML = `
-        <div class="message-content">${message}</div>
+        <div class="message-content ${sizeClass}">${message}</div>
         <div class="message-time">${new Date(createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
     `;
     chatMessages.appendChild(msgDiv);
