@@ -2162,7 +2162,7 @@ function showNotification(type, title, message) {
     }
 }
 
-/**
+/*
  * Shows detailed information about a complaint in a modal
  * /**@param {string} complaintId - The unique identifier of the complaint to display
  
@@ -2342,9 +2342,9 @@ window.addRow = function(data) {
     document.getElementById('tbody').appendChild(row);
 };
 
-async function Analytics() { 
+async function Analytics(range) { 
 	try {
-        const response = await fetch(`http://localhost:3000/api/Analytics`, {
+        const response = await fetch(`http://localhost:3000/api/Analytics?range=${range}`, {
             method: 'GET',
         });   
 
@@ -2368,4 +2368,23 @@ function renderAnalytics(data){
 	newRec.textContent =  data.newRec;
 	client.textContent =  data.client;
 	completed.textContent =  data.completed;
+
+	//Reclamation Status
+	const percentages = data.percentages;
+	const count  = data.counts;
+      const completedVal = document.getElementById('completed-val');
+	  const progress = document.getElementById('progress-val');
+	  const pending = document.getElementById('pending-val');
+	  const reopened = document.getElementById('reopened-val');
+        completedVal.dataset.originalText = `${count["completed"]}%`;
+        completedVal.dataset.count = count["completed"];
+        completedVal.dataset.initialized = true;
+        completedVal.textContent = `${count["completed"]}%`;
+
+		progress.dataset.originalText = `${count["inProgress"]}%`;
+        progress.dataset.count = count["inProgress"];
+        progress.dataset.initialized = true;
+        progress.textContent = `${count["inProgress"]}%`;
+
+
 }

@@ -457,22 +457,22 @@
                     <div class="legend-item">
                         <span class="legend-color" style="background-color: #4CAF50;"></span>
                         <span class="legend-label">Completed</span>
-                        <span class="legend-value">45%</span>
+                        <span id="completed-val" class="legend-value">0%</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color" style="background-color: #2196F3;"></span>
                         <span class="legend-label">In Progress</span>
-                        <span class="legend-value">30%</span>
+                        <span id="progress-val" class="legend-value">30%</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color" style="background-color: #FFC107;"></span>
                         <span class="legend-label">Pending</span>
-                        <span class="legend-value">15%</span>
+                        <span id="pending-val" class="legend-value">15%</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-color" style="background-color: #F44336;"></span>
                         <span class="legend-label">Reopened</span>
-                        <span class="legend-value">10%</span>
+                        <span id="reopened-val" class="legend-value">10%</span>
                     </div>
                 </div>
             </div>
@@ -1282,6 +1282,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Here you would typically fetch new data based on the selected time period
             // For now, we'll just log the selected period
             const period = this.getAttribute('data-period');
+            Analytics(period);
             console.log('Selected period:', period);
             
             // Example of how you might update the chart with new data

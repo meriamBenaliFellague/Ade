@@ -11,8 +11,6 @@ const multer = require('multer');
 const storage = multer.memoryStorage(); // باش نخلي الصورة في الذاكرة
 const upload = multer({ storage: storage });
 
-const crypto = require("crypto");
-const bcrypt = require('bcrypt');
 
 const SendEmailFunction = require("../utils/SendEmail");
 const { Console } = require("console");
@@ -362,7 +360,19 @@ async function display_reclamationAdmin(req,res){
   }
 }
 
-//New reclamation
+//Analytics
+const getStartDate = (filter) => {
+  const now = new Date();
+  if (filter === 'week') {
+    now.setDate(now.getDate() - 7);
+  } else if (filter === 'month') {
+    now.setMonth(now.getMonth() - 1);
+  } else if (filter === 'year') {
+    now.setFullYear(now.getFullYear() - 1);
+  }
+  return now;
+};
+
 async function Analytics(req,res) {
    try {
     let Status = 'Pending';
@@ -370,13 +380,55 @@ async function Analytics(req,res) {
     const clients = await SchemaClient.find();
     Status = 'completed';
     const completedRec = await SchemaReclamation.find({Status});
+     Status = 'In Progress';
+    const progressRec = await SchemaReclamation.find({Status});
+     Status = 'deleted';
+    const deletedRec = await SchemaReclamation.find({Status});
     const newRec = reclamations.length;
     const client = clients.length;
+    const penging = reclamations.length;
     const completed = completedRec.length;
+    const progress = progressRec.length;
+    const deleted = deletedRec.length;
     console.log(newRec,client,completed);
+//Reclamation Status
+    const { range } = req.query; // week | month | year
+    const startDate = getStartDate(range || 'week');
+     // نجيب كامل الشكاوي من تاريخ محدد
+    const all = await SchemaReclamation.find({ createdAt: { $gte: startDate } });
+
+    const total = all.length;
+    console.log("total: ",total);
+    if (total === 0) {
+      return res.json({
+        completed: 0,
+        inProgress: 0,
+        pending: 0,
+        reopened: 0
+      });
+    }
+
+     // نحسب كل حالة
+    const counts = {
+      completed: all.filter(r => r.Status === 'completed').length,
+      inProgress: all.filter(r => r.Status === 'In Progress').length,
+      pending: all.filter(r => r.Status === 'Pending').length,
+      reopened: all.filter(r => r.Status === 'reopened').length,
+    };
+
+    // نحسب النسبة المئوية
+    const percentages = {
+      completed: Math.round((counts.completed / total) * 100),
+      inProgress: Math.round((counts.inProgress / total) * 100),
+      pending: Math.round((counts.pending / total) * 100),
+      reopened: Math.round((counts.reopened / total) * 100),
+    };
+
     res.status(200).json({newRec: newRec,
   client: client,
-  completed: completed});
+  completed: completed,
+  percentages: percentages,
+  counts: counts});
   } catch (err) {
     res.status(500).json({ error: err.message});
   }

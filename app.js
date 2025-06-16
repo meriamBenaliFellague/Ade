@@ -4,7 +4,7 @@ const session = require('express-session');
 const mongoose = require("mongoose");
 const path = require("path");
 const { SchemaMessage } = require("./model/messageDB"); 
-const bcrypt = require("bcrypt");
+ 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
@@ -129,7 +129,7 @@ app.get("/Home/LoginAdmin/Dashboard", (req, res) => {
 const router = require("./server/ClientLogin");
 const dbUrl = process.env.dbUrl;
 
-mongoose
+mongoose 
   .connect(dbUrl) 
   .then(() => {
     console.log("Connected to MongoDB successfully");
