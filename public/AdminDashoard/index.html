@@ -280,7 +280,7 @@
 								<i class='bx bx-wrench'></i>
 							</div>
 							<div class="team-info">
-								<h3>Tech Support Team</h3>
+								<h3>Technical Maintenance Team</h3>
 								<p>Technical support and maintenance</p>
 							</div>
 						</div>
@@ -296,8 +296,8 @@
 								<i class='bx bx-message-rounded-dots'></i>
 							</div>
 							<div class="team-info">
-								<h3>Customer Service Team</h3>
-								<p>Customer support and assistance</p>
+								<h3>Billing Services Team</h3>
+								<p>Billing services and support</p>
 							</div>
 						</div>
 						<div class="team-members">
@@ -312,8 +312,24 @@
 								<i class='bx bx-check-circle'></i>
 							</div>
 							<div class="team-info">
-								<h3>Quality Team</h3>
-								<p>Quality assurance and testing</p>
+								<h3>Water Quality & Pollution Control Team</h3>
+								<p>Water quality and pollution control</p>
+							</div>
+						</div>
+						<div class="team-members">
+							<!-- Members will be added dynamically -->
+						</div>
+					</div>
+
+					<!-- Electronic Payment Team -->
+					<div class="team-card">
+						<div class="team-header">
+							<div class="team-icon">
+								<i class='bx bx-credit-card'></i>
+							</div>
+							<div class="team-info">
+								<h3>Electronic Payment Team</h3>
+								<p>Online payment processing and support</p>
 							</div>
 						</div>
 						<div class="team-members">
@@ -351,9 +367,10 @@
 								<label for="member-team">Assign to Team</label>
 								<select id="member-team" required>
 									<option value="">Select a team</option>
-									<option value="tech-support">Tech Support Team</option>
-									<option value="customer-service">Customer Service Team</option>
-									<option value="quality">Quality Team</option>
+									<option value="tech-support">Technical Maintenance Team</option>
+									<option value="customer-service">Billing Services Team</option>
+									<option value="quality">Water Quality & Pollution Control Team</option>
+									<option value="electronic-payment">Electronic Payment Team</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -363,6 +380,36 @@
 									<option value="team-lead">Team Lead</option>
 									<option value="senior">Senior Member</option>
 									<option value="member">Team Member</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="member-municipality">Municipality</label>
+								<select id="member-municipality" required>
+									<option value="">Select a municipality</option>
+									<option value="ain-defla">Ain Defla</option>
+									<option value="bordj-emir-abdelkader">Bordj Emir Abdelkader</option>
+									<option value="boumedfaa">Boumedfaa</option>
+									<option value="djendel">Djendel</option>
+									<option value="djemaa-djendel">Djemaa Djendel</option>
+									<option value="el-abadia">El Abadia</option>
+									<option value="el-amra">El Amra</option>
+									<option value="el-attef">El Attef</option>
+									<option value="el-hammam">El Hammam</option>
+									<option value="el-maine">El Maine</option>
+									<option value="el-oued">El Oued</option>
+									<option value="hammam-righa">Hammam Righa</option>
+									<option value="hoceinia">Hoceinia</option>
+									<option value="khemis-miliana">Khemis Miliana</option>
+									<option value="mekhatria">Mekhatria</option>
+									<option value="miliana">Miliana</option>
+									<option value="oued-chorfa">Oued Chorfa</option>
+									<option value="oued-djediouat">Oued Djeddiouat</option>
+									<option value="rouina">Rouina</option>
+									<option value="sidi-lakhdar">Sidi Lakhdar</option>
+									<option value="tacheta-zegagha">Tacheta Zegagha</option>
+									<option value="tarek-ibn-ziad">Tarek Ibn Ziad</option>
+									<option value="tiberkanine">Tiberkanine</option>
+									<option value="zaccar">Zaccar</option>
 								</select>
 							</div>
 						</form>
@@ -611,8 +658,17 @@
 				<div class="todo">
 					<div class="head">
 						<h3>Todos</h3>
-						<i class='bx bx-plus' id="add-todo"></i>
-						<i class='bx bx-filter'></i>
+						<div class="header-actions">
+							<div class="header-icon" id="add-todo" title="Add New Todo">
+								<i class='bx bx-plus'></i>
+							</div>
+							<div class="header-icon" title="Filter">
+								<i class='bx bx-filter'></i>
+							</div>
+							<div class="header-icon" title="More Options">
+								<i class='bx bx-dots-vertical-rounded'></i>
+							</div>
+						</div>
 					</div>
 					<ul class="todo-list">
 						<li class="completed">
@@ -631,9 +687,9 @@
 				</div>
 			</div>
 
-			<!-- Settings Section -->
-			<div id="settings-section" style="display:none;">
-				<div class="settings-head">
+				<!-- Settings Section -->
+				<div id="settings-section" style="display:none;">
+					<div class="settings-head">
 					<h1>Settings</h1>
 					<ul class="breadcrumb">
 						<li><a href="#">Dashboard</a></li>
@@ -738,6 +794,25 @@
 	
 
     <script src="script.js"></script> 
+    <script src="todo.js"></script>
+    <!-- Complaint Info Modal -->
+    <div id="complaint-modal-overlay" class="modal-overlay">
+        <div class="complaint-modal">
+            <div class="complaint-modal-header">
+                <h3>Complaint Details</h3>
+                <button class="close-modal" onclick="closeComplaintInfoModal()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="complaint-modal-body" id="complaint-modal-body">
+                <!-- Complaint details will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
 <script>
 // Dropdown toggle logic for assignee
 function closeAllDropdowns() {
@@ -868,7 +943,7 @@ document.querySelectorAll('.assignee-cell').forEach(cell => {
                 <div class="team-section">
                     <div class="team-header">
                         <i class='bx bx-wrench'></i>
-                        <span>Tech Support</span>
+                        <span>Technical Maintenance</span>
                     </div>
                     <div class="team-members" id="TechSupport">
                         
