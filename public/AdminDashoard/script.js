@@ -51,15 +51,30 @@ window.addEventListener('resize', function () {
 
 
 
+// Dark Mode Toggle
 const switchMode = document.getElementById('switch-mode');
 
-switchMode.addEventListener('change', function () {
-	if(this.checked) {
-		document.body.classList.add('dark');
-	} else {
-		document.body.classList.remove('dark');
-	}
-})
+// Check for saved user preference, if any
+const darkMode = localStorage.getItem('darkMode') === 'true';
+
+// Apply dark mode if previously enabled
+if (darkMode) {
+    document.body.classList.add('dark');
+    if (switchMode) switchMode.checked = true;
+}
+
+// Toggle dark mode
+if (switchMode) {
+    switchMode.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('dark');
+            localStorage.setItem('darkMode', 'true');
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('darkMode', 'false');
+        }
+    });
+}
 
 // Message functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -396,7 +411,24 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
 	const addTodoBtn = document.getElementById('add-todo');
 	const addTodoModal = document.getElementById('add-todo-modal');
-	const todoActionsMenu = document.querySelector('.todo-actions-menu');
+	const todoActionsMenu = document.createElement('div');
+	todoActionsMenu.className = 'todo-actions-menu';
+	todoActionsMenu.innerHTML = `
+		<div class="menu-item" data-status="completed">
+			<i class='bx bx-check-circle'></i> Mark as Completed
+		</div>
+		<div class="menu-item" data-status="process">
+			<i class='bx bx-time-five'></i> Mark as In Progress
+		</div>
+		<div class="menu-item" data-status="not-completed">
+			<i class='bx bx-x-circle'></i> Mark as Not Completed
+		</div>
+		<div class="menu-divider"></div>
+		<div class="menu-item delete-todo">
+			<i class='bx bx-trash'></i> Delete Todo
+		</div>
+	`;
+	document.body.appendChild(todoActionsMenu);
 	let activeTodoItem = null;
 
 	// Show Add Todo Modal
@@ -441,15 +473,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// Show Todo Actions Menu
 	document.addEventListener('click', function(e) {
-		if (e.target.classList.contains('todo-actions')) {
+		// Handle click on todo actions icon
+		if (e.target.classList.contains('todo-actions') || e.target.closest('.todo-actions')) {
+			e.preventDefault();
 			e.stopPropagation();
-			const rect = e.target.getBoundingClientRect();
-			activeTodoItem = e.target.closest('li');
 			
+			const target = e.target.classList.contains('todo-actions') ? e.target : e.target.closest('.todo-actions');
+			const rect = target.getBoundingClientRect();
+			activeTodoItem = target.closest('li');
+			
+			// Toggle menu visibility
+			if (todoActionsMenu.style.display === 'block') {
+				todoActionsMenu.style.display = 'none';
+				return;
+			}
+			
+			// Position the menu
 			todoActionsMenu.style.display = 'block';
-			todoActionsMenu.style.top = `${rect.bottom + 5}px`;
-			todoActionsMenu.style.left = `${rect.left - 150}px`;
-		} else if (!e.target.closest('.todo-actions-menu')) {
+			todoActionsMenu.style.top = `${rect.bottom + window.scrollY + 5}px`;
+			todoActionsMenu.style.left = `${rect.left + window.scrollX - 150}px`;
+		} 
+		// Handle click on menu items
+		else if (e.target.closest('.menu-item')) {
+			e.preventDefault();
+			e.stopPropagation();
+			
+			const menuItem = e.target.closest('.menu-item');
+			if (menuItem.classList.contains('delete-todo')) {
+				activeTodoItem.remove();
+			} else {
+				const status = menuItem.dataset.status;
+				if (status && activeTodoItem) {
+					activeTodoItem.className = status;
+				}
+			}
+			todoActionsMenu.style.display = 'none';
+		}
+		// Close menu when clicking outside
+		else if (!e.target.closest('.todo-actions-menu')) {
+			todoActionsMenu.style.display = 'none';
+		}
+	});
+	
+	// Close menu when pressing Escape key
+	document.addEventListener('keydown', function(e) {
+		if (e.key === 'Escape') {
 			todoActionsMenu.style.display = 'none';
 		}
 	});
@@ -1231,36 +1299,51 @@ async function DisplayMessages(lead){
       }
 }
 
-async function renderMessages(message){
-	const chatMessages = document.querySelector('.chat-messages');
-	chatMessages.innerHTML = "";
-
-	message.forEach(msg => {
-		const dateOnly =  new Date(msg.createdAt).toLocaleTimeString([], {
-			hour: '2-digit',
-			minute: '2-digit',
-			hour12: true // حطها true إذا حبيت صيغة 12 ساعة
-		  });
-		const messageElement = document.createElement('div');
-		if(!msg.sender){
-			messageElement.className = 'message sent';
-			messageElement.innerHTML = `
-				<div class="message-content">${msg.message}</div>
-				<div class="message-time">${dateOnly}</div>
-			`;
-			chatMessages.appendChild(messageElement);
-			chatMessages.scrollTop = chatMessages.scrollHeight;
-		}else{
-			messageElement.className = 'message received';
-			messageElement.innerHTML = `
-				<div class="message-content">${msg.message}</div>
-				<div class="message-time">${dateOnly}</div>
-			`;
-			chatMessages.appendChild(messageElement);
-			chatMessages.scrollTop = chatMessages.scrollHeight;
-		}	
-		
-	})
+async function renderMessages(messages) {
+    const chatMessages = document.querySelector('.chat-messages');
+    chatMessages.innerHTML = "";
+    
+    let currentDate = '';
+    
+    // Sort messages by createdAt to ensure they're in chronological order
+    messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    
+    messages.forEach((msg, index) => {
+        const messageDate = new Date(msg.createdAt);
+        const messageDay = messageDate.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        const timeString = messageDate.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+        
+        // Add date separator if this is the first message or date has changed
+        if (currentDate !== messageDay) {
+            currentDate = messageDay;
+            const dateSeparator = document.createElement('div');
+            dateSeparator.className = 'date-separator';
+            dateSeparator.textContent = messageDay;
+            chatMessages.appendChild(dateSeparator);
+        }
+        
+        const messageElement = document.createElement('div');
+        messageElement.className = `message ${msg.sender ? 'received' : 'sent'}`;
+        
+        messageElement.innerHTML = `
+            <div class="message-content">${msg.message}</div>
+            <div class="message-time">${timeString}</div>
+        `;
+        
+        chatMessages.appendChild(messageElement);
+    });
+    
+    // Scroll to bottom after rendering all messages
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 
@@ -1355,6 +1438,35 @@ async function renderLeader(lead){
 	const chatContainer = document.getElementById('conversations');
 	chatContainer.innerHTML = "";
 	sessionStorage.setItem("leaders",  JSON.stringify(lead));
+	
+	// Add click handler for conversation items
+	function setupConversationClick(conversation, leader) {
+		conversation.addEventListener('click', function() {
+			// Remove active class from all conversations
+			document.querySelectorAll('.conversation').forEach(c => {
+				c.classList.remove('active');
+			});
+			
+			// Add active class to clicked conversation
+			this.classList.add('active');
+			
+			// Update chat header
+			const name = this.querySelector('.conversation-name').textContent;
+			const avatar = this.querySelector('.conversation-avatar').innerHTML;
+			document.querySelector('.chat-name').textContent = name;
+			document.querySelector('.chat-avatar').innerHTML = avatar;
+			
+			// Load messages for this conversation
+			sessionStorage.setItem("leaders", JSON.stringify(lead));
+			socket.emit("get receiverId", leader._id);
+			const chatMessages = document.querySelector('.chat-messages');
+			chatMessages.scrollTop = chatMessages.scrollHeight;
+			
+			DisplayMessages(leader);
+		});
+	}
+	
+	// Create conversation items
 	lead.forEach(leader => {
 		const item = document.createElement("div");
 		item.className = "conversation";
@@ -1369,42 +1481,19 @@ async function renderLeader(lead){
 			</div>
 			<div class="conversation-time"></div>
 		 `;
-		 item.onclick = () => {
-			
-		        sessionStorage.setItem("leaders",  JSON.stringify(lead));
-		        socket.emit("get receiverId", leader._id);
-				const chatMessages = document.querySelector('.chat-messages');
-				chatMessages.scrollTop = chatMessages.scrollHeight;
-			
-			DisplayMessages(leader)
-			console.log(leader._id);
-
-			const conversations = document.querySelectorAll('.conversation');
-			// Handle conversation clicks
-
-	conversations.forEach(conversation => {
-		conversation.addEventListener('click', function() {
-			// Remove active class from all conversations
-			conversations.forEach(c =>{
-				console.log("Removing active from:", c);
-				c.classList.remove('active')
-			} );
-			// Add active class to clicked conversation
-			console.log("Adding active to:", this);
-			this.classList.add('active');
-			
-			// Update chat header
-			const name = this.querySelector('.conversation-name').textContent;
-			const avatar = this.querySelector('.conversation-avatar').innerHTML;
-			document.querySelector('.chat-name').textContent = name;
-			document.querySelector('.chat-avatar').innerHTML = avatar;
-		});
+		 
+		 // Set up click handler for this conversation
+		 setupConversationClick(item, leader);
+		 
+		 // Add to container
+		 chatContainer.appendChild(item);
 	});
-
-		}; 
-		
-	chatContainer.appendChild(item);
-	});
+	
+	// If there are conversations, click the first one to load its messages
+	const firstConversation = chatContainer.querySelector('.conversation');
+	if (firstConversation) {
+		firstConversation.click();
+	}
 }
 //Display Reclamation
 async function DisplayReclamations(){
@@ -1678,7 +1767,8 @@ function getTeamIndex(teamValue) {
 	const teamMap = {
 		'tech-support': 1,
 		'customer-service': 2,
-		'quality': 3
+		'quality': 3,
+		'electronic-payment': 4
 	};
 	return teamMap[teamValue];
 }
@@ -1698,6 +1788,7 @@ function renderUsers(user){
 			    <div class="member-details">
 				    <h4>${u.Fullname}</h4>
 				    <p>${u.Role} · ${u.Email}</p>
+				    <p class="member-municipality">${u.Municipality || 'No municipality'}</p>
 			    </div>
 		    </div>
 		    <div class="member-actions">
@@ -1727,6 +1818,7 @@ function renderUsers(user){
 		document.getElementById('member-role').value = u.Role;
 		document.getElementById('member-team').value = u.Team;
 		document.getElementById('member-password').value = '';
+		document.getElementById('member-municipality').value = u.Municipality || '';
 		
 		// Show modal
 		addMemberModal.style.display = 'flex';	
@@ -1816,20 +1908,193 @@ async function DeleteUser(user) {
     }
 }
 
-function showComplaintInfo(btn) {
-    var row = btn.closest('tr');
-    var user = row.querySelector('td p').innerText;
-    var details = {
-        'aya inas': 'Complaint details for aya inas: ...',
-        'ben krouda gogo': 'Complaint details for ben krouda gogo: ...',
-        'Benali fellague mimi': 'Complaint details for Benali fellague mimi: ...',
-        'kada besoltan ipti': 'Complaint details for kada besoltan ipti: ...',
-        'luna fatima': 'Complaint details for luna fatima: ...'
+/**
+ * Shows the complaint details in a modal
+ * @param {string} complaintId - The ID of the complaint to show details for
+ */
+function showComplaintInfo(complaintId) {
+    // Find the complaint row in the table
+    const row = document.querySelector(`tr[data-complaint-id="${complaintId}"]`);
+    if (!row) {
+        console.error('Complaint row not found');
+        return;
+    }
+
+    // Get complaint data from the row
+    const userName = row.querySelector('td p')?.textContent || 'Unknown User';
+    const date = row.querySelector('td:nth-child(2)')?.textContent || 'N/A';
+    const assignee = row.querySelector('.assigned-member')?.textContent.trim() || 'Unassigned';
+    const status = row.querySelector('td:nth-child(4) .status')?.textContent || 'Unknown';
+    
+    // Get the complaint details (this would typically come from your data)
+    // For now, we'll use placeholders for the additional fields
+    const complaintDetails = {
+        id: complaintId,
+        title: `Complaint from ${userName}`,
+        description: `Description of the issue reported by the user.`,
+        address: '123 Main Street, City', // This would come from your data
+        complaintType: 'Water Leak', // This would come from your data
+        hasPhoto: true, // This would come from your data
+        status: status,
+        priority: 'Medium', // This would come from your data
+        category: 'General', // This would come from your data
+        createdAt: date,
+        updatedAt: new Date().toISOString().split('T')[0],
+        assignedTo: assignee,
+        contactEmail: 'user@example.com', // This would come from your data
+        contactPhone: '+1234567890', // This would come from your data
+        municipality: 'Ain Defla', // This would come from your data
+        subscribeId: 'SUB' + Math.floor(10000 + Math.random() * 90000) // This would come from your data
     };
-    var info = details[user] || 'No details available.';
-    document.getElementById('complaint-modal-body').innerText = info;
-    document.getElementById('complaint-modal-overlay').style.display = 'flex';
+
+    // Create the HTML for the modal content
+    const modalContent = `
+        <div class="complaint-details">
+            <div class="complaint-modal-header">
+                <h3>Complaint Details</h3>
+                <div class="modal-actions">
+                    <button class="icon-button" id="print-complaint" title="Print/Download">
+                        <i class='bx bx-printer'></i>
+                    </button>
+                    <button class="icon-button close-modal" onclick="closeComplaintInfoModal()" title="Close">
+                        <i class='bx bx-x'></i>
+                    </button>
+                </div>
+            </div>
+            <div class="complaint-details-content">
+                <div class="detail-row">
+                    <span class="detail-label">Title:</span>
+                    <span class="detail-value">${complaintDetails.title}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="status ${status.toLowerCase().replace(' ', '-')}">${status}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Priority:</span>
+                    <span class="priority">${complaintDetails.priority}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Category:</span>
+                    <span class="category">${complaintDetails.category}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Submitted On:</span>
+                    <span class="date">${complaintDetails.createdAt}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Last Updated:</span>
+                    <span class="date">${complaintDetails.updatedAt}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Assigned To:</span>
+                    <span class="assigned-to">${complaintDetails.assignedTo}</span>
+                </div>
+                <div class="detail-section">
+                    <h4>Description</h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">${complaintDetails.address}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value">${complaintDetails.complaintType}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Photo Attached:</span>
+                        <span class="detail-value">${complaintDetails.hasPhoto ? 'Yes' : 'No'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Details:</span>
+                        <p class="description">${complaintDetails.description}</p>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <h4>Contact Information</h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Municipality:</span>
+                        <span class="detail-value">${complaintDetails.municipality}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Subscribe ID:</span>
+                        <span class="detail-value">${complaintDetails.subscribeId}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <a href="mailto:${complaintDetails.contactEmail}" class="contact-link">${complaintDetails.contactEmail}</a>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone:</span>
+                        <a href="tel:${complaintDetails.contactPhone}" class="contact-link">${complaintDetails.contactPhone}</a>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    // Set the modal content and show it
+    const modalBody = document.getElementById('complaint-modal-body');
+    modalBody.innerHTML = modalContent;
+    
+    // Add event listener for print button
+    const printButton = document.getElementById('print-complaint');
+    if (printButton) {
+        printButton.addEventListener('click', () => {
+            const printWindow = window.open('', '', 'width=800,height=600');
+            const printContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Complaint Details - ${complaintDetails.id}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+                        .print-header { text-align: center; margin-bottom: 20px; }
+                        .print-header h1 { margin: 0; color: #333; }
+                        .print-header p { margin: 5px 0; color: #666; }
+                        .detail-row { display: flex; margin-bottom: 10px; }
+                        .detail-label { font-weight: bold; min-width: 150px; }
+                        .detail-section { margin: 20px 0; }
+                        .detail-section h3 { border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+                        @media print { 
+                            body { -webkit-print-color-adjust: exact; } 
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="print-header">
+                        <h1>Complaint Details</h1>
+                        <p>Generated on ${new Date().toLocaleString()}</p>
+                    </div>
+                    ${document.querySelector('.complaint-details-content').innerHTML}
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.open();
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            
+            // Wait for content to load before printing
+            printWindow.onload = function() {
+                setTimeout(() => {
+                    printWindow.print();
+                    // printWindow.close(); // Uncomment to close after printing
+                }, 500);
+            };
+        });
+    }
+    
+    // Show the modal
+    const modalOverlay = document.getElementById('complaint-modal-overlay');
+    modalOverlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    
+    // Add event listener to close modal when clicking outside
+    modalOverlay.onclick = function(event) {
+        if (event.target === modalOverlay) {
+            closeComplaintInfoModal();
+        }
+    };
 }
 
 function closeComplaintInfoModal() {
@@ -1933,7 +2198,7 @@ function showNotification(type, title, message) {
 
 /*
  * Shows detailed information about a complaint in a modal
- * @param {string} complaintId - The unique identifier of the complaint to display
+ * /**@param {string} complaintId - The unique identifier of the complaint to display
  
 function showComplaintInfo(complaintId) {
     try {
