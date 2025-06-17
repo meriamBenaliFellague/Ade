@@ -39,6 +39,32 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+/* Back Button */
+.back-button {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    font-size: 24px;
+    color: var(--darck-blue);
+    background: rgba(255, 255, 255, 0.9);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: var(--box-shadow);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-button:hover {
+    background: var(--darck-blue);
+    color: white;
+    transform: translateX(-3px);
+}
+
 /* Background Shapes */
 .bg-shape-1 {
     position: fixed;
