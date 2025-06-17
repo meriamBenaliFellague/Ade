@@ -1415,9 +1415,11 @@ async function renderLeaderAssign(lead){
 	const tech = document.getElementById('TechSupport');
 	const customer = document.getElementById('CustomerService');
 	const quality = document.getElementById('QualityTeam');
+	const electronic = document.getElementById('ElectronicTeam');
 	 tech.innerHTML = '';
 	  customer.innerHTML = '';
 	   quality.innerHTML = '';
+	   electronic.innerHTML = '';
 	lead.forEach(leader => {
 		const item = document.createElement("div");
 		item.className = "member-item";
@@ -1426,13 +1428,15 @@ async function renderLeaderAssign(lead){
             selectMember(this);
         });
 		console.log(leader.Team)
-		if (leader.Team == 'tech-support') {
+		if (leader.Team == 'Technical Maintenance Team') {
 		    tech.appendChild(item);
-	    } else if (leader.Team == 'customer-service') {
+	    } else if (leader.Team == 'Billing Services Team') {
 		    customer.appendChild(item);
-	    }else{
+	    }else if (leader.Team == 'Water Quality & Pollution Control Team'){
 		    quality.appendChild(item);
-	    }
+	    }else{
+			electronic.appendChild(item);
+		}
 	})
 	
 }
@@ -1705,6 +1709,7 @@ newBtn.addEventListener('click', async function(e){console.log('Add function')
 	const passwordTeam = document.getElementById('member-password').value;
 	const teamAssign = document.getElementById('member-team').value;
 	const roleTeam = document.getElementById('member-role').value;
+	const municipality = document.getElementById('member-municipality').value;
 	console.log(fullname);
 	try { 
 		const response = await fetch("http://localhost:3000/api/CreateUser", {
@@ -1717,7 +1722,8 @@ newBtn.addEventListener('click', async function(e){console.log('Add function')
 			Email: email,
 			Password: passwordTeam,
 			Team: teamAssign,
-			Role: roleTeam 
+			Role: roleTeam ,
+			Municipality: municipality,
 		  }) 
 		});
 		console.log(response)
@@ -1766,10 +1772,10 @@ async function DisplayUsers(){
 
 function getTeamIndex(teamValue) {
 	const teamMap = {
-		'tech-support': 1,
-		'customer-service': 2,
-		'quality': 3,
-		'electronic-payment': 4
+		'Technical Maintenance Team': 1,
+		'Billing Services Team': 2,
+		'Water Quality & Pollution Control Team': 3,
+		'Electronic Payment Team': 4
 	};
 	return teamMap[teamValue];
 }
@@ -2372,6 +2378,7 @@ window.addRow = function(data) {
 };
 
 async function Analytics(range) { 
+	console.log("range",range);
 	try {
         const response = await fetch(`http://localhost:3000/api/Analytics?range=${range}`, {
             method: 'GET',
@@ -2388,12 +2395,12 @@ async function Analytics(range) {
     }
 } 
 window.addEventListener('load', Analytics);
-
+let reclamationChart ;
 function renderAnalytics(data){
 	const newRec = document.getElementById('newRec');
 	const client = document.getElementById('client');
 	const completed = document.getElementById('completed');
-delet;
+
 	newRec.textContent =  data.newRec;
 	client.textContent =  data.client;
 	completed.textContent =  data.completed;
@@ -2424,4 +2431,55 @@ delet;
         reopened.dataset.initialized = true;
         reopened.textContent = `${percentages["reopened"]}%`;
 
+        if (!reclamationChart) {
+  const ctx = document.getElementById('reclamationChart').getContext('2d');
+  reclamationChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Completed', 'In Progress', 'Pending', 'Dismissed'],
+      datasets: [{
+        data: [
+          percentages["completed"],
+          percentages["inProgress"],
+          percentages["pending"],
+          percentages["reopened"]
+        ],
+        backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#F44336'],
+        borderWidth: 0,
+        cutout: '70%',
+        spacing: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw || 0;
+              return `${label}: ${value}%`;
+            }
+          }
+        }
+      },
+      cutout: '70%',
+      radius: '90%'
+    }
+  });
+} else {
+  // Update only
+  const newData = [
+    percentages["completed"],
+    percentages["inProgress"],
+    percentages["pending"],
+    percentages["reopened"]
+  ];
+  reclamationChart.data.datasets[0].data = newData;
+  reclamationChart.update();
 }
+
+}
+

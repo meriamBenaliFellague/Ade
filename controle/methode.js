@@ -184,8 +184,8 @@ async function update_user(req,res){
 //create user (Admin)
 async function create_user(req, res){
   const id = `user${Math.floor(Math.random() * 100000)}`;
-  const {Fullname, Email, Password, Team, Role} = req.body;
-  const account = new SchemaTeam({id, Fullname, Email, Password, Team, Role});
+  const {Fullname, Email, Password, Team, Role, Municipality} = req.body;
+  const account = new SchemaTeam({id, Fullname, Email, Password, Team, Role, Municipality});
   console.log(account);
   account
     .save()
@@ -402,8 +402,14 @@ async function Analytics(req,res) {
     const deleted = deletedRec.length;
     console.log(newRec,client,completed);
 //Reclamation Status
-    const { range } = req.query; // week | month | year
-    const startDate = getStartDate(range || 'week');
+    let { range } = req.query; // week | month | year
+   console.log("range ",range);
+
+if (typeof range !== 'string' || ['week', 'month', 'year'].includes(range) === false) {
+  range = 'week'; // القيمة الافتراضية
+}
+
+    const startDate = getStartDate(range);
      // نجيب كامل الشكاوي من تاريخ محدد
     const all = await SchemaReclamation.find({ createdAt: { $gte: startDate } });
 

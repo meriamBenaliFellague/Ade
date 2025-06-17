@@ -367,10 +367,10 @@
 								<label for="member-team">Assign to Team</label>
 								<select id="member-team" required>
 									<option value="">Select a team</option>
-									<option value="tech-support">Technical Maintenance Team</option>
-									<option value="customer-service">Billing Services Team</option>
-									<option value="quality">Water Quality & Pollution Control Team</option>
-									<option value="electronic-payment">Electronic Payment Team</option>
+									<option value="Technical Maintenance Team">Technical Maintenance Team</option>
+									<option value="Billing Services Team">Billing Services Team</option>
+									<option value="Water Quality & Pollution Control Team">Water Quality & Pollution Control Team</option>
+									<option value="Electronic Payment Team">Electronic Payment Team</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -943,7 +943,7 @@ document.querySelectorAll('.assignee-cell').forEach(cell => {
                 <div class="team-section">
                     <div class="team-header">
                         <i class='bx bx-wrench'></i>
-                        <span>Technical Maintenance</span>
+                        <span>Technical Maintenance Team</span>
                     </div>
                     <div class="team-members" id="TechSupport">
                         
@@ -954,7 +954,7 @@ document.querySelectorAll('.assignee-cell').forEach(cell => {
                 <div class="team-section">
                     <div class="team-header">
                         <i class='bx bx-message-rounded-dots'></i>
-                        <span>Customer Service</span>
+                        <span>Billing Services Team</span>
                     </div>
                     <div class="team-members" id="CustomerService">
                        
@@ -965,12 +965,24 @@ document.querySelectorAll('.assignee-cell').forEach(cell => {
                 <div class="team-section">
                     <div class="team-header">
                         <i class='bx bx-check-circle'></i>
-                        <span>Quality Team</span>
+                        <span>Water Quality & Pollution Control Team</span>
                     </div>
                     <div class="team-members" id="QualityTeam">
                         
                     </div>
                 </div>
+
+                <!-- Electronic Payment Team -->
+                <div class="team-section">
+                    <div class="team-header">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Electronic Payment Team</span>
+                    </div>
+                    <div class="team-members" id="ElectronicTeam">
+                        
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="assign-modal-footer">
@@ -1223,9 +1235,10 @@ document.getElementById('close-message-modal').onclick = function() {
 <script>
 // Initialize donut chart
 document.addEventListener('DOMContentLoaded', function() {
+    /*
     // Chart data
     const chartData = {
-        labels: ['Completed', 'In Progress', 'Pending', 'Reopened'],
+        labels: ['Completed', 'In Progress', 'Pending', 'Dismissed'],
         datasets: [{
             data: [45, 30, 15, 10],
             backgroundColor: [
@@ -1269,6 +1282,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize chart
     const ctx = document.getElementById('reclamationChart').getContext('2d');
     const reclamationChart = new Chart(ctx, config);
+    */
 
     // Time filter functionality
     const timeFilters = document.querySelectorAll('.time-filter');

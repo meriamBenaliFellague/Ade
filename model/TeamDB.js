@@ -28,6 +28,10 @@ const team = new Schema(
         type: String,
         required: true, 
     },
+    Municipality: {
+        type: String,
+        required: true,
+    },
   }
 )  
 const SchemaTeam = mongoose.model("team", team);
