@@ -8,8 +8,15 @@ const btnL =  document.getElementById('btn-login');
 const forgotPasswordModal = document.getElementById('forgotPasswordModal');
 const closeForgotPassword = document.querySelector('.close-forgot-password');
 const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-const resetEmail = document.getElementById('resetEmail');
+const resetEmailInput = document.getElementById('resetEmail');
 const resetMessage = document.getElementById('resetMessage');
+const emailStep = document.getElementById('emailStep');
+const verificationStep = document.getElementById('verificationStep');
+const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+const verificationCodeInput = document.getElementById('verificationCode');
+const newPasswordSection = document.getElementById('newPasswordSection');
+const updatePasswordBtn = document.getElementById('updatePasswordBtn');
+let resetEmail = '';
 
 // Password Visibility Toggle
 const togglePassword = document.getElementById('togglePassword');
@@ -94,98 +101,183 @@ if (loginForm && loginButton) {
 function openForgotPasswordModal(e) {
     e.preventDefault();
     forgotPasswordModal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+    
+    // Reset the form and show email step
+    emailStep.style.display = 'block';
+    verificationStep.style.display = 'none';
+    newPasswordSection.style.display = 'none';
+    verifyCodeBtn.style.display = 'block';
+    if (updatePasswordBtn) updatePasswordBtn.style.display = 'none';
+    if (verificationCodeInput) verificationCodeInput.disabled = false;
+    resetEmail = '';
+    forgotPasswordForm.reset();
 }
 
 // Close Forgot Password Modal
 function closeForgotPasswordModal() {
     forgotPasswordModal.classList.remove('active');
-    document.body.style.overflow = ''; // Re-enable scrolling
-    // Reset form
+    document.body.style.overflow = '';
+    
+    // Reset form state
+    emailStep.style.display = 'block';
+    verificationStep.style.display = 'none';
+    newPasswordSection.style.display = 'none';
+    verifyCodeBtn.style.display = 'block';
+    if (updatePasswordBtn) updatePasswordBtn.style.display = 'none';
+    if (verificationCodeInput) verificationCodeInput.disabled = false;
+    resetEmail = '';
     forgotPasswordForm.reset();
-    resetMessage.style.display = 'none';
+    resetMessage.textContent = '';
+    resetMessage.className = 'reset-message';
 }
 
-// Close modal when clicking outside of it
+// Close modal when clicking outside of it or on close button
+if (closeForgotPassword) {
+    closeForgotPassword.addEventListener('click', closeForgotPasswordModal);
+}
+
 window.addEventListener('click', (e) => {
     if (e.target === forgotPasswordModal) {
         closeForgotPasswordModal();
     }
 });
 
-// Close button event
-closeForgotPassword.addEventListener('click', closeForgotPasswordModal);
+// Handle Verify Code button click
+if (verifyCodeBtn) {
+    verifyCodeBtn.addEventListener('click', () => {
+        const code = verificationCodeInput.value.trim();
+        
+        if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
+            showResetMessage('Please enter a valid 6-digit code', 'error');
+            verificationCodeInput.focus();
+            return;
+        }
+        
+        // For demo purposes, accept any 6-digit code
+        showResetMessage('Code verified! Please set your new password.', 'success');
+        
+        // Show password fields and update button
+        newPasswordSection.style.display = 'block';
+        if (updatePasswordBtn) updatePasswordBtn.style.display = 'block';
+        verifyCodeBtn.style.display = 'none';
+        verificationCodeInput.disabled = true;
+    });
+}
 
-// Handle Forgot Password form submission
-forgotPasswordForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const email = resetEmail.value.trim();
-    const submitButton = forgotPasswordForm.querySelector('button[type="submit"]');
-    const buttonText = submitButton.innerHTML;
-    
-    if (!email) {
-        showResetMessage('Please enter your email address', 'error');
-        return;
-    }
-    
-    // Simple email validation
-    if (!isValidEmail(email)) {
-        showResetMessage('Please enter a valid email address', 'error');
-        return;
-    }
-    
-    try {
-        // Show loading state
-        submitButton.disabled = true;
-        submitButton.classList.add('btn-loading');
-        submitButton.innerHTML = '<span class="btn-text">Sending...</span>';
+// Handle Update Password button click
+if (updatePasswordBtn) {
+    updatePasswordBtn.addEventListener('click', () => {
+        const newPassword = document.getElementById('newPassword').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
         
-        // Simulate API call (replace with actual API call)
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Simple validation
+        if (!newPassword) {
+            showResetMessage('Please enter a new password', 'error');
+            return;
+        }
         
-        // Simulate successful response (replace with actual API response handling)
-        showResetMessage('Password reset link has been sent to your email!', 'success');
-        forgotPasswordForm.reset();
+        if (newPassword !== confirmPassword) {
+            showResetMessage('Passwords do not match', 'error');
+            return;
+        }
         
-        // Close modal after 3 seconds
+        // For demo purposes, show success message
+        showResetMessage('Password updated successfully!', 'success');
+        
+        // Close the modal after 2 seconds
         setTimeout(() => {
             closeForgotPasswordModal();
-        }, 3000);
+        }, 2000);
+    });
+}
+
+// Handle Forgot Password form submission
+if (forgotPasswordForm) {
+    forgotPasswordForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         
-    } catch (error) {
-        console.error('Error:', error);
-        showResetMessage('An error occurred. Please try again later.', 'error');
-    } finally {
-        // Reset button state
-        submitButton.disabled = false;
-        submitButton.classList.remove('btn-loading');
-        submitButton.innerHTML = buttonText;
-    }
-});
+        const email = resetEmailInput.value.trim();
+        const submitBtn = forgotPasswordForm.querySelector('button[type="submit"]');
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+        resetMessage.textContent = '';
+        resetMessage.className = 'reset-message';
+        
+        // Simple email validation
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showResetMessage('Please enter a valid email address', 'error');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            resetEmailInput.focus();
+            return false;
+        }
+        
+        // Simulate API call delay
+        setTimeout(() => {
+            try {
+                // Save the email and show verification step
+                resetEmail = email;
+                emailStep.style.display = 'none';
+                verificationStep.style.display = 'block';
+                verificationCodeInput.focus();
+                
+                // Update the message
+                showResetMessage(`A verification code has been sent to ${email}`, 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showResetMessage('Error processing your request. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+            }
+        }, 1000);
+    });
+}
 
 // Helper function to show reset message
 function showResetMessage(message, type) {
     resetMessage.textContent = message;
     resetMessage.className = 'reset-message';
-    resetMessage.classList.add(type);
-    resetMessage.style.display = 'block';
     
-    // Auto-hide message after 5 seconds
-    setTimeout(() => {
-        resetMessage.style.opacity = '0';
+    if (type === 'success') {
+        resetMessage.classList.add('success');
+    } else if (type === 'error') {
+        resetMessage.classList.add('error');
+        
+        // Add shake animation for errors
+        resetMessage.style.animation = 'none';
+        void resetMessage.offsetWidth; // Trigger reflow
+        resetMessage.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
+    }
+    
+    // Auto-hide success messages after 5 seconds
+    if (type === 'success') {
         setTimeout(() => {
-            resetMessage.style.display = 'none';
-            resetMessage.style.opacity = '1';
-        }, 300);
-    }, 5000);
+            if (resetMessage.textContent === message) {
+                resetMessage.textContent = '';
+                resetMessage.className = 'reset-message';
+            }
+        }, 5000);
+    }
 }
 
-// Simple email validation
-function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
+// Add shake animation for errors
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+        40%, 60% { transform: translate3d(3px, 0, 0); }
+    }
+`;
+document.head.appendChild(style);
 
 //login Admin
 btnL.addEventListener('click', async function (e) {

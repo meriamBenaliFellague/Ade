@@ -7,12 +7,43 @@ document.addEventListener('DOMContentLoaded', function() {
     initMap();
     setupFormValidation();
     setupPhotoHandling();
+    setupHeaderScroll();
 });
+
+// Header scroll effect
+function setupHeaderScroll() {
+    const header = document.querySelector('.header');
+    const headerHeight = header.offsetHeight;
+    let lastScroll = 0;
+
+    // Add padding to body to account for fixed header
+    document.body.style.paddingTop = `${headerHeight}px`;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        // Add/remove scrolled class based on scroll position
+        if (currentScroll > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        // Hide header on scroll down, show on scroll up
+        if (currentScroll > lastScroll && currentScroll > headerHeight) {
+            header.style.transform = `translateY(-${headerHeight}px)`;
+        } else {
+            header.style.transform = 'translateY(0)';
+        }
+        
+        lastScroll = currentScroll;
+    });
+}
 
 function mapError() {
     const mapDiv = document.getElementById("map");
     if (mapDiv) {
-        mapDiv.innerHTML = '<div class="alert alert-danger text-center p-3">عذراً، حدث خطأ في تحميل الخريطة. يرجى تحديث الصفحة أو التحقق من اتصال الإنترنت.</div>';
+        mapDiv.innerHTML = '<div class="alert alert-danger text-center p-3">Sorry, there was an error loading the map. Please refresh the page or check your internet connection.</div>';
     }
 }
 
@@ -37,7 +68,7 @@ function initMap() {
 
         // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+            attribution: 'Map data &copy; OpenStreetMap contributors'
         }).addTo(map);
 
         // Add a rectangle to show Ain Defla boundaries
@@ -51,7 +82,7 @@ function initMap() {
         // Create marker
         marker = L.marker(ainDeflaCenter, {
             draggable: true,
-            title: 'اضغط واسحب لتحديد الموقع'
+            title: 'Click and drag to select location'
         }).addTo(map);
 
         // Update location when marker is dragged
@@ -66,7 +97,7 @@ function initMap() {
                 marker.setLatLng(clickedPoint);
                 updateLocation(clickedPoint);
             } else {
-                alert("الرجاء اختيار موقع داخل منطقة عين الدفلى");
+                alert("Please select a location within Ain Defla area");
             }
         });
 
@@ -90,15 +121,15 @@ function updateLocation(latlng) {
         document.getElementById("latitude").value = latlng.lat;
         document.getElementById("longitude").value = latlng.lng;
         
-        // Update address field with Arabic text and coordinates
-        document.getElementById("address").value = `عين الدفلى (${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)})`;
+        // Update address field with coordinates
+        document.getElementById("address").value = `Ain Defla (${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)})`;
         document.getElementById("address").classList.remove('is-invalid');
         
         // Center map on new location
         map.panTo(latlng);
     } catch (error) {
         console.error("Error updating location:", error);
-        alert("حدث خطأ في تحديث الموقع. حاول مرة أخرى.");
+        alert("An error occurred while updating the location. Please try again.");
     }
 }
 

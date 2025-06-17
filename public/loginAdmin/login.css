@@ -38,6 +38,32 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+/* Back Button */
+.back-button {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    font-size: 24px;
+    color: var(--darck-blue);
+    background: rgba(255, 255, 255, 0.9);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: var(--box-shadow);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-button:hover {
+    background: var(--darck-blue);
+    color: white;
+    transform: translateX(-3px);
+}
+
 /* Background Shapes */
 .bg-shape-1 {
     position: fixed;
@@ -995,6 +1021,124 @@ body {
     color: #721c24;
     border: 1px solid #f1b0b7;
     box-shadow: 0 4px 15px rgba(220, 53, 69, 0.1);
+}
+
+/* Verification Code Input */
+#verificationCode {
+    letter-spacing: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    text-align: center;
+    padding: 15px 20px !important;
+    transition: all 0.3s ease;
+    border: 2px solid #e0e9ff;
+    background: #f8faff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+#verificationCode:focus {
+    border-color: var(--darck-blue);
+    box-shadow: 0 0 0 3px rgba(8, 80, 136, 0.15);
+    background: #fff;
+}
+
+#verificationCode::placeholder {
+    letter-spacing: normal;
+    font-family: var(--font-family);
+    font-size: 15px;
+    color: #aaa;
+    transition: all 0.3s ease;
+}
+
+#verificationCode:focus::placeholder {
+    color: #ddd;
+}
+
+/* New Password Section */
+#newPasswordSection {
+    margin-top: 20px;
+    animation: fadeIn 0.4s ease-out;
+    background: rgba(248, 250, 255, 0.6);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e9ff;
+}
+
+#newPasswordSection .input-box {
+    margin-bottom: 15px;
+}
+
+#newPasswordSection .input-box:last-child {
+    margin-bottom: 0;
+}
+
+#newPasswordSection .input-box input {
+    background: #fff;
+    border: 2px solid #e0e9ff;
+    transition: all 0.3s ease;
+}
+
+#newPasswordSection .input-box input:focus {
+    border-color: var(--darck-blue);
+    box-shadow: 0 0 0 3px rgba(8, 80, 136, 0.1);
+}
+
+#newPasswordSection .input-box label {
+    color: #555;
+    font-weight: 500;
+}
+
+/* Button Group */
+.btn-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-group .btn {
+    flex: 1;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-group .btn i {
+    margin-left: 8px;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.btn-group .btn:hover i {
+    transform: translateX(3px);
+}
+
+/* Error Message */
+.error-message {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 5px;
+    text-align: left;
+    padding-left: 5px;
+    display: none;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 /* Loading animation */
