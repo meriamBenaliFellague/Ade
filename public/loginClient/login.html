@@ -9,6 +9,9 @@
 </head>
 <body>
     <div class="container">
+        <a href="/" class="back-button">
+            <i class='bx bx-arrow-back'></i>
+        </a>
         <div class="form-box login">
             <form action="/api/login" method="POST" class="one">
                 <h1>Login</h1>
@@ -110,15 +113,49 @@
             <h2>Reset Password</h2>
             <p>Please enter your email address. We'll send you a link to reset your password.</p>
             <form id="forgotPasswordForm">
-                <div class="input-box">
-                    <input type="email" id="resetEmail" placeholder=" " required>
-                    <label for="resetEmail">Email</label>
-                    <i class='bx bxs-envelope'></i>
+                <div id="emailStep">
+                    <div class="input-box">
+                        <input type="email" id="resetEmail" placeholder=" " required>
+                        <label for="resetEmail">Email</label>
+                        <i class='bx bxs-envelope'></i>
+                    </div>
+                    <button type="submit" class="btn">
+                        <span class="btn-text">Send Reset Link</span>
+                        <i class='bx bx-send'></i>
+                    </button>
                 </div>
-                <button type="submit" class="btn">
-                    <span class="btn-text">Send Reset Link</span>
-                    <i class='bx bx-send'></i>
-                </button>
+                <div id="verificationStep" style="display: none;">
+                    <div class="input-box">
+                        <input type="text" id="verificationCode" placeholder=" " maxlength="6" pattern="\d{6}">
+                        <div id="verificationError" class="error-message" style="display: none; color: #ff4444; font-size: 0.8em; margin-top: 5px;"></div>
+                        <label for="verificationCode">Verification Code</label>
+                        <i class='bx bx-key'></i>
+                    </div>
+                    
+                    <div id="newPasswordSection" style="display: none;">
+                        <div class="input-box" style="margin-top: 15px;">
+                            <input type="password" id="newPassword" placeholder=" ">
+                            <label for="newPassword">New Password</label>
+                            <i class='bx bxs-lock-alt'></i>
+                        </div>
+                        <div class="input-box" style="margin-top: 15px;">
+                            <input type="password" id="confirmPassword" placeholder=" ">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <i class='bx bxs-lock-alt'></i>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group" style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button type="button" id="verifyCodeBtn" class="btn" style="flex: 1;">
+                            <span class="btn-text">Verify Code</span>
+                            <i class='bx bx-check'></i>
+                        </button>
+                        <button type="button" id="updatePasswordBtn" class="btn" style="flex: 1; display: none;">
+                            <span class="btn-text">Update Password</span>
+                            <i class='bx bx-refresh'></i>
+                        </button>
+                    </div>
+                </div>
             </form>
             <div id="resetMessage" class="reset-message"></div>
         </div>
