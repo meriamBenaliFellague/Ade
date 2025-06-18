@@ -16,8 +16,8 @@ const reclamation = new Schema(
     },
     Type: {//تقنية ولا تجارية
       type: String,
-      enum: ["تقنية", "تجارية"],
-      default: "تقنية",
+      enum: ["Commercial", "Technical"],
+      default: "Technical",
       required: true,
     },
     Name: {

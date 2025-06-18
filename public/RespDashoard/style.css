@@ -642,13 +642,22 @@ body.dark #content nav form .form-input .search-btn:hover {
 }
 #content main .table-data .order table {
 	width: 100%;
-	border-collapse: collapse;
+	border-collapse: separate;
+  border-spacing: 0 12px;
 }
 #content main .table-data .order table th {
-	padding-bottom: 12px;
 	font-size: 13px;
-	text-align: left;
-	border-bottom: 1px solid var(--grey);
+	background-color: #f5f8ff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 2px solid #e0e0e0;
+}
+.table-data table tbody tr {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 #content main .table-data .order table td {
 	padding: 12px 16px;
@@ -676,6 +685,13 @@ body.dark #content nav form .form-input .search-btn:hover {
 	color: var(--light);
 	border-radius: 20px;
 	font-weight: 700;
+}
+.status {
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
 }
 #content main .table-data .order table tr td .status.completed {
 	background: var(--blue);
@@ -2336,7 +2352,8 @@ body.dark .send-btn:hover {
 }
 
 .status-icon-btn.completed-btn {
-    background: #1976d2 !important;
+   background-color: #f44336 !important;;
+  color: #fff; 
     border: 1.5px solid #e3eafc;
 }
 .status-icon-btn.completed-btn i {
@@ -2355,7 +2372,9 @@ body.dark .send-btn:hover {
 }
 
 .status-icon-btn.completed-btn {
-    background: #1976d2;
+  background: linear-gradient(135deg, #41e03c 0%, #f2ff82 100%) !important;
+  color: #fff;
+  border-radius: 10px !important;
 }
 .status-icon-btn.completed-btn i {
     color: #fff;
@@ -4026,6 +4045,7 @@ body.dark .box-info.analytics li .text p {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05), var(--glow-spread);
     transition: all 0.2s ease;
     border: 1px solid var(--grey);
+
 }
 
 .member-card:hover {
@@ -4171,7 +4191,7 @@ body.dark .member-status.offline {
     color: var(--dark-variant);
     font-size: 0.8rem;
     margin-bottom: 12px;
-    height: 36px;
+    
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -4826,20 +4846,23 @@ body.dark .settings-block select:focus {
 .status-actions {
   display: flex;
   align-items: center;
-  gap: 0px;
+  gap: 20px;
   justify-content: center;
 }
 .status-actions .status-icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 38px;
-  width: 38px;
+  height: 36px;
+  width: 36px;
   font-size: 1.5rem;
   margin: -5px;
   padding: 0;
   line-height: 1;
   vertical-align: middle;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
 }
 .status-actions .status-icon-btn i {
   display: flex;
@@ -4851,10 +4874,15 @@ body.dark .settings-block select:focus {
   line-height: 1;
   vertical-align: middle;
 }
+.status-icon-btn.info-btn-modern {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+    color: #fff !important; 
+    border-radius: 10px !important;
+}
 
 /* Enhance info icon visibility in dark mode */
 body.dark .status-actions .info-btn-modern i {
-  color: #4fc3f7 !important;
+  color: #4fc3f7;
 }
 
 /* Optionally, ensure it's visible in light mode too */
@@ -4885,22 +4913,12 @@ body.dark .status-actions .info-btn-modern i {
   align-self: center;
 }
 
-.complaint-modal-body {
-  text-align: left;
-}
 
-.complaint-modal-header {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
 .complaint-modal-title {
   text-align: right;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #1976d2;
+  color: white;
   margin: 0;
 }
 .complaint-modal-close {
@@ -4949,14 +4967,7 @@ body.dark .status-actions .info-btn-modern i {
     from {transform: translateY(-30px); opacity: 0;}
     to {transform: translateY(0); opacity: 1;}
   }
-  .complaint-modal-title {
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-bottom: 18px;
-    color: #1976d2;
-    text-align: right;
-    width: 100%;
-  }
+  
   .complaint-modal-close {
     position: absolute;
     top: 12px;
@@ -5316,4 +5327,97 @@ body.dark .image-caption {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* خلفية شفافة مع Blur */
+.complaint-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 36, 71, 0.5);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* صندوق المودال */
+.complaint-modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 123, 255, 0.25);
+  width: 90%;
+  max-width: 550px;
+  animation: fadeInUp 0.3s ease-out;
+  overflow: hidden;
+  border: 1px solid #d0e4ff;
+}
+
+/* رأس المودال */
+.complaint-modal-header {
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: white;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  border-radius: 16px;
+}
+
+/* زر الغلق */
+.complaint-modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  margin-left: 230px;
+  margin-top: 35px;
+}
+
+.complaint-modal-close:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+/* محتوى المودال */
+.complaint-modal-body {
+  padding: 24px;
+  font-size: 15.5px;
+  color: #2c3e50;
+  line-height: 1.6;
+  background-color: #f8fbff;
+}
+
+/* صورة أو مرفق داخل المودال */
+.complaint-modal-body img {
+  max-width: 100%;
+  margin-top: 16px;
+  border-radius: 10px;
+  border: 1px solid #e1ecf9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* أنميشن دخول ناعم */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

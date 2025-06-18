@@ -127,7 +127,7 @@ function openForgotPasswordModal(e) {
 }
 
 // Close Forgot Password modal with animation
-function closeForgotPasswordModal() {
+async function closeForgotPasswordModal() {
     if (!isModalOpen) return;
     
     forgotPasswordModal.classList.remove('active');
@@ -161,30 +161,62 @@ window.addEventListener('click', (e) => {
 
 // Handle Verify Code button click
 if (verifyCodeBtn) {
-    verifyCodeBtn.addEventListener('click', () => {
+    verifyCodeBtn.addEventListener('click', async() => {
         const code = verificationCodeInput.value.trim();
+
+        resetMessage.textContent = '';
+        resetMessage.className = 'reset-message';
         
-        if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
-            showErrorMessage('Please enter a valid 6-digit code');
+        if (!code || code.length !== 5 || !/^\d+$/.test(code)) {
+            showErrorMessage('Please enter a valid 5-digit code');
             verificationCodeInput.focus();
             return;
         }
-        
-        // For demo purposes, accept any 6-digit code
-        showSuccessMessage('Code verified! Please set your new password.');
+        try {
+        const response = await fetch("http://localhost:3000/api/VerifyResetCode", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+            code: code }) 
+        });
+        const data = await response.json();
+       
+        if (data.message === "Reset code invalide or expired") {
+            setTimeout(() => {
+                showErrorMessage('Reset code invalide or expired. Please try again.');
+                emailStep.style.display = 'block';
+                verificationStep.style.display = 'none';
+                resetEmail = '';
+                verificationCodeInput.disabled = true;
+                resetEmailInput.value = '';
+            }, 300);
+        } else if(data.message === "Reset code valide") {  
+            setTimeout(() => {
+            
+                showSuccessMessage('Code verified! Please set your new password.');
         
         // Show password fields and update button
+        emailStep.style.display = 'none';
         document.getElementById('newPasswordSection').style.display = 'block';
         document.getElementById('updatePasswordBtn').style.display = 'block';
         verifyCodeBtn.style.display = 'none';
         verificationCodeInput.disabled = true;
+            }, 1000);
+        } 
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+
+        
     });
 }
 
 // Handle Update Password button click
 const updatePasswordBtn = document.getElementById('updatePasswordBtn');
 if (updatePasswordBtn) {
-    updatePasswordBtn.addEventListener('click', () => {
+    updatePasswordBtn.addEventListener('click', async() => {
         const newPassword = document.getElementById('newPassword').value.trim();
         const confirmPassword = document.getElementById('confirmPassword').value.trim();
         
@@ -197,9 +229,22 @@ if (updatePasswordBtn) {
         if (newPassword !== confirmPassword) {
             showErrorMessage('Passwords do not match');
             return;
-        }
-        
-        // For demo purposes, show success message
+        }  
+
+        try {
+        const response = await fetch("http://localhost:3000/api/ResetPassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({ 
+            newPass: newPassword }) 
+        });
+        const data = await response.json();
+       
+        if (data.message === "Update password") {
+            // For demo purposes, show success message
+            console.log('Password updated successfully!')
         showSuccessMessage('Password updated successfully!');
         
         // Close the modal after 2 seconds
@@ -217,12 +262,18 @@ if (updatePasswordBtn) {
                 forgotPasswordForm.reset();
             }, 300);
         }, 2000);
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+
+
     });
 }
 
 // Handle Forgot Password form submission
 if (forgotPasswordForm) {
-    forgotPasswordForm.addEventListener('submit', function(e) {
+    forgotPasswordForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         e.stopPropagation();
         
@@ -250,11 +301,26 @@ if (forgotPasswordForm) {
             resetEmailInput.focus();
             return false;
         }
-        
-        // Simulate API call delay with a timeout instead of await
-        setTimeout(() => {
-            try {
+
+
+        try {
+        const response = await fetch("http://localhost:3000/api/forgetPassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+            email: email }) 
+        });
+        const data = await response.json();
+       
+        if (data.message === "the account not exists") {
+            showErrorMessage('Error processing your request. Please try again.');
+        } else if(data.message === "code sent to email") {
+            setTimeout(() => {
+           
                 // Save the email and show verification step
+                verificationCodeInput.value = '';
                 resetEmail = email;
                 emailStep.style.display = 'none';
                 verificationStep.style.display = 'block';
@@ -262,16 +328,17 @@ if (forgotPasswordForm) {
                 
                 // Update the message
                 showSuccessMessage(`A verification code has been sent to ${email}`);
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showErrorMessage('Error processing your request. Please try again.');
-            } finally {
-                // Reset button state
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('btn-loading');
-            }
-        }, 1000);
+            }, 1000);
+        }  
+         submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-loading');
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+
+
+        
+       
     });
 }
 

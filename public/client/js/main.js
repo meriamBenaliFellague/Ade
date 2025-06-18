@@ -246,12 +246,12 @@ function setupFormValidation() {
 
         // Validate photos
         if (selectedPhotos.length === 0) {
-            alert('الرجاء إرفاق صورة واحدة على الأقل / Veuillez joindre au moins une photo');
+            alert('Veuillez joindre au moins une photo');
             isValid = false;
         }
 
         if (isValid) {
-            alert('نموذج تجريبي: تم إرسال الشكوى بنجاح / Formulaire de démonstration: Réclamation envoyée avec succès');
+            alert('Formulaire de démonstration: Réclamation envoyée avec succès');
             form.reset();
             photoPreview.innerHTML = '';
             selectedPhotos = [];
@@ -262,12 +262,28 @@ function setupFormValidation() {
                 document.getElementById('address').value = '';
             }
         } else {
-            alert('الرجاء التحقق من جميع الحقول المطلوبة / Veuillez vérifier tous les champs requis');
+            alert('Veuillez vérifier tous les champs requis');
         }
     });
 }
 
 //Add Reclamation
+
+let selectedPhoto = []; // نخزن الصور هنا خارج الأحداث
+
+const photoInput = document.getElementById('photoInput');
+
+photoInput.addEventListener('change', () => {
+  const files = photoInput.files;
+  console.log("عدد الصور:", files.length);
+
+  for (let i = 0; i < files.length; i++) {
+    console.log(`الصورة ${i + 1}:`, files[i]); 
+    selectedPhoto.push(files[i]);
+  }
+});
+
+
 const btnS = document.getElementById('btnS');
   
 btnS.addEventListener('click', async function (e) {
@@ -282,7 +298,7 @@ btnS.addEventListener('click', async function (e) {
     const email = document.getElementById('email').value.trim();
     const address = document.getElementById('address').value.trim();
     const complaint = document.getElementById('reclamation').value.trim();
-    const photo = document.getElementById('photoInput');
+
 
     const formData = new FormData();
 
@@ -295,12 +311,13 @@ btnS.addEventListener('click', async function (e) {
     formData.append("Address", address);
     formData.append("Email", email);
     formData.append("Complaint", complaint);
-    const files = photo.files;
-  if (files.length > 0) {
-    for (let i = 0; i < files.length; i++) {
-        formData.append('Photos', files[i]); // 
-    }
-  }
+
+    
+selectedPhoto.forEach((photo) => {
+    formData.append("Photos", photo);
+  });
+
+ 
   for (let pair of formData.entries()) {
     console.log(`${pair[0]}:`, pair[1]);
   }

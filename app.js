@@ -86,6 +86,9 @@ app.use("/api/UpdateUser", update_user);
 const display_leaders = require("./server/DisplayLeader");
 app.use("/api/Displayleader", display_leaders);
 
+const display_team_members = require("./server/DisplayTeam");
+app.use("/api/DisplayTeam", display_team_members);
+
 const display_information = require("./server/Displayinformation");
 app.use("/api/DisplayInformation", display_information);
 

@@ -1676,3 +1676,47 @@ console.log(recId)
         console.error("❌ خطأ في جلب المعلومات :", error);
       }
 }
+
+//Display team members
+async function DisplayTeam(){
+	const leaderId = sessionStorage.getItem("leaderId");
+	try {
+        const response = await fetch(`http://localhost:3000/api/DisplayTeam/${leaderId}`, {
+          method: "GET",
+        });
+    
+        if (!response.ok) {
+          throw new Error("فشل في جلب البيانات");
+        }
+    
+        const team = await response.json();
+        renderTeam(team);
+        // هنا تقدر تعرضهم فـ DOM حسب الشكل لي تحب
+      } catch (error) {
+        console.error("❌ خطأ في جلب المعلومات :", error);
+      }
+}
+
+async function renderTeam(members) {
+	const team_grid = document.getElementById('team-members-grid');
+	members.forEach(member => {
+		const member_card = document.createElement('div');
+    member_card.className = 'member-card';
+	member_card.innerHTML = `
+        <div class="member-photo-wrap">
+            <i class='bx bx-user member-icon'></i>
+            <span class="member-status available"></span>
+        </div>
+		<div class="member-info">
+		    <h4>${member.Fullname}</h4>
+		    <div class="member-role">${member.Team} <br> ${member.Municipality}</div>
+		    <div class="member-actions">
+			    <a href="tel:+123456789" title="Call"><i class='bx bx-phone'></i></a>
+			    <a href="#" title="Chat"><i class='bx bx-chat'></i></a>
+			    <a href="#" title="Tasks"><i class='bx bx-task'></i></a>
+		    </div>
+		</div>  `;
+		team_grid.appendChild(member_card);
+	})
+}
+window.addEventListener('load', DisplayTeam);

@@ -10,6 +10,8 @@ const ReclamationDb = mongoose.connection.collection("reclamation");
 const multer = require('multer');
 const storage = multer.memoryStorage(); // باش نخلي الصورة في الذاكرة
 const upload = multer({ storage: storage });
+const crypto = require('crypto');
+
 
 
 const SendEmailFunction = require("../utils/SendEmail");
@@ -34,13 +36,14 @@ async function hashPassword(password) {
 async function forget_password(req, res) {
   //get user by email
   const email = req.body.email;
+  req.session.clientEmail = email;
   console.log(email)
   const user = await SchemaClient.findOne({email});
   if(!user){
     return res.status(404).json({ message: "the account not exists"});
   }
   //if user exist generate hash reset random 6 digits and save
-  const code = Math.floor(Math.random() * 100000).toString();
+  const code = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
   const hashCode = crypto
     .createHash('sha256')
     .update(code)
@@ -80,8 +83,9 @@ async function verifyResetCode(req, res) {
     .update(req.body.code)
     .digest('hex')
 
-  const user = await SchemaClient.findOne({hashCode, timeCode:{$gt: Date.now()}});
-  if(!user){
+  const user = await SchemaClient.findOne({email: req.session.clientEmail});
+  
+  if(!( user.hashCode == hashCode && user.timeCode > Date.now()) ){
     return res.status(404).json({ message: "Reset code invalide or expired"});
   }
   //reset code valid
@@ -92,11 +96,9 @@ async function verifyResetCode(req, res) {
 
 //reset password
 async function reset_password(req, res) {
-  //get user by email
-  const user = await SchemaClient.findOne({email: req.body.email});
-  if(!user){
-    return res.status(404).json({ message: "the account not exists"});
-  }
+  //get user by email 
+  const user = await SchemaClient.findOne({email: req.session.clientEmail});
+
   if(!user.verifiedCode){
     return res.status(400).json({ message: "Reset code not verified"});
   } 
@@ -106,7 +108,7 @@ async function reset_password(req, res) {
   user.timeCode = undefined;
   user.verifiedCode = undefined;
   user.save();
-  return res.status(200).json({ message: "Update password "});
+  return res.status(200).json({ message: "Update password"});
 }
 
 //create count client
@@ -200,6 +202,21 @@ async function display_user(req,res){
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ error: "Erreur lors du chargement des réclamations" });
+  }
+}
+
+//display team members
+async function display_team_members(req,res){
+  const IdLeader = req.params.IdLeader;
+  console.log( "id leader: ",IdLeader);
+  try {
+    const leader = await SchemaTeam.findOne({_id: IdLeader});
+   console.log( "leader: ",leader);
+    const team =  await SchemaTeam.find({Role: { $ne: 'team-lead' }, Team: leader.Team , Municipality: leader.Municipality});
+    console.log(team);
+    res.status(200).json(team);
+  } catch (err) {
+    res.status(500).json({ error: err });
   }
 }
 
@@ -300,7 +317,7 @@ async function login_accountAdmin(req,res){
   }
 
 //create reclamation
-async function create_reclamation(req,res){
+async function create_reclamation(req,res){ 
   //const account = new SchemaReclamation({ id: 1, Name: "meriam", email: "be2430423", password: "1234" });
   const { Name, Type, Surname, Phone, Municipality, Subscriber_ID, Address, Email, Complaint} = req.body;
   const id = `post${Math.floor(Math.random() * 100000)}`;
@@ -321,8 +338,9 @@ async function create_reclamation(req,res){
 async function display_reclamationClient(req,res){
   try {
     const clientId = req.session.clientId;
-    console.log(clientId);
+    console.log("idc: ",clientId);
     const reclamations = await SchemaReclamation.find({ clientId });
+    console.log(reclamations);
     res.status(200).json(reclamations);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -341,7 +359,7 @@ async function display_information(req,res){
     const mimeType = photo.contentType; // مثلا: 'image/jpeg'
     res.status(200).json({reclamations,image: `data:${mimeType};base64,${base64Image}`});
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message });   
   }
 }
 
@@ -481,5 +499,5 @@ module.exports = {create_account, login_account,create_user,login_accountUser,lo
   create_reclamation,update_user,delet_user,Admin, Responsable,display_reclamationClient,
   Analytics,display_user,forget_password,verifyResetCode,reset_password,
   display_leader,display_message_admin,display_message_leader,display_reclamationResponsable,
-  display_information,display_reclamationAdmin,delet_reclamation
+  display_information,display_reclamationAdmin,delet_reclamation,display_team_members
 };
