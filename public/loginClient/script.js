@@ -274,12 +274,12 @@ if (updatePasswordBtn) {
 // Handle Forgot Password form submission
 if (forgotPasswordForm) {
     forgotPasswordForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
+        e.preventDefault(); 
         e.stopPropagation();
         
         const email = resetEmailInput.value.trim();
         const submitBtn = forgotPasswordForm.querySelector('button[type="submit"]');
-        
+         
         // Show loading state
         submitBtn.disabled = true;
         submitBtn.classList.add('btn-loading');
