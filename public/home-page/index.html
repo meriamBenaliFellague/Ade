@@ -16,9 +16,24 @@
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="css/reviews-fix.css">
    
    <!-- Boxicons CSS -->
    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+   <style>
+      .about .row {
+         position: relative;
+      }
+      .about .video {
+         position: sticky;
+         top: 20px;
+      }
+      .about .content {
+         position: relative;
+         z-index: 1;
+      }
+   </style>
 
 </head>
 <body>
@@ -66,28 +81,27 @@
    <div class="info">
       <i class="fas fa-phone"></i>
       <h3>phone number</h3>
-      <p>+201200000000</p>
-      <p>+201000000000</p>
+      <p>027.50.31.77</p>
+      <p>1593 (Free)</p>
    </div>
 
    <div class="info">
       <i class="fas fa-envelope"></i>
       <h3>email address</h3>
-      <p>hegazy@gmail.com</p>
-      <p>developer-hegazy@gmail.com</p>
+      <p>contact@ade-aindefla.dz</p>
    </div>
 
    <div class="info">
       <i class="fas fa-map-marker-alt"></i>
       <h3>office address</h3>
-      <p>Tanta, Egypt </p>
+      <p>Ain Defla, Algeria</p>
    </div>
 
    <div class="social-icons">
-      <a href="#" class="social-icon"><i class='bx bxl-facebook'></i></a>
-      <a href="#" class="social-icon"><i class='bx bxl-twitter'></i></a>
-      <a href="#" class="social-icon"><i class='bx bxl-instagram'></i></a>
-      <a href="#" class="social-icon"><i class='bx bxl-linkedin'></i></a>
+      <a href="https://www.facebook.com/p/Ade-Unit%C3%A9-Ain-Defla-%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%D9%8A%D8%A9-%D9%84%D9%84%D9%85%D9%8A%D8%A7%D9%87-%D9%88%D8%AD%D8%AF%D8%A9-%D8%B9%D9%8A%D9%86-%D8%A7%D9%84%D8%AF%D9%81%D9%84%D9%89-61557401078492/?locale=fr_FR" target="_blank" class="social-icon"><i class='bx bxl-facebook'></i></a>
+      <a href="https://x.com/ADEAINDEFLA" target="_blank" class="social-icon"><i class='bx bxl-twitter'></i></a>
+      <a href="https://www.instagram.com/communication_ade_ain_defla/?hl=fr" target="_blank" class="social-icon"><i class='bx bxl-instagram'></i></a>
+      <a href="https://youtube.com/@adeaindefla7072?si=WZbt7s-NhtE5vDIj" target="_blank" class="social-icon"><i class='bx bxl-youtube'></i></a>
    </div>
 
 </div>
@@ -107,7 +121,7 @@
                <h3>we provide best service</h3>
                <p>More than 36,000 workers engaged...</p>
                <p>For a better public water service in Ain-Defla</p>
-               <a href="#login" class="btn">get started</a>
+               <a href="#about" class="btn scroll-to-about">Read More</a>
             </div>
          </section>
 
@@ -115,7 +129,7 @@
             <div class="content">
                <h3>We manage 10 districts.. </h3>
                <p>15 districts that Ain-Defla has in 2025</p>
-               <a href="#login" class="btn">get started</a>
+               <a href="#about" class="btn scroll-to-about">Learn More</a>
             </div>
          </section>
 
@@ -123,7 +137,7 @@
             <div class="content">
                <h3>More than a service...</h3>
                <p>We all share the responsibility of conserving water.</p>
-               <a href="#login" class="btn">get started</a>
+               <a href="#about" class="btn scroll-to-about">Learn More</a>
             </div>
          </section>
 
@@ -141,8 +155,9 @@
 <!-- about section starts  -->
 
 <section class="about" id="about">
-
-   <h1 class="heading"> about us </h1>
+   <div class="section-header">
+      <h1 class="heading">About Us</h1>
+   </div>
 
    <div class="row">
 
@@ -151,38 +166,44 @@
       </div>
 
       <div class="content">
-         <h3>Discover with us Algerian waters - Ain Defla Unit</h3>
-         <p> Algérienne des Eaux (ADE) is a public label and economic caractère
-            Commercial, created on the executive floor no. 01-101 on April 21, 2001, in the but unifier and
-            To modernize the existing structures that charge the gestion of the water area at home
-            local and regional.</p>
-         <a href="#services" class="btn">read more</a>
+         <h3>Discover with us Algérienne des Eaux - Ain Defla Unit</h3>
+         <p id="about-text">Algérienne des Eaux (ADE) is a public industrial and commercial establishment established by Executive Decree No. 01-101 on April 21, 2001. It operates under the supervision of the Ministry of Water Resources and is headquartered in Algiers.</p>
+         <p id="about-text-more" style="display: none;">The company has legal personality and financial autonomy and is made up of 15 zones and 44 units, organized to effectively manage water resources throughout the country. These zones were established by Presidential Decree No. 07-173 of June 4, 2007, to enhance coordination and oversight at the regional level. The Ain Defla unit is located in the municipality of Ain Defla, in the Koussider neighborhood, which includes 160 housing units. It serves as general administration and storage for the unit. The establishment implements and applies the national drinking water policy by managing production, transportation, treatment, storage, distribution, and water supply. In Ain Defla province, the Local Environmental Management Unit manages 22 of the 36 municipalities, with a coverage rate of 58. The unit has 70 wells with a daily production capacity of 173,5578 cubic meters per day, 6 treatment plants with 105,062 cubic meters per day, 46 pumping stations with 393,125 cubic meters per day, and 145 reservoirs with a total capacity of 124,230 cubic meters. It employs 924 employees, including 173 managers specializing in various fields such as hydraulics, electromechanics, electronics, chemistry, biology, and information technology.</p>
+         <a href="#about" class="btn" id="read-more-btn">Read more</a>
       </div>
 
    </div>
 
    <div class="box-container">
+         <div class="box" data-aos="fade-up" data-aos-delay="100">
+            <div class="box-icon">
+               <i class="fas fa-project-diagram"></i>
+            </div>
+            <h3 class="counter" data-count="250">0</h3>
+            <p>projects completed</p>
+         </div>
 
-      <div class="box">
-         <h3>10+</h3>
+         <div class="box" data-aos="fade-up" data-aos-delay="200">
+            <div class="box-icon">
+               <i class="fas fa-smile"></i>
+            </div>
+            <h3 class="counter" data-count="370">0</h3>
+            <p>satisfied clients</p>
+         </div>
+         <div class="box" data-aos="fade-up" data-aos-delay="300">
+            <div class="box-icon">
+               <i class="fas fa-award"></i>
+            </div>
+            <h3 class="counter" data-count="15">0</h3>
          <p>years of experience</p>
       </div>
-
-      <div class="box">
-         <h3>1500+</h3>
-         <p>project completed</p>
+         <div class="box" data-aos="fade-up" data-aos-delay="400">
+            <div class="box-icon">
+               <i class="fas fa-users"></i>
       </div>
-
-      <div class="box">
-         <h3>790+</h3>
-         <p>satiesfied clients</p>
+            <h3 class="counter" data-count="45">0</h3>
+            <p>active workers</p>
       </div>
-
-      <div class="box">
-         <h3>450+</h3>
-         <p>active workers</p>
-      </div>
-
    </div>
 
 </section>
@@ -198,54 +219,55 @@
    <div class="box-container">
 
       <div class="box">
-         <img src="images/service-1.png" alt="">
+         <i class="fas fa-tint-slash fa-4x"></i>
          <h3>Leak Detection & Network Renewal</h3>
          <p>We detect leaks and renew water networks to ensure efficient water distribution.</p>
       </div>
 
       <div class="box">
-         <img src="images/service-2.png" alt="">
+         <i class="fas fa-flask fa-4x"></i>
          <h3>Water Quality Analysis</h3>
          <p>We perform certified water analysis to ensure compliance with national and international drinking water standards</p>
       </div>
 
       <div class="box">
-         <img src="images/service-3.png" alt="">
+         <i class="fas fa-pump-soap fa-4x"></i>
          <h3>Water Tank Cleaning</h3>
          <p>We clean and disinfect water tanks to ensure clean and safe drinking water.</p>
       </div>
 
       <div class="box">
-         <img src="images/service-4.png" alt="">
-         <h3> Drinking Water Tanker Supply</h3>
+         <i class="fas fa-truck-moving fa-4x"></i>
+         <h3>Drinking Water Tanker Supply</h3>
          <p>We deliver potable water using specialized tankers that meet hygiene and transport standards.</p>
       </div>
 
       <div class="box">
-         <img src="images/service-5.png" alt="">
+         <i class="fas fa-hands-wash fa-4x"></i>
          <h3>Water and Sanitation Guidance</h3>
          <p>We offer guidance programs in water and sanitation management.</p>
       </div>
 
       <div class="box">
-         <img src="images/service-6.png" alt="">
+         <i class="fas fa-clipboard-check fa-4x"></i>
          <h3>Project Diagnostics & Studies</h3>
          <p>We conduct diagnostics and feasibility studies for water and sanitation-related projects.</p>
       </div>
 
       <div class="box">
-         <img src="images/service-7.png" alt="">
-         <h3> Building Maintenance</h3>
-         <p> We ensure the ongoing maintenance of water-related facilities to preserve performance and extend their lifespan.</p> 
+         <i class="fas fa-tools fa-4x"></i>
+         <h3>Building Maintenance</h3>
+         <p>We ensure the ongoing maintenance of water-related facilities to preserve performance and extend their lifespan.</p> 
       </div>
 
       <div class="box">
-         <img src="images/service-8.png" alt="">
+         <i class="fas fa-route fa-4x"></i>
          <h3>Potable Water Pipeline Diversion</h3>
          <p>We provide pipeline diversion services to adapt to infrastructure or customer needs.</p>
       </div>
+      
       <div class="box">
-         <img src="images/service-8.png" alt="">
+         <i class="fas fa-recycle fa-4x"></i>
          <h3>Industrial Waste Treatment</h3>
          <p>We offer sustainable solutions to reduce the environmental impact of industrial waste.</p>
       </div>
@@ -277,9 +299,9 @@
          </div>
       </a>
 
-      <a href="images/project-2.jpg" class="box">
+      <a href="images/home-slide-2.jpg" class="box">
          <div class="image">
-            <img src="images/home-slide-2.jpg" alt="">
+            <img src="images/home-slide-2.jpg" alt="Emergency Response Operations">
          </div>
          <div class="content">
             <div class="info">
@@ -351,20 +373,23 @@
 
 <!-- reviews section starts  -->
 
-<section class="reviews">
+<section class="reviews" id="reviews">
 
    <h1 class="heading"> clients reviews </h1>
 
    <div class="swiper reviews-slider">
+      <!-- Navigation buttons -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
 
       <div class="swiper-wrapper">
 
          <div class="swiper-slide slide">
-            <p>من أحسن ما أنجبت الجزائرية للمياه.... فصاحة في اللغة والتعبير الواضح والمفهوم ورؤية واسعة في مجال التسيير العمومي للجزائرية للمياه في تحسين الخدمة العمومية للمواطن والسهر علي تنفيذ تعليمات رئيس الجمهورية </p>
+            <p>خدمة ممتازة من الجزائرية للمياه! سرعة الاستجابة في معالجة تسرب المياه كانت مذهلة. الفريق المهني قام بإصلاح المشكلة في أقل من ساعتين. شكراً جزيلاً على الالتزام بتقديم خدمة عالية الجودة.</p>
             <div class="user">
                <img src="images/pic-1.png" alt="">
                <div class="info">
-                  <h3>يوسف بوعزرية</h3>
+                  <h3>عبد القادر محمد</h3>
                   <div class="stars">
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
@@ -377,11 +402,11 @@
          </div>
 
          <div class="swiper-slide slide">
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis unde suscipit quis consequuntur, tempora corporis ex molestias dignissimos in cumque sunt ducimus voluptate inventore harum earum rem aperiam vel modi?</p>
+            <p>تجربتي مع وحدة عين الدفلى كانت إيجابية جداً. نظام الشكاوى يعمل بشكل جيد، وتم حل مشكلتي في أقل من 24 ساعة. الموظفون متعاونون ومهنيون. أنصح الجميع بالتعامل معهم.</p>
             <div class="user">
                <img src="images/pic-2.png" alt="">
                <div class="info">
-                  <h3>KADER</h3>
+                  <h3>فاطمة الزهراء</h3>
                   <div class="stars">
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
@@ -394,28 +419,28 @@
          </div>
 
          <div class="swiper-slide slide">
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis unde suscipit quis consequuntur, tempora corporis ex molestias dignissimos in cumque sunt ducimus voluptate inventore harum earum rem aperiam vel modi?</p>
+            <p>أشكر فريق العمل في الجزائرية للمياه على جهودهم في تحسين جودة المياه في منطقتنا. لاحظت تحسناً كبيراً في ضغط المياه ونقاوتها. الخدمة أصبحت أكثر موثوقية.</p>
             <div class="user">
                <img src="images/pic-3.png" alt="">
                <div class="info">
-                  <h3>Mërïäm Mêrîâm </h3>
+                  <h3>أحمد بومدين</h3>
                   <div class="stars">
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
-                     <i class="fas fa-star"></i>
+                     <i class="fas fa-star-half-alt"></i>
                   </div>
                </div>
             </div>
          </div>
 
          <div class="swiper-slide slide">
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis unde suscipit quis consequuntur, tempora corporis ex molestias dignissimos in cumque sunt ducimus voluptate inventore harum earum rem aperiam vel modi?</p>
+            <p>الرقم الأخضر 1593 سهل الوصول إليه وسريع الاستجابة. تم حل مشكلتي في نفس اليوم. شكراً للفريق على الاحترافية والكفاءة في العمل.</p>
             <div class="user">
                <img src="images/pic-4.png" alt="">
                <div class="info">
-                  <h3>john deo</h3>
+                  <h3>سارة بن علي</h3>
                   <div class="stars">
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
@@ -428,11 +453,11 @@
          </div>
 
          <div class="swiper-slide slide">
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis unde suscipit quis consequuntur, tempora corporis ex molestias dignissimos in cumque sunt ducimus voluptate inventore harum earum rem aperiam vel modi?</p>
+            <p>برنامج التوعية بترشيد استهلاك المياه كان مفيداً جداً. تعلمت الكثير من النصائح العملية لتوفير المياه. شكراً للجزائرية للمياه على هذه المبادرات التوعوية.</p>
             <div class="user">
                <img src="images/pic-5.png" alt="">
                <div class="info">
-                  <h3>john deo</h3>
+                  <h3>محمد أمين</h3>
                   <div class="stars">
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
@@ -445,11 +470,11 @@
          </div>
 
          <div class="swiper-slide slide">
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis unde suscipit quis consequuntur, tempora corporis ex molestias dignissimos in cumque sunt ducimus voluptate inventore harum earum rem aperiam vel modi?</p>
+            <p>خدمة تنظيف خزانات المياه كانت احترافية جداً. الفريق مجهز بأحدث المعدات واتبعوا جميع إجراءات السلامة. أنصح الجميع بالاستفادة من هذه الخدمة.</p>
             <div class="user">
                <img src="images/pic-6.png" alt="">
                <div class="info">
-                  <h3>john deo</h3>
+                  <h3>ليلى بن عيسى</h3>
                   <div class="stars">
                      <i class="fas fa-star"></i>
                      <i class="fas fa-star"></i>
@@ -482,11 +507,26 @@
 
       <form action="">
          <h3>get in touch</h3>
-         <input type="text" placeholder="name" class="box">
-         <input type="email" placeholder="email" class="box">
-         <input type="number" placeholder="phone" class="box">
-         <textarea name="" placeholder="message" class="box" id="" cols="30" rows="10"></textarea>
-         <input type="submit" value="send message" class="btn">
+         <div class="form-group">
+            <input type="text" id="name" class="box" placeholder=" " required>
+            <label for="name">Name</label>
+         </div>
+         <div class="form-group">
+            <input type="email" id="email" class="box" placeholder=" " required>
+            <label for="email">Email</label>
+         </div>
+         <div class="form-group">
+            <input type="tel" id="phone" class="box" placeholder=" " required>
+            <label for="phone">Phone Number</label>
+         </div>
+         <div class="form-group">
+            <textarea id="message" class="box" placeholder=" " required></textarea>
+            <label for="message">Your Message</label>
+         </div>
+         <button type="submit" class="btn">
+            <span>Send Message</span>
+            <i class="fas fa-paper-plane"></i>
+         </button>
       </form>
 
    </div>
@@ -502,6 +542,9 @@
    <h1 class="heading"> our blogs </h1>
 
    <div class="swiper blogs-slider">
+      <!-- Navigation buttons -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
 
       <div class="swiper-wrapper">
 
@@ -606,47 +649,65 @@
 
 <!-- blogs section ends -->
 
-<!-- client logo section starts -->
-
-<section class="logo-container">
-   <div class="swiper logo-slider">
-      <div class="swiper-wrapper">
-         <div class="swiper-slide slide"><img src="images/client-logo-1.png" alt=""></div>
-         <div class="swiper-slide slide"><img src="images/client-logo-2.png" alt=""></div>
-         <div class="swiper-slide slide"><img src="images/client-logo-3.png" alt=""></div>
-         <div class="swiper-slide slide"><img src="images/client-logo-4.png" alt=""></div>
-         <div class="swiper-slide slide"><img src="images/client-logo-5.png" alt=""></div>
-         <div class="swiper-slide slide"><img src="images/client-logo-6.png" alt=""></div>
+<!-- Modern Footer Section -->
+<footer class="modern-footer">
+   <div class="footer-content">
+      <div class="footer-main">
+         <div class="footer-brand">
+            <img src="images/logo.jpg" alt="ADE Logo" class="footer-logo">
+            <h3>Algérienne Des Eaux</h3>
+            <p>Providing excellence in water services for Ain Defla</p>
+         </div>
+         
+         <div class="footer-links">
+            <div class="footer-column">
+               <h4>Quick Links</h4>
+               <ul>
+                  <li><a href="#home">Home</a></li>
+                  <li><a href="#about">About Us</a></li>
+                  <li><a href="#services">Services</a></li>
+                  <li><a href="#projects">Projects</a></li>
+                  <li><a href="#contact">Contact</a></li>
+               </ul>
+            </div>
+            
+            <div class="footer-column">
+               <h4>Services</h4>
+               <ul>
+                  <li><a href="#services">Water Supply</a></li>
+                  <li><a href="#services">Network Maintenance</a></li>
+                  <li><a href="#services">Quality Control</a></li>
+                  <li><a href="#services">Customer Support</a></li>
+               </ul>
+            </div>
+            
+            <div class="footer-column">
+               <h4>Services</h4>
+               <ul>
+                  <li><i class="fas fa-phone"></i> <a>027.50.31.77</a></li>
+                  <li><i class="fas fa-phone-alt"></i><a>1593 (Free)</a></li>
+                  <li><i class="fas fa-envelope"></i> <a>contact@ade-aindefla.dz</a></li>
+                  <li><i class="fas fa-map-marker-alt"></i><a>Ain Defla, Algeria</a></li>
+               </ul>
+            </div>
+   
+         </div>
+      </div>
+      
+      <div class="footer-bottom">
+         <div class="social-links">
+            <a href="https://www.facebook.com/p/Ade-Unit%C3%A9-Ain-Defla-%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%D9%8A%D8%A9-%D9%84%D9%84%D9%85%D9%8A%D8%A7%D9%87-%D9%88%D8%AD%D8%AF%D8%A9-%D8%B9%D9%8A%D9%86-%D8%A7%D9%84%D8%AF%D9%81%D9%84%D9%89-61557401078492/?locale=fr_FR" target="_blank" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/ADEAINDEFLA" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/communication_ade_ain_defla/?hl=fr" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/@adeaindefla7072?si=WZbt7s-NhtE5vDIj" target="_blank" class="social-link"><i class="fab fa-youtube"></i></a>
+         </div>
+         <p class="copyright">&copy; 2025 Algérienne Des Eaux - Ain Defla. All rights reserved.</p>
       </div>
    </div>
-</section>
+</footer>
 
-<!-- client logo section ends -->
-
-<!-- footer section starts  -->
-
-<section class="footer">
-
-   <div class="links">
-      <a class="btn" href="#home">home</a>
-      <a class="btn" href="#about">about</a>
-      <a class="btn" href="#services">services</a>
-      <a class="btn" href="#projects">projects</a>
-      <a class="btn" href="#contact">contact</a>
-      <a class="btn" href="#blogs">blogs</a>
-   </div>
-
-
-
-</section>
-
-<!-- footer section ends -->
-
-
-
-
-
-
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery-js/1.4.0/js/lightgallery.min.js"></script>
 
@@ -656,9 +717,40 @@
 <script src="js/script.js"></script>
 
 <script>
+   document.addEventListener('DOMContentLoaded', function() {
+      // Smooth scroll to about section
+      document.querySelectorAll('.scroll-to-about').forEach(button => {
+         button.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#about').scrollIntoView({
+               behavior: 'smooth'
+            });
+         });
+      });
 
-lightGallery(document.querySelector('.projects .box-container'));
+      // Read more/less functionality
+      const readMoreBtn = document.getElementById('read-more-btn');
+      const aboutTextMore = document.getElementById('about-text-more');
 
+      readMoreBtn.addEventListener('click', function(e) {
+         e.preventDefault();
+         if (aboutTextMore.style.display === 'none') {
+            aboutTextMore.style.display = 'block';
+            readMoreBtn.textContent = 'read less';
+         } else {
+            aboutTextMore.style.display = 'none';
+            readMoreBtn.textContent = 'read more';
+            // Scroll back to the about section when clicking read less
+            document.querySelector('#about').scrollIntoView({
+               behavior: 'smooth'
+            });
+         }
+      });
+   });
+</script>
+
+<script>
+   lightGallery(document.querySelector('.projects .box-container'));
 </script>
 
 </body>
