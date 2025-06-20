@@ -43,7 +43,15 @@ btnR.addEventListener('click', async function (e) {
     const Username = document.getElementById('Username').value.trim();
     const Email = document.getElementById('Email').value.trim();
     const Password = document.getElementById('Password').value.trim();
-    
+    if (Email === '' || Password === ''|| Username === '') {
+        document.getElementById('Username').classList.add('is-invalid');
+        document.getElementById('Email').classList.add('is-invalid');
+        document.getElementById('Password').classList.add('is-invalid');
+        return;
+  }
+  if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(Email)) {
+            document.getElementById('Email').classList.add('is-invalid');
+        }
     try {
         const response = await fetch("http://localhost:3000/api/register", {
             method: "POST",
@@ -57,7 +65,13 @@ btnR.addEventListener('click', async function (e) {
             password: Password }) 
         });
         const data = await response.json();
-        alert('تمت العملية بنجاح');
+        if (data.message === "the account exists") {
+            alert('⚠️ This email or username is already in use. Please log in or use a different information.'); // ✅ انتقال إلى صفحة أخرى
+        }else{
+             alert('The account has been added successfully.');
+        }
+
+       
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -68,6 +82,11 @@ btnL.addEventListener('click', async function (e) {
     const nameUser = document.getElementById('nameUser').value.trim();
     const pass = document.getElementById('pass').value.trim();
     console.log(nameUser);
+    if (nameUser === '' || pass === '') {
+        document.getElementById('nameUser').classList.add('is-invalid');
+        document.getElementById('pass').classList.add('is-invalid');
+        return;
+  }
     try {
         const response = await fetch("http://localhost:3000/api/login", {
             method: "POST",
@@ -82,7 +101,7 @@ btnL.addEventListener('click', async function (e) {
         if (data.message === "the account exists") {
             window.location.href = "/Reclamation"; // ✅ انتقال إلى صفحة أخرى
         } else {
-            alert("❌ Incorrect username or password!                                                    ❌ اسم المستخدم أو كلمة المرور غير صحيحة!");
+            alert("❌ Incorrect username or password!");
         }
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -193,7 +212,7 @@ if (verifyCodeBtn) {
                 resetEmailInput.value = '';
             }, 300);
         } else if(data.message === "Reset code valide") {  
-            setTimeout(() => {
+            setTimeout(() => { 
             
                 showSuccessMessage('Code verified! Please set your new password.');
         
@@ -355,20 +374,5 @@ function showSuccessMessage(message) {
 function showErrorMessage(message) {
     resetMessage.textContent = message;
     resetMessage.className = 'reset-message error';
-    // Add shake animation for errors
-    resetMessage.style.animation = 'none';
-    void resetMessage.offsetWidth; // Trigger reflow
-    resetMessage.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
 }
 
-// Add shake animation for errors
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes shake {
-        10%, 90% { transform: translate3d(-1px, 0, 0); }
-        20%, 80% { transform: translate3d(2px, 0, 0); }
-        30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
-        40%, 60% { transform: translate3d(3px, 0, 0); }
-    }
-`;
-document.head.appendChild(style);

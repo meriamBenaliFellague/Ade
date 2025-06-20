@@ -3,11 +3,27 @@ let marker;
 let selectedPhotos = [];
 
 // Initialize map when document is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     initMap();
     setupFormValidation();
     setupPhotoHandling();
     setupHeaderScroll();
+
+    try {
+        const response = await fetch("http://localhost:3000/api/getEmail", {
+          method: "GET",
+          credentials: "include", // باش تبعث الكوكي تاع السيشن
+        });
+    
+        if (!response.ok) {
+          throw new Error("فشل في جلب البيانات");
+        }
+    
+        const data = await response.json();
+      document.getElementById('email').value = data.email;
+      } catch (error) {
+        console.error(error);
+      }
 });
 
 // Header scroll effect
@@ -331,7 +347,7 @@ selectedPhoto.forEach((photo) => {
 
     const data = await response.json();
     DisplayReclamations();
-    alert('تمت العملية بنجاح');
+    alert('The complaint has been added successfully.');
     document.getElementById("complaintForm").reset();
 } catch (error) {
     console.error("Error fetching data:", error);

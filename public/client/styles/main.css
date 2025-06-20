@@ -704,6 +704,8 @@ textarea.form-control {
 
 .form-check-input[type=radio] {
     border-radius: 50%;
+    background-color: white;
+    border-color: #e2e8f0;
 }
 
 .form-check-input:active {
@@ -1211,7 +1213,7 @@ textarea.form-control {
     padding-right: 1.75rem;
 }
 
-.form-check-input:checked {
+.form-check-input[type="radio"]:checked {
     background-color: #0056b3;
     border-color: #0056b3;
 }
@@ -1455,4 +1457,9 @@ textarea.form-control {
     .complaints-list {
         max-height: 500px;
     }
+}
+
+.input.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
 }

@@ -32,6 +32,9 @@ const team = new Schema(
         type: String,
         required: true,
     },
+    hashCode: String,
+    timeCode: Date,
+    verifiedCode: Boolean,
   }
 )  
 const SchemaTeam = mongoose.model("team", team);

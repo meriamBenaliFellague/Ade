@@ -145,29 +145,57 @@ window.addEventListener('click', (e) => {
 
 // Handle Verify Code button click
 if (verifyCodeBtn) {
-    verifyCodeBtn.addEventListener('click', () => {
+    verifyCodeBtn.addEventListener('click', async () => {
         const code = verificationCodeInput.value.trim();
         
-        if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
-            showResetMessage('Please enter a valid 6-digit code', 'error');
+        if (!code || code.length !== 5 || !/^\d+$/.test(code)) {
+            showResetMessage('Please enter a valid 5-digit code', 'error');
             verificationCodeInput.focus();
             return;
         }
         
-        // For demo purposes, accept any 6-digit code
-        showResetMessage('Code verified! Please set your new password.', 'success');
+        try {
+        const response = await fetch("http://localhost:3000/api/VerifyResetCode", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+            code: code }) 
+        });
+        const data = await response.json();
+       
+        if (data.message === "Reset code invalide or expired") {
+            setTimeout(() => {
+                 showResetMessage('Reset code invalide or expired. Please try again.','error');
+                emailStep.style.display = 'block';
+                verificationStep.style.display = 'none';
+                resetEmail = '';
+                verificationCodeInput.disabled = true;
+                resetEmailInput.value = '';
+            }, 300);
+        } else if(data.message === "Reset code valide") {  
+            setTimeout(() => {
+                showResetMessage('Code verified! Please set your new password.','success');
         
-        // Show password fields and update button
+       // Show password fields and update button
         newPasswordSection.style.display = 'block';
+        emailStep.style.display = 'none';
         if (updatePasswordBtn) updatePasswordBtn.style.display = 'block';
         verifyCodeBtn.style.display = 'none';
         verificationCodeInput.disabled = true;
+            }, 1000);
+        } 
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+
     });
 }
 
 // Handle Update Password button click
 if (updatePasswordBtn) {
-    updatePasswordBtn.addEventListener('click', () => {
+    updatePasswordBtn.addEventListener('click', async () => {
         const newPassword = document.getElementById('newPassword').value.trim();
         const confirmPassword = document.getElementById('confirmPassword').value.trim();
         
@@ -182,19 +210,37 @@ if (updatePasswordBtn) {
             return;
         }
         
-        // For demo purposes, show success message
-        showResetMessage('Password updated successfully!', 'success');
+        try {
+        const response = await fetch("http://localhost:3000/api/ResetPassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({ 
+            newPass: newPassword }) 
+        });
+        const data = await response.json();
+       
+        if (data.message === "Update password") {
+            // For demo purposes, show success message
+            console.log('Password updated successfully!')
+            showResetMessage('Password updated successfully!','success');
         
         // Close the modal after 2 seconds
         setTimeout(() => {
             closeForgotPasswordModal();
         }, 2000);
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+
     });
 }
 
 // Handle Forgot Password form submission
 if (forgotPasswordForm) {
-    forgotPasswordForm.addEventListener('submit', function(e) {
+    forgotPasswordForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         e.stopPropagation();
         
@@ -216,27 +262,39 @@ if (forgotPasswordForm) {
             return false;
         }
         
-        // Simulate API call delay
-        setTimeout(() => {
-            try {
+         try {
+        const response = await fetch("http://localhost:3000/api/forgetPassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+            email: email }) 
+        });
+        const data = await response.json();
+       
+        if (data.message === "the account not exists") {
+            showResetMessage('Error processing your request. Please try again.','error');
+        } else if(data.message === "code sent to email") {
+            setTimeout(() => {
+           
                 // Save the email and show verification step
+                verificationCodeInput.value = '';
                 resetEmail = email;
                 emailStep.style.display = 'none';
                 verificationStep.style.display = 'block';
                 verificationCodeInput.focus();
                 
                 // Update the message
-                showResetMessage(`A verification code has been sent to ${email}`, 'success');
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showResetMessage('Error processing your request. Please try again.', 'error');
-            } finally {
-                // Reset button state
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('loading');
-            }
-        }, 1000);
+                showResetMessage(`A verification code has been sent to ${email}`,'success');
+            }, 1000);
+        }  
+         submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-loading');
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+
     });
 }
 
@@ -250,10 +308,6 @@ function showResetMessage(message, type) {
     } else if (type === 'error') {
         resetMessage.classList.add('error');
         
-        // Add shake animation for errors
-        resetMessage.style.animation = 'none';
-        void resetMessage.offsetWidth; // Trigger reflow
-        resetMessage.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
     }
     
     // Auto-hide success messages after 5 seconds
@@ -267,17 +321,6 @@ function showResetMessage(message, type) {
     }
 }
 
-// Add shake animation for errors
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes shake {
-        10%, 90% { transform: translate3d(-1px, 0, 0); }
-        20%, 80% { transform: translate3d(2px, 0, 0); }
-        30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
-        40%, 60% { transform: translate3d(3px, 0, 0); }
-    }
-`;
-document.head.appendChild(style);
 
 //login Admin
 btnL.addEventListener('click', async function (e) {
@@ -286,6 +329,16 @@ btnL.addEventListener('click', async function (e) {
     const nameUser = document.getElementById('nameUser').value.trim();
     const pass = document.getElementById('pass').value.trim();
     console.log(nameUser);
+     if (!nameUser || !pass) {
+            // Add shake animation for empty fields
+            if (!nameUser) {
+                document.getElementById('nameUser').classList.add('is-invalid');
+            }
+            if (!pass) {
+                document.getElementById('pass').classList.add('is-invalid');
+            }
+            return;
+        }
     try {
         const response = await fetch("http://localhost:3000/api/Admin", {
             method: "POST",
@@ -297,7 +350,7 @@ btnL.addEventListener('click', async function (e) {
             password: pass }) 
         });
         const data = await response.json();
-        console.log(data.adminId)
+        console.log(data.message)
        const socket = io("http://localhost:3000");
         if (data.message === "the account admin exists") {
             window.location.href = "/Home/LoginAdmin/Dashboard"; 

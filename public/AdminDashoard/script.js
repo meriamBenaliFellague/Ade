@@ -1048,13 +1048,41 @@ document.addEventListener('DOMContentLoaded', function() {
 	const profilePic = document.querySelector('.profile-pic');
 	const navbarProfilePic = document.getElementById('navbar-profile-pic');
 	
-	profileForm.addEventListener('submit', function(e) {
+	profileForm.addEventListener('submit', async function(e) {
 		e.preventDefault();
 		const name = document.getElementById('settings-name').value;
 		const email = document.getElementById('settings-email').value;
+		if (email === '' || name === '') {
+        document.getElementById('settings-name').classList.add('is-invalid');
+        document.getElementById('settings-email').classList.add('is-invalid');
+        return;
+        }
+        if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            document.getElementById('settings-email').classList.add('is-invalid');
+			return;
+        }
 		
+		try {
+        const response = await fetch("http://localhost:3000/api/UpdateAdmin", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'include',
+            body: JSON.stringify({ 
+            username: name, 
+            email: email}) 
+        });
+        const data = await response.json();
+        if (data.message === "Update Profile Settings") {
+			notificationSystem.addNotification('status', 'Profile settings updated successfully');
+        }else{
+            notificationSystem.addNotification('status', 'Profile settings not updated');
+        }
+		} catch (error) {
+        console.error("Error fetching data:", error);
+    }
 		// Here you would typically send this data to your backend
-		notificationSystem.addNotification('status', 'Profile settings updated successfully');
 	});
 
 	if (btnUpload && profilePic) {
@@ -1084,17 +1112,49 @@ document.addEventListener('DOMContentLoaded', function() {
 	// Security Settings
 	const securityForm = document.getElementById('security-form');
 	
-	securityForm.addEventListener('submit', function(e) {
+	securityForm.addEventListener('submit', async function(e) {
 		e.preventDefault();
 		const currentPassword = document.getElementById('current-password').value;
 		const newPassword = document.getElementById('new-password').value;
 		const confirmPassword = document.getElementById('confirm-password').value;
 
+         if (currentPassword === '' || newPassword === '' || confirmPassword === '') {
+        document.getElementById('current-password').classList.add('is-invalid');
+        document.getElementById('new-password').classList.add('is-invalid');
+		document.getElementById('confirm-password').classList.add('is-invalid');
+        return;
+        }
+
 		if (newPassword !== confirmPassword) {
+		    document.getElementById('confirm-password').classList.add('is-invalid');
 			alert('New passwords do not match!');
 			return;
 		}
 
+		try {
+        const response = await fetch("http://localhost:3000/api/UpdateAdmin", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'include',
+            body: JSON.stringify({ 
+            password: newPassword,
+		    currentPassword: currentPassword, }) 
+        });
+        const data = await response.json();
+        if (data.message === "Update Security Settings") {
+			notificationSystem.addNotification('status', 'Password updated successfully');
+        }else if (data.message === "Incorrect password") {
+			document.getElementById('current-password').classList.add('is-invalid');
+            alert('Incorrect password!');
+        }else{
+			notificationSystem.addNotification('status', 'Profile settings not updated');
+		    document.getElementById('current-password').classList.add('is-invalid');
+		}
+		} catch (error) {
+        console.error("Error fetching data:", error);
+    }
 		// Here you would typically verify and update the password on your backend
 		notificationSystem.addNotification('status', 'Password updated successfully');
 		this.reset();

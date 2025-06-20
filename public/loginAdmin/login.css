@@ -1017,10 +1017,10 @@ body {
 }
 
 .reset-message.error {
-    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-    color: #721c24;
-    border: 1px solid #f1b0b7;
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.1);
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb) !important;
+    color: #721c24 !important;
+    border: 1px solid #f1b0b7 !important;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.1) !important;
 }
 
 /* Verification Code Input */
@@ -1219,5 +1219,9 @@ body {
 }
     
 
+.input.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
 
 

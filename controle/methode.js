@@ -1,18 +1,16 @@
 const { Router } = require("express");
 const { default: mongoose } = require("mongoose");
+const { SchemaAdmin } = require("../model/Admin"); 
 const { SchemaClient } = require("../model/database"); 
 const { SchemaUser } = require("../model/UserDB");
 const { SchemaTeam } = require("../model/TeamDB");  
 const {SchemaReclamation} = require("../model/ReclamationDB"); 
 const {SchemaMessage} = require("../model/messageDB"); 
-const AdminDb = mongoose.connection.collection("admin");
-const ReclamationDb = mongoose.connection.collection("reclamation");
+const AdminDb = mongoose.connection.collection("admins");
 const multer = require('multer');
 const storage = multer.memoryStorage(); // باش نخلي الصورة في الذاكرة
 const upload = multer({ storage: storage });
 const crypto = require('crypto');
-
-
 
 const SendEmailFunction = require("../utils/SendEmail");
 const { Console } = require("console");
@@ -36,12 +34,21 @@ async function hashPassword(password) {
 async function forget_password(req, res) {
   //get user by email
   const email = req.body.email;
-  req.session.clientEmail = email;
+  req.session.Email = email;
   console.log(email)
-  const user = await SchemaClient.findOne({email});
-  if(!user){
-    return res.status(404).json({ message: "the account not exists"});
-  }
+  const client = await SchemaClient.findOne({email});
+  const admin = await SchemaAdmin.findOne({email});
+  const leader = await SchemaClient.findOne({email});
+  let user;
+    if (client) {
+      user = client;
+    } else if(admin) {
+      user = admin;
+    }else if(leader) {
+      user = leader;
+    }else{
+      return res.status(404).json({ message: "the account not exists"});
+    }
   //if user exist generate hash reset random 6 digits and save
   const code = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
   const hashCode = crypto
@@ -52,8 +59,8 @@ async function forget_password(req, res) {
   //add time for code (10 min)
   user.timeCode = Date.now() + 10 * 60 * 1000;
   user.verifiedCode = false;
-
-  await user.save();
+console.log('user: ',user);
+  await user.save(); 
 
   const message = `Hi ${user.username}\n We recived a request to rest the password on your ADE (Algerian waters - Unite Ain Defla) Account.\n ${code} \n Enter this code to complete the reset.\n
   Thanks for helping us keep your account secure. \n The ADE (Algerian waters - Unite Ain Defla) Team`
@@ -83,32 +90,69 @@ async function verifyResetCode(req, res) {
     .update(req.body.code)
     .digest('hex')
 
-  const user = await SchemaClient.findOne({email: req.session.clientEmail});
-  
-  if(!( user.hashCode == hashCode && user.timeCode > Date.now()) ){
+  const user = await SchemaClient.findOne({email: req.session.Email});
+  const admin = await SchemaAdmin.findOne({email: req.session.Email});
+  const leader = await SchemaClient.findOne({email: req.session.Email});
+ 
+  //reset code valid
+  if (user) {
+    if(!( user.hashCode == hashCode && user.timeCode > Date.now()) ){
+    return res.status(404).json({ message: "Reset code invalide or expired"});
+    }
+    user.verifiedCode = true;
+    user.save();
+    return res.status(200).json({ message: "Reset code valide"});
+  } else if(admin) {
+    if(!(admin.hashCode == hashCode && admin.timeCode > Date.now()) ){
     return res.status(404).json({ message: "Reset code invalide or expired"});
   }
-  //reset code valid
-  user.verifiedCode = true;
-  user.save();
-  return res.status(200).json({ message: "Reset code valide"});
+    admin.verifiedCode = true;
+    admin.save();
+    return res.status(200).json({ message: "Reset code valide"});
+  }else if(leader) {
+    if(!(leader.hashCode == hashCode && leader.timeCode > Date.now()) ){
+    return res.status(404).json({ message: "Reset code invalide or expired"});
+  }
+    leader.verifiedCode = true;
+    leader.save();
+    return res.status(200).json({ message: "Reset code valide"});
+  }
+
 }
 
 //reset password
 async function reset_password(req, res) {
   //get user by email 
-  const user = await SchemaClient.findOne({email: req.session.clientEmail});
-
-  if(!user.verifiedCode){
-    return res.status(400).json({ message: "Reset code not verified"});
-  } 
-  //user valide, update user password
-  user.password = req.body.newPass;
+  const user = await SchemaClient.findOne({email: req.session.Email});
+  const admin = await SchemaAdmin.findOne({email: req.session.Email});
+  const leader = await SchemaClient.findOne({email: req.session.Email});
+  
+  //if valide, update password
+  if (user) {
+    user.password = req.body.newPass;
   user.hashCode = undefined;
   user.timeCode = undefined;
   user.verifiedCode = undefined;
   user.save();
   return res.status(200).json({ message: "Update password"});
+  } else if(admin) {
+    admin.password = req.body.newPass;
+    admin.hashCode = undefined;
+    admin.timeCode = undefined;
+    admin.verifiedCode = undefined;
+    admin.save();
+   return res.status(200).json({ message: "Update password"});
+  }else if(leader) {
+    leader.password = req.body.newPass;
+    leader.hashCode = undefined;
+    leader.timeCode = undefined;
+    leader.verifiedCode = undefined;
+    leader.save();
+   return res.status(200).json({ message: "Update password"});
+  }else{
+    return res.status(200).json({ message: "Password not updated"});
+  }
+  
 }
 
 //create count client
@@ -116,6 +160,14 @@ async function create_account(req, res){
   console.log("📥البيانات ة:", req.body);
     //const account = new SchemaClient({ id: 1, username: "meriam", email: "be2430423", password: "1234" });
     const { username, email, password } = req.body;
+    const user = await SchemaClient.find({ $or: [
+    { username },
+    { email }
+  ]});
+  console.log('user',user);
+  if(user.length > 0){
+    return res.status(401).json({ message: "the account exists" });
+  }
     console.log(req.body);
     const id = `client${Math.floor(Math.random() * 100000)}`;
     /*const hashedPassword = await hashPassword(password) ;
@@ -123,7 +175,7 @@ async function create_account(req, res){
     const account = new SchemaClient({ id, username, email, password});
     account
       .save()
-      .then((result) => res.status(201).json(result))
+      .then((result) => res.status(201).json({ message: "successfully"}))
       .catch((err) => res.status(400).json({ message: err.message }));
   };
 
@@ -144,12 +196,19 @@ async function create_account(req, res){
       console.log("the account exists");
       const userId = user._id;
       req.session.clientId = userId;
-      console.log(req.session.clientId);
+      req.session.client = user;
+      console.log(req.session.client);
       return res.status(201).json({ message:"the account exists"});
     }catch (err) {
       console.log("err:", err.message);
       return res.status(500).json({ message: "حدث خطأ في السيرفر" });
   }
+}
+
+//get email
+async function get_email(req,res){ 
+  const client = req.session.client;
+  return res.status(201).json({ email:client.email});
 }
 
 //delet user (Admin)
@@ -281,7 +340,7 @@ async function login_accountAdmin(req,res){
     const Role = "team-lead";
     console.log(username, password, Role);
   try{
-    const user = await AdminDb.findOne({ username,password});
+    const user = await SchemaAdmin.findOne({ username,password});
     const leader = await SchemaTeam.findOne({ Fullname:username,Password:password,Role});
     console.log(leader);
     if (!user && !leader) {
@@ -294,6 +353,7 @@ async function login_accountAdmin(req,res){
       console.log("the account not exists");
       return res.status(401).json({ message: "the account not exists" });
     }
+    req.session.admin = user;
     console.log("the account admin exists");
     return res.status(201).json({ message:"the account admin exists", adminId: user._id});
   }else{
@@ -469,6 +529,40 @@ if (typeof range !== 'string' || ['week', 'month', 'year'].includes(range) === f
   
 }
 
+//Update admin account
+async function Update_admin(req,res){console.log(req.body)
+    const {username, email , password , currentPassword} = req.body;
+    const admin = req.session.admin;
+    console.log('username ', username);
+     console.log('admin: ', admin);
+     console.log('pass: ', password);
+    try{
+      if(typeof password !== 'string' || password.trim() === ''){
+        const update = await SchemaAdmin.findByIdAndUpdate(admin._id, {username , email}, { new: true });
+        console.log('null: ',update)
+        if (update) {
+          return res.status(200).json({message: "Update Profile Settings"});
+        } 
+      }else{ 
+        console.log('not null: ');
+        if (admin.password === currentPassword) {
+          const update = await SchemaAdmin.findByIdAndUpdate(admin._id, {password}, { new: true });
+        if (update) {
+           return res.status(200).json({message: "Update Security Settings"});
+        }
+        } else {
+          return res.status(404).json({message: "Incorrect password"});
+        }
+        
+       
+      }
+      
+      return res.status(404).json({message: "Error during update"});
+    }catch(err){
+      res.status(500).json({ error: err.message });
+    }
+  }
+
 //Update reclamation status
   //Admin
   async function Admin(req,res){console.log(req.body)
@@ -499,5 +593,6 @@ module.exports = {create_account, login_account,create_user,login_accountUser,lo
   create_reclamation,update_user,delet_user,Admin, Responsable,display_reclamationClient,
   Analytics,display_user,forget_password,verifyResetCode,reset_password,
   display_leader,display_message_admin,display_message_leader,display_reclamationResponsable,
-  display_information,display_reclamationAdmin,delet_reclamation,display_team_members
+  display_information,display_reclamationAdmin,delet_reclamation,display_team_members,get_email,
+  Update_admin,
 };

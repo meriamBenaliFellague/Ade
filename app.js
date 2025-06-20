@@ -83,6 +83,9 @@ app.use("/api/DeleteRec", deletRec);
 const update_user = require("./server/UpdateUser");
 app.use("/api/UpdateUser", update_user);
 
+const update_admin = require("./server/UpdateAdmin");
+app.use("/api/UpdateAdmin", update_admin);
+
 const display_leaders = require("./server/DisplayLeader");
 app.use("/api/Displayleader", display_leaders);
 
@@ -109,6 +112,9 @@ app.use("/api/UpdateReclamationLeader", update_reclamation_status_leader);
 
 const Analytics = require("./server/Analytics");
 app.use("/api/Analytics", Analytics);
+
+const get_email = require("./server/getEmail");
+app.use("/api/getEmail", get_email);
 
 //.....
 
