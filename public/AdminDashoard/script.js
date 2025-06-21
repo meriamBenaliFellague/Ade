@@ -885,6 +885,17 @@ analyticsLink.addEventListener('click', function(e) {
 	document.querySelectorAll('.close-modal').forEach(btn => {
 		btn.addEventListener('click', function() {
 			addMemberModal.style.display = 'none';
+			const btnAdd = document.getElementById('save-member');
+		// Change save button to edit mode
+		document.getElementById('member-name').value = '';
+		document.getElementById('member-email').value = '';
+		document.getElementById('member-role').value = '';
+		document.getElementById('member-team').value = '';
+		document.getElementById('member-password').value = '';
+		document.getElementById('member-municipality').value = '';
+		btnAdd.textContent = 'Add member';
+		btnAdd.dataset.editing = '';
+		btnAdd.dataset.memberId = '';
 		});
 	});
 
@@ -1082,7 +1093,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		} catch (error) {
         console.error("Error fetching data:", error);
     }
-		// Here you would typically send this data to your backend
 	});
 
 	if (btnUpload && profilePic) {
@@ -1155,8 +1165,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		} catch (error) {
         console.error("Error fetching data:", error);
     }
-		// Here you would typically verify and update the password on your backend
-		notificationSystem.addNotification('status', 'Password updated successfully');
 		this.reset();
 	});
 
@@ -1761,6 +1769,14 @@ const btnAdd = document.getElementById('save-member');
 addMember.addEventListener('click' , async function(){
 	btnAdd.replaceWith(btnAdd.cloneNode(true)); // Trick باش نضمن كل مرة نضيف مستمع واحد فقط
 	
+	    addMemberModal.style.display = 'flex';
+	    btnAdd.textContent = 'Add Member';
+		btnAdd.dataset.editing = '';
+		btnAdd.dataset.memberId = '';
+		addMemberModal.editingMemberElement = null;
+
+
+
 	const newBtn = document.getElementById('save-member');
 newBtn.addEventListener('click', async function(e){console.log('Add function')
 	e.preventDefault();
@@ -1809,7 +1825,7 @@ newBtn.addEventListener('click', async function(e){console.log('Add function')
 		console.error("Error fetching data:", error);
 	} 
 })
-})
+}, { once: true });
 
   //display users
 async function DisplayUsers(){
@@ -1924,6 +1940,7 @@ async function UpdateUser(u){
 	const passwordTeam = document.getElementById('member-password').value;
 	const teamAssign = document.getElementById('member-team').value;
 	const roleTeam = document.getElementById('member-role').value;
+	const municipality = document.getElementById('member-municipality').value;
 	if (newBtn.dataset.editing === 'true') {
 	try {
 		const response = await fetch(`http://localhost:3000/api/UpdateUser/${u._id}`, {
@@ -1936,7 +1953,8 @@ async function UpdateUser(u){
 			Email: email,
 			Password: passwordTeam,
 			Team: teamAssign,
-			Role: roleTeam 
+			Role: roleTeam ,
+			Municipality: municipality,
 		  }) 
 		});
 		if (!response.ok) {
@@ -1944,10 +1962,6 @@ async function UpdateUser(u){
 		  }
 		addMemberModal.style.display = 'none';
 		notificationSystem.addNotification('assign', ` team member ${u.Fullname} update to ${u.Team}`);
-
-		btnAdd.textContent = 'Add Member';
-		btnAdd.dataset.editing = 'false';
-
 	    DisplayUsers();
 	} catch (error) {
 		console.error("Error fetching data:", error);

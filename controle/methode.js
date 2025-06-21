@@ -233,20 +233,36 @@ async function delet_reclamation(req, res){
 
 //update user (Admin)
 async function update_user(req,res){
-  const { Fullname, Email, Password, Team, Role } = req.body;
+  const { Fullname, Email, Password, Team, Role, Municipality } = req.body;
   const iduser = req.params.iduser;
-  const update = SchemaTeam.findByIdAndUpdate(iduser, { Fullname, Email, Password, Team, Role}, { new: true })
+  const update = SchemaTeam.findByIdAndUpdate(iduser, { Fullname, Email, Password, Team, Role, Municipality}, { new: true })
   console.log(update);
  update 
     .then((results) => res.status(200).json(results)) 
     .catch((err) => res.status(500).json({ message: err.message }));
-}
+} 
 
 //create user (Admin)
 async function create_user(req, res){
   const id = `user${Math.floor(Math.random() * 100000)}`;
   const {Fullname, Email, Password, Team, Role, Municipality} = req.body;
   const account = new SchemaTeam({id, Fullname, Email, Password, Team, Role, Municipality});
+  if (Role == 'team-lead') {
+    const message = `Hello ${account.Fullname},\n
+Your leader account has been successfully created by the system administrator.
+Here are your login credentials:
+- **Username:** ${account.Fullname}\n
+- **Password:** ${account.Password}\n
+If you have any questions or need assistance, feel free to contact support.
+Best regards,  
+The Admin Team`
+//send email
+    await SendEmailFunction({
+      email: account.Email,
+      subject: 'Your Leader Account Has Been Created',
+      message: message,
+    })
+  }
   console.log(account);
   account
     .save()
@@ -365,6 +381,7 @@ async function login_accountAdmin(req,res){
     const leaderId = leader._id;
       req.session.leadername = leadername;
       req.session.leaderId = leaderId;
+      req.session.leader = leader;
       console.log(req.session.leadername);
     console.log("the account leader exists");
     return res.status(201).json({ message:"the account leader exists", leaderId: leader._id});
@@ -553,15 +570,46 @@ async function Update_admin(req,res){console.log(req.body)
         } else {
           return res.status(404).json({message: "Incorrect password"});
         }
-        
        
       }
-      
       return res.status(404).json({message: "Error during update"});
     }catch(err){
       res.status(500).json({ error: err.message });
     }
   }
+
+//Update leader account
+async function Update_leader(req,res){console.log(req.body)
+    const {username, email , password , currentPassword} = req.body;
+    const lead = req.session.leader;
+    console.log('username ', username);
+     console.log('leader: ', lead);
+     console.log('pass: ', password);
+    try{
+      if(typeof password !== 'string' || password.trim() === ''){
+        const update = await SchemaTeam.findOneAndUpdate({_id: lead._id, Role: "team-lead" }, {Fullname: username , Email: email}, { new: true });
+        console.log('null: ',update)
+        if (update) {
+          return res.status(200).json({message: "Update Profile Settings"});
+        } 
+      }else{ 
+        console.log('not null: ');
+        if (lead.Password === currentPassword) {
+          const update = await SchemaTeam.findOneAndUpdate({_id: lead._id, Role: "team-lead" }, {Password: password}, { new: true });
+        if (update) {
+           return res.status(200).json({message: "Update Security Settings"});
+        }
+        } else {
+          return res.status(404).json({message: "Incorrect password"});
+        }
+       
+      }
+      return res.status(404).json({message: "Error during update"});
+    }catch(err){
+      res.status(500).json({ error: err.message });
+    }
+  }
+
 
 //Update reclamation status
   //Admin
@@ -594,5 +642,5 @@ module.exports = {create_account, login_account,create_user,login_accountUser,lo
   Analytics,display_user,forget_password,verifyResetCode,reset_password,
   display_leader,display_message_admin,display_message_leader,display_reclamationResponsable,
   display_information,display_reclamationAdmin,delet_reclamation,display_team_members,get_email,
-  Update_admin,
+  Update_admin,Update_leader,
 };

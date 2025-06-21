@@ -85,6 +85,9 @@ app.use("/api/UpdateUser", update_user);
 
 const update_admin = require("./server/UpdateAdmin");
 app.use("/api/UpdateAdmin", update_admin);
+ 
+const update_leader = require("./server/UpdateLeader");
+app.use("/api/UpdateLeader", update_leader);
 
 const display_leaders = require("./server/DisplayLeader");
 app.use("/api/Displayleader", display_leaders);
