@@ -190,7 +190,7 @@ body {
     align-items: center;
     color: var(--dark-grey);
     text-align: center;
-    padding: 40px;
+    padding: 55px;
     z-index: 1;
     transition: .6s ease-in-out 1.2s, visibility 0s 1s ;
 }
@@ -205,6 +205,7 @@ body {
 }
 .one {
     width: 100%;
+    margin-right: 12px;
 }
 
 .container h1 {
@@ -444,7 +445,7 @@ body {
 /* Forgot password link styling */
 .forgot-link {
     margin: 10px 105px;
-    text-align: right;
+    text-align: center;
 }
 
 .forgot-link a {
@@ -558,6 +559,171 @@ body {
     background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+/* Validation Feedback Styles */
+.validation-feedback {
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.validation-feedback .username-availability,
+.validation-feedback .email-valid {
+    font-size: 1.2rem;
+    display: none;
+}
+
+.validation-feedback .username-error,
+.validation-feedback .email-error {
+    display: none;
+    font-size: 0.7rem;
+    color: #ff4444;
+    position: absolute;
+    bottom: -20px;
+    left: 2px;
+    width: 100%;
+    background: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.input-box:focus-within .validation-feedback .username-error,
+.input-box:focus-within .validation-feedback .email-error {
+    display: block;
+}
+
+/* Password strength meter */
+.password-strength {
+    margin-top: 5px;
+    width: 100%;
+    display: none;
+}
+
+.input-box:focus-within .password-strength {
+    display: block;
+}
+
+.strength-meter {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 5px;
+}
+
+.strength-segment {
+    height: 4px;
+    flex: 1;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.strength-text {
+    font-size: 0.7rem;
+    color: #666;
+}
+
+.strength-text span {
+    font-weight: 600;
+}
+
+/* Password requirements */
+.password-requirements {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    display: none;
+    font-size: 0.75rem;
+}
+
+.input-box:focus-within .password-requirements {
+    display: block;
+}
+
+.password-requirements p {
+    margin: 0 0 5px 0;
+    font-weight: 600;
+    color: #555;
+}
+
+.password-requirements ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.password-requirements li {
+    color: #ff4444;
+    margin-bottom: 3px;
+    transition: color 0.3s ease;
+    list-style-type: none;
+    position: relative;
+    padding-left: 20px;
+}
+
+.password-requirements li:before {
+    content: '✗';
+    position: absolute;
+    left: 0;
+    color: #ff4444;
+}
+
+.password-requirements li.valid {
+    color: #4CAF50;
+}
+
+.password-requirements li.valid:before {
+    content: '✓';
+    color: #4CAF50;
+}
+
+/* Password container */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Show/hide password toggle */
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+    z-index: 2;
+}
+
+.password-toggle:hover {
+    color: #333;
+}
+
+/* Valid/Invalid states */
+.input:valid:not(:placeholder-shown) {
+    border-color: #4CAF50;
+}
+
+.input:invalid:not(:placeholder-shown) {
+    border-color: #ff4444;
+}
+
+.input:valid:not(:placeholder-shown) + label + i + .validation-feedback .username-availability.available,
+.input:valid:not(:placeholder-shown) + label + i + .validation-feedback .email-valid.valid {
+    display: inline-block;
+    color: #4CAF50;
+}
+
+.input:invalid:not(:placeholder-shown) + label + i + .validation-feedback .username-availability,
+.input:invalid:not(:placeholder-shown) + label + i + .validation-feedback .email-valid {
+    display: inline-block;
+    color: #ff4444;
+    
 }
 
 .social-icons a::before {

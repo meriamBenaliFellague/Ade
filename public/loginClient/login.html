@@ -46,20 +46,49 @@
             <form action="/api/register" method="POST" class="one" id="form">
                 <h1 class="register">Registration</h1>
                 <div class="input-box">
-                    <input type="text" id="Username" class="input" placeholder=" " required>
+                    <input type="text" id="Username" class="input" placeholder=" " required minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+">
                     <label for="Username">Username</label>
                     <i class='bx bxs-user'></i>
+                    <div class="validation-feedback">
+                        <span class="username-availability"></span>
+                        <span class="username-error">3-20 characters, letters, numbers</span>
+                    </div>
                 </div>
                 <div class="input-box">
                     <input type="email" id="Email" class="input" placeholder="" required>
                     <label for="Email">Email</label>
                     <i class='bx bxs-envelope'></i>
+                    <div class="validation-feedback">
+                        <span class="email-valid"></span>
+                        <span class="email-error">Please enter a valid email address</span>
+                    </div>
                 </div>
                 <div class="input-box">
-                    <input type="password" name="Password" id="Password" class="input" placeholder=" " required>
-                    <label for="Password">Password</label>
-                    <i class='bx bxs-lock-alt'></i>
-                    <i class='bx bx-hide password-toggle' id="toggleRegisterPassword"></i>
+                    <div class="password-container">
+                        <input type="password" name="Password" id="Password" class="input" placeholder=" " required minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}">
+                        <label for="Password">Password</label>
+                        <i class='bx bxs-lock-alt'></i>
+                        <i class='bx bx-hide password-toggle' id="toggleRegisterPassword"></i>
+                        <div class="password-strength">
+                            <div class="strength-meter">
+                                <span class="strength-segment"></span>
+                                <span class="strength-segment"></span>
+                                <span class="strength-segment"></span>
+                                <span class="strength-segment"></span>
+                            </div>
+                            <div class="strength-text">Password Strength: <span>Very Weak</span></div>
+                        </div>
+                        <div class="password-requirements">
+                            <p>Password must contain:</p>
+                            <ul>
+                                <li class="requirement" data-requirement="length">At least 8 characters</li>
+                                <li class="requirement" data-requirement="uppercase">One uppercase letter</li>
+                                <li class="requirement" data-requirement="lowercase">One lowercase letter</li>
+                                <li class="requirement" data-requirement="number">One number</li>
+                                <li class="requirement" data-requirement="special">One special character</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <button type="submit" class="btn" id="btn-register">
                     <span class="btn-text">Register</span>

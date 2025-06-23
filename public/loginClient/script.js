@@ -1,20 +1,187 @@
 const container = document.querySelector('.container');
 const registrBtn = document.querySelector('.registr-btn');
 const loginBtn = document.querySelector('.login-btn');
-const btnR =  document.getElementById('btn-register');
-const btnL =  document.getElementById('btn-login');
+const btnR = document.getElementById('btn-register');
+const btnL = document.getElementById('btn-login');
+
+// Form validation elements
+const usernameInput = document.getElementById('Username');
+const emailInput = document.getElementById('Email');
+const registerPasswordInput = document.getElementById('Password');
+const usernameValidation = document.querySelector('.username-availability');
+const emailValidation = document.querySelector('.email-valid');
+const passwordStrengthText = document.querySelector('.strength-text span');
+const strengthSegments = document.querySelectorAll('.strength-segment');
+const requirementItems = document.querySelectorAll('.requirement');
 
 // Password toggle functionality
 const togglePassword = document.getElementById('togglePassword');
 const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
-const passwordInput = document.getElementById('pass');
-const registerPasswordInput = document.getElementById('Password');
+const loginPasswordInput = document.getElementById('pass');
+
+// Username validation
+let usernameTimeout;
+const checkUsernameAvailability = async (username) => {
+    // Simulate API call (replace with actual API call)
+    return new Promise(resolve => {
+        // Simulate network delay
+        setTimeout(() => {
+            // For demo purposes, consider a username taken if it's 'admin' or 'user'
+            const isAvailable = !['admin', 'user', 'test'].includes(username.toLowerCase());
+            resolve(isAvailable);
+        }, 500);
+    });
+};
+
+const validateUsername = async (username) => {
+    clearTimeout(usernameTimeout);
+    
+    if (username.length === 0) {
+        usernameValidation.textContent = '';
+        usernameValidation.className = 'username-availability';
+        return false;
+    }
+
+    // Check length requirements
+    if (username.length < 3 || username.length > 20) {
+        usernameValidation.textContent = '✕';
+        usernameValidation.className = 'username-availability';
+        return false;
+    }
+
+    // Check allowed characters (letters, numbers, underscores)
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        usernameValidation.textContent = '✕';
+        usernameValidation.className = 'username-availability';
+        return false;
+    }
+
+    // Show loading state
+    usernameValidation.textContent = '...';
+    usernameValidation.className = 'username-availability checking';
+
+    // Debounce the API call
+    return new Promise((resolve) => {
+        usernameTimeout = setTimeout(async () => {
+            const isAvailable = await checkUsernameAvailability(username);
+            if (isAvailable) {
+                usernameValidation.textContent = '✓';
+                usernameValidation.className = 'username-availability available';
+                resolve(true);
+            } else {
+                usernameValidation.textContent = '✕';
+                usernameValidation.className = 'username-availability';
+                resolve(false);
+            }
+        }, 800);
+    });
+};
+
+// Email validation
+const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailRegex.test(email);
+    
+    if (email.length === 0) {
+        emailValidation.textContent = '';
+        emailValidation.className = 'email-valid';
+        return false;
+    }
+    
+    if (isValid) {
+        emailValidation.textContent = '✓';
+        emailValidation.className = 'email-valid valid';
+    } else {
+        emailValidation.textContent = '✕';
+        emailValidation.className = 'email-valid';
+    }
+    
+    return isValid;
+};
+
+// Password strength checker
+const checkPasswordStrength = (password) => {
+    let strength = 0;
+    const requirements = {
+        length: false,
+        uppercase: false,
+        lowercase: false,
+        number: false,
+        special: false
+    };
+
+    // Check length
+    if (password.length >= 8) {
+        strength += 1;
+        requirements.length = true;
+    }
+
+    // Check for uppercase letters
+    if (/[A-Z]/.test(password)) {
+        strength += 1;
+        requirements.uppercase = true;
+    }
+
+    // Check for lowercase letters
+    if (/[a-z]/.test(password)) {
+        strength += 1;
+        requirements.lowercase = true;
+    }
+
+    // Check for numbers
+    if (/[0-9]/.test(password)) {
+        strength += 1;
+        requirements.number = true;
+    }
+
+
+    // Check for special characters
+    if (/[!@#$%^&*]/.test(password)) {
+        strength += 1;
+        requirements.special = true;
+    }
+
+    // Update requirement indicators
+    requirementItems.forEach(item => {
+        const requirement = item.getAttribute('data-requirement');
+        if (requirements[requirement]) {
+            item.classList.add('valid');
+        } else {
+            item.classList.remove('valid');
+        }
+    });
+
+// Update strength meter
+    updatePasswordStrengthMeter(strength);
+    
+    return strength;
+};
+
+const updatePasswordStrengthMeter = (strength) => {
+    const strengthTexts = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+    const strengthColors = ['#ff4444', '#ff6b6b', '#ffd166', '#06d6a0', '#4CAF50'];
+    
+    // Update text
+    passwordStrengthText.textContent = strengthTexts[strength - 1] || 'Very Weak';
+    passwordStrengthText.style.color = strengthColors[strength - 1] || '#ff4444';
+    
+    // Update segments
+    strengthSegments.forEach((segment, index) => {
+        if (index < strength) {
+            segment.style.backgroundColor = strengthColors[strength - 1];
+            segment.style.flexGrow = '1';
+        } else {
+            segment.style.backgroundColor = '#e0e0e0';
+            segment.style.flexGrow = '0.5';
+        }
+    });
+};
 
 // Toggle password visibility for login form
-if (togglePassword && passwordInput) {
+if (togglePassword && loginPasswordInput) {
     togglePassword.addEventListener('click', function() {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
+        const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        loginPasswordInput.setAttribute('type', type);
         this.classList.toggle('bx-show');
         this.classList.toggle('bx-hide');
     });
@@ -37,21 +204,76 @@ loginBtn.addEventListener('click',()=> {
     container.classList.remove('active');
 })
 
-//create count client
+// Event listeners for real-time validation
+if (usernameInput) {
+    usernameInput.addEventListener('input', (e) => {
+        validateUsername(e.target.value.trim());
+    });
+}
+
+if (emailInput) {
+    emailInput.addEventListener('input', (e) => {
+        validateEmail(e.target.value.trim());
+    });
+}
+
+if (registerPasswordInput) {
+    registerPasswordInput.addEventListener('input', (e) => {
+        const password = e.target.value;
+        checkPasswordStrength(password);
+    });
+}
+
+// Create account with validation
 btnR.addEventListener('click', async function (e) {
     e.preventDefault();
-    const Username = document.getElementById('Username').value.trim();
-    const Email = document.getElementById('Email').value.trim();
-    const Password = document.getElementById('Password').value.trim();
-    if (Email === '' || Password === ''|| Username === '') {
-        document.getElementById('Username').classList.add('is-invalid');
-        document.getElementById('Email').classList.add('is-invalid');
-        document.getElementById('Password').classList.add('is-invalid');
+    
+    const Username = usernameInput ? usernameInput.value.trim() : '';
+    const Email = emailInput ? emailInput.value.trim() : '';
+    const Password = registerPasswordInput ? registerPasswordInput.value.trim() : '';
+    
+    // Validate all fields
+    const isUsernameValid = await validateUsername(Username);
+    const isEmailValid = validateEmail(Email);
+    const isPasswordValid = checkPasswordStrength(Password) >= 3; // At least 'Fair' strength
+    
+    // Show validation errors
+    if (!Username) {
+        usernameInput.classList.add('is-invalid');
+        usernameInput.focus();
         return;
-  }
-  if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(Email)) {
-            document.getElementById('Email').classList.add('is-invalid');
-        }
+    } else if (!isUsernameValid) {
+        usernameInput.classList.add('is-invalid');
+        usernameInput.focus();
+        return;
+    }
+    
+    if (!Email) {
+        emailInput.classList.add('is-invalid');
+        if (Username) emailInput.focus();
+        return;
+    } else if (!isEmailValid) {
+        emailInput.classList.add('is-invalid');
+        emailInput.focus();
+        return;
+    }
+    
+    if (!Password) {
+        registerPasswordInput.classList.add('is-invalid');
+        if (Email) registerPasswordInput.focus();
+        return;
+    } else if (!isPasswordValid) {
+        registerPasswordInput.classList.add('is-invalid');
+        registerPasswordInput.focus();
+        return;
+    }
+    
+    // Additional email format validation
+    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(Email)) {
+        document.getElementById('Email').classList.add('is-invalid');
+        emailInput.focus();
+        return;
+    }
     try {
         const response = await fetch("http://localhost:3000/api/register", {
             method: "POST",
